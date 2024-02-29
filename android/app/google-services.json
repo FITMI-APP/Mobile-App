@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "318206584052",
+    "project_id": "fitmi-d65a1",
+    "storage_bucket": "fitmi-d65a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:318206584052:android:be367fa7dca97c21df6aa1",
+        "android_client_info": {
+          "package_name": "com.example.fitmi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_2mJBvyt-vu3wHYReWfL6-nbs8RI1uGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:318206584052:android:1718e8f187706d25df6aa1",
+        "android_client_info": {
+          "package_name": "com.example.grad"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_2mJBvyt-vu3wHYReWfL6-nbs8RI1uGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
