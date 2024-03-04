@@ -1,18 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grad/models/user.dart';
 
+import 'database.dart';
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Database _database = Database();
 
-  MyUser? _myUser(User? user) {
-    return user != null ? MyUser(uid: user.uid) : null;
+  MyUser? _myUser(User? user, {String fullName = ''}) {
+    return user != null
+        ? MyUser(
+      uid: user.uid,
+      fullName: fullName,
+      email: user.email ?? '',
+      phone: '',
+      password: '',
+    )
+        : null;
   }
 
   Stream<MyUser?> get user {
     return _auth.authStateChanges().map(_myUser);
   }
-
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(String fullName, String email, String password, String phone) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -20,13 +30,40 @@ class AuthService {
       );
 
       User user = result.user!;
-      //await DatabaseSer(uid: user.uid).update('6', 'name', 100);
-      return _myUser(user);
+
+      // Create a MyUser instance and add it to Firestore
+      MyUser newUser = MyUser(
+        uid: user.uid,
+        fullName: fullName,
+        email: email,
+        phone: phone,
+        password: password,
+      );
+
+      return _database.addUser(newUser);
+
+      // return _myUser(user);
     } catch (error) {
       print(error.toString());
       return null;
     }
   }
+
+  // Future registerWithEmailAndPassword(String email, String password) async {
+  //   try {
+  //     UserCredential result = await _auth.createUserWithEmailAndPassword(
+  //       email: email,
+  //       password: password,
+  //     );
+  //
+  //     User user = result.user!;
+  //     await createUser();
+  //     return _myUser(user);
+  //   } catch (error) {
+  //     print(error.toString());
+  //     return null;
+  //   }
+  // }
 
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
