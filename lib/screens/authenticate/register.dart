@@ -18,6 +18,8 @@ class _RegisterState extends State<Register> {
 
   String email = '';
   String password = '';
+  String phone = '';
+  String fullName = '';
   String error = '';
   bool loading = false;
 
@@ -44,6 +46,12 @@ class _RegisterState extends State<Register> {
           key: _formKey,
           child: Column(
             children: <Widget>[
+          TextFormField(
+          decoration: textInputDecoration.copyWith(hintText: 'Thaowpsta Saiid'),
+          validator: (val) => val!.isEmpty ? 'Enter your full name' : null,
+          onChanged: (val) {
+            setState(() => fullName = val);
+          }),
               const SizedBox(height: 20.0),
               TextFormField(
                 decoration: textInputDecoration.copyWith(hintText: 'Exampl@example.com'),
@@ -61,6 +69,15 @@ class _RegisterState extends State<Register> {
                   setState(() => password = val);
                 },
               ),
+                const SizedBox(height: 20.0),
+                TextFormField(
+                  decoration: textInputDecoration.copyWith(hintText: '0100000000'),
+                  validator: (val) => val!.length < 12 ? 'Enter a valid number' : null,
+                  obscureText: true,
+                  onChanged: (val) {
+                    setState(() => password = val);
+                  },
+              ),
               const SizedBox(height: 20.0),
               ElevatedButton(
                 style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepPurple[100])),
@@ -71,7 +88,7 @@ class _RegisterState extends State<Register> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     setState(() => loading = true);
-                    dynamic result = await _auth.registerWithEmailAndPassword(email, password);
+                    dynamic result = await _auth.registerWithEmailAndPassword(fullName,email, password, phone);
                     if (result == null) {
                       // Registration failed, display an error message
                       setState(() {
