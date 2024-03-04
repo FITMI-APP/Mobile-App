@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grad/screens/authenticate/register.dart';
 import 'package:grad/shared/loading.dart';
 
 import '../../services/authenticate.dart';
@@ -28,18 +29,10 @@ class _SignInState extends State<SignIn> {
         : Scaffold(
             backgroundColor: Colors.deepPurple[200],
             appBar: AppBar(
+              leading: logo,
               backgroundColor: Colors.deepPurple[100],
               elevation: 0.0,
-              title: const Text('Sign in to Fluttora'),
-              actions: <Widget>[
-                TextButton.icon(
-                  icon: const Icon(Icons.person),
-                  label: const Text('Register'),
-                  style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all(Colors.black)),
-                  onPressed: () => widget.toggleView(),
-                ),
-              ],
+              title: const Text('Sign in to FitMi'),
             ),
             body: Container(
               padding:
@@ -70,9 +63,7 @@ class _SignInState extends State<SignIn> {
                     ),
                     const SizedBox(height: 20.0),
                     ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Colors.deepPurple[100])),
+                      style: button,
                       child: const Text(
                         'Sign In',
                         style: TextStyle(color: Colors.black),
@@ -80,8 +71,7 @@ class _SignInState extends State<SignIn> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           setState(() => loading = true);
-                          dynamic result = await _auth
-                              .signInWithEmailAndPassword(email, password);
+                          dynamic result = await _auth.signInWithEmailAndPassword(email, password);
                           if (result == null) {
                             setState(() {
                               error = 'Email or Password is Incorrect';
@@ -89,6 +79,48 @@ class _SignInState extends State<SignIn> {
                             });
                           }
                         }
+                      },
+                    ),
+                    const SizedBox(height: 20.0),
+                    ElevatedButton(
+                      style: button,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/google_logo.png',
+                            height: 24.0,
+                            width: 20.0,
+                          ),
+                          const SizedBox(width: 8.0),
+                          const Text(
+                            'Sign In with Google',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ],
+                      ),
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() => loading = true);
+                          dynamic result = await _auth.signInWithGoogle();
+                          if (result == null) {
+                            setState(() {
+                              error = 'Email or Password is Incorrect';
+                              loading = false;
+                            });
+                          }
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10.0),
+                    ElevatedButton(
+                      style: button,
+                      child: const Text(
+                        'Create Account',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      onPressed: () async {
+                        widget.toggleView();
                       },
                     ),
                     const SizedBox(height: 12.0),

@@ -28,9 +28,10 @@ class _RegisterState extends State<Register> {
     return loading ? const Loading() : Scaffold(
       backgroundColor: Colors.deepPurple[200],
       appBar: AppBar(
+        leading: logo,
         backgroundColor: Colors.deepPurple[100],
         elevation: 0.0,
-        title: const Text('Sign up to Fluttora'),
+        title: const Text('Sign up to FitMi'),
         actions: <Widget>[
           TextButton.icon(
             icon: const Icon(Icons.person),
@@ -79,7 +80,7 @@ class _RegisterState extends State<Register> {
               ),
               const SizedBox(height: 20.0),
               ElevatedButton(
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.deepPurple[100])),
+                style: button,
                 child: const Text(
                   'Register',
                   style: TextStyle(color: Colors.black),
