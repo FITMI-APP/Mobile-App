@@ -49,22 +49,6 @@ class AuthService {
     }
   }
 
-  // Future registerWithEmailAndPassword(String email, String password) async {
-  //   try {
-  //     UserCredential result = await _auth.createUserWithEmailAndPassword(
-  //       email: email,
-  //       password: password,
-  //     );
-  //
-  //     User user = result.user!;
-  //     await createUser();
-  //     return _myUser(user);
-  //   } catch (error) {
-  //     print(error.toString());
-  //     return null;
-  //   }
-  // }
-
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(

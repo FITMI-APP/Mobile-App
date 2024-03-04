@@ -73,9 +73,8 @@ class _RegisterState extends State<Register> {
                 TextFormField(
                   decoration: textInputDecoration.copyWith(hintText: '0100000000'),
                   validator: (val) => val!.length < 12 ? 'Enter a valid number' : null,
-                  obscureText: true,
                   onChanged: (val) {
-                    setState(() => password = val);
+                    setState(() => phone = val);
                   },
               ),
               const SizedBox(height: 20.0),
