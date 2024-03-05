@@ -79,6 +79,11 @@ class AuthService {
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
+      UserCredential result = await _auth.signInWithCredential(credential);
+      User user = result.user!;
+      // Once signed in, return the UserCredential
+     // return await FirebaseAuth.instance.signInWithCredential(credential);
+      return _myUser(user);
     }catch(e){
       print(e.toString());
       return null;
