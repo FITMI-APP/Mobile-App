@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grad/screens/authenticate/register.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grad/shared/loading.dart';
 
 import '../../services/authenticate.dart';
@@ -82,34 +82,21 @@ class _SignInState extends State<SignIn> {
                       },
                     ),
                     const SizedBox(height: 20.0),
-                    ElevatedButton(
+                    ElevatedButton.icon(
                       style: button,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/google_logo.png',
-                            height: 24.0,
-                            width: 20.0,
-                          ),
-                          const SizedBox(width: 8.0),
-                          const Text(
-                            'Sign In with Google',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ],
-                      ),
+                      icon: FaIcon(FontAwesomeIcons.google, color: Colors.blue[700]),
+                      label: Text('Sign In with Google',),
                       onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() => loading = true);
-                          dynamic result = await _auth.signInWithGoogle();
-                          if (result == null) {
-                            setState(() {
-                              error = 'Email or Password is Incorrect';
-                              loading = false;
-                            });
-                          }
-                        }
+                        // if (_formKey.currentState!.validate()) {
+                        //   setState(() => loading = true);
+                           await _auth.signInWithGoogle();
+                        //   if (result == null) {
+                        //     setState(() {
+                        //       error = 'Email or Password is Incorrect';
+                        //       loading = false;
+                        //     });
+                        //   }
+                        // }
                       },
                     ),
                     const SizedBox(height: 10.0),
