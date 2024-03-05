@@ -29,4 +29,5 @@ final button = ButtonStyle(
       borderRadius: BorderRadius.circular(10.0),
     ),
   ),
+  foregroundColor: MaterialStateProperty.all(Colors.black),
 );
