@@ -30,55 +30,122 @@ class _HomeState extends State<MyHomePage> {
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if(imageFile != null)
-              Container(
-                width: 640,
-                height: 480,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  image: DecorationImage(
-                      image: FileImage(imageFile!),
-                      fit: BoxFit.cover
+              Row(
+                children: [
+                  Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      image: DecorationImage(
+                          image: FileImage(imageFile!),
+                          fit: BoxFit.cover
+                      ),
+                      border: Border.all(width: 8, color: Colors.black),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
                   ),
-                  border: Border.all(width: 8, color: Colors.black),
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
+                  Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: FileImage(imageFile!),
+                        fit: BoxFit.cover
+                      ),
+                      border: Border.all(width: 8, color: Colors.black),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+
+                  ),
+
+                ],
               )
+
             else
-              Container(
-                width: 640,
-                height: 480,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  border: Border.all(width: 8, color: Colors.black12),
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                child: const Text('Image should appear here', style: TextStyle(fontSize: 26),),
+              Row(
+                children: [
+                  Container(
+                    height:250,
+                    alignment: Alignment.topLeft,
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 150,
+                          height: 150,
+                          alignment: Alignment.topLeft,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            border: Border.all(width: 8, color: Colors.black12),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          child: const Text('Image should appear here', style: TextStyle(fontSize: 26)),
+                        ),
+                        SizedBox(height: 10),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => getImage(source: ImageSource.camera),
+                            child: const Text('Capture Image', style: TextStyle(fontSize: 12)),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => getImage(source: ImageSource.gallery),
+                            child: const Text('Select Image', style: TextStyle(fontSize: 12)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 10), // Add spacing between containers
+                  Expanded(
+                    child: Container(
+                      height:250,
+                      alignment: Alignment.topRight,
+                      child: Column(
+                        //crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            width: 150,
+                            height: 150,
+                    
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              border: Border.all(width: 8, color: Colors.black12),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: const Text('Image should appear here', style: TextStyle(fontSize: 26)),
+                          ),
+                          SizedBox(height: 10),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => getImage(source: ImageSource.camera),
+                              child: const Text('Capture Image', style: TextStyle(fontSize: 12)),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => getImage(source: ImageSource.gallery),
+                              child: const Text('Select Image', style: TextStyle(fontSize: 12)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
+
+
             const SizedBox(
               height: 20,
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                      onPressed: ()=> getImage(source: ImageSource.camera),
-                      child: const Text('Capture Image', style: TextStyle(fontSize: 18))
-                  ),
-                ),
-                const SizedBox(width: 20,),
-                Expanded(
-                  child: ElevatedButton(
-                      onPressed: ()=> getImage(source: ImageSource.gallery),
-                      child: const Text('Select Image', style: TextStyle(fontSize: 18))
-                  ),
-                )
-              ],
-            ),
+
           ],
         ),
       ),
