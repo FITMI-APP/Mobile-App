@@ -45,6 +45,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   google_sign_in: ^6.2.1
   font_awesome_flutter: ^10.7.0
+  animated_button_bar: ^1.0.0
 
 
 dev_dependencies:

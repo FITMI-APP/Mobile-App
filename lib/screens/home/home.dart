@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grad/services/authenticate.dart';
+import 'package:animated_button_bar/animated_button_bar.dart';
 
 class Home extends StatelessWidget {
   final AuthService _auth = AuthService();
@@ -25,11 +26,40 @@ class Home extends StatelessWidget {
               label: const Text('Logout'))
         ],
       ),
-      body: const Center(
-          child: Text(
-        'Welcome to home page',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      )),
+      body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              //You can populate it with different types of widgets like Icon
+              AnimatedButtonBar(
+                radius: 32.0,
+                padding: const EdgeInsets.all(16.0),
+                backgroundColor: Colors.blueGrey.shade800,
+                foregroundColor: Colors.blueGrey.shade300,
+                elevation: 24,
+                borderColor: Colors.white,
+                borderWidth: 2,
+                innerVerticalPadding: 16,
+                children: [
+                  ButtonBarEntry(onTap: () => print('First item tapped'), child: Text("woman")),
+                  ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text("men")),
+                ],
+              ),
+              //inverted selection button bar
+              AnimatedButtonBar(
+                radius: 8.0,
+                padding: const EdgeInsets.all(16.0),
+                invertedSelection: true,
+                children: [
+                  ButtonBarEntry(onTap: () => print('First item tapped'), child: Text('upper')),
+                  ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text('lower')),
+                  ButtonBarEntry(onTap: () => print('Third item tapped'), child: Text('dress')),
+
+                ],
+              ),
+            ],
+          ),
+      ),
     );
   }
 }
