@@ -1,7 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:animated_button_bar/animated_button_bar.dart';
+
 
 void main() {
   runApp(const MaterialApp(
@@ -18,7 +19,8 @@ class MyHomePage extends StatefulWidget {
 
 class _HomeState extends State<MyHomePage> {
 
-  File? imageFile;
+  File? cloth;
+  File? person;
 
   @override
   Widget build(BuildContext context) {
@@ -27,98 +29,49 @@ class _HomeState extends State<MyHomePage> {
         title: const Text('Capturing Images'),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if(imageFile != null)
-              Row(
-                children: [
-                  Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      image: DecorationImage(
-                          image: FileImage(imageFile!),
-                          fit: BoxFit.cover
+      body: Column(
+        //padding: const EdgeInsets.all(12.0),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if(person != null )
+                Row(
+                  children: [
+                    Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        image: DecorationImage(
+                            image: FileImage(person!),
+                            fit: BoxFit.cover
+                        ),
+                        border: Border.all(width: 8, color: Colors.black),
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      border: Border.all(width: 8, color: Colors.black),
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                  ),
-                  Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: FileImage(imageFile!),
-                        fit: BoxFit.cover
-                      ),
-                      border: Border.all(width: 8, color: Colors.black),
-                      borderRadius: BorderRadius.circular(12.0),
                     ),
 
-                  ),
-
-                ],
-              )
-
-            else
-              Row(
-                children: [
-                  Container(
-                    height:250,
-                    alignment: Alignment.topLeft,
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 150,
-                          height: 150,
-                          alignment: Alignment.topLeft,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            border: Border.all(width: 8, color: Colors.black12),
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          child: const Text('Image should appear here', style: TextStyle(fontSize: 26)),
-                        ),
-                        SizedBox(height: 10),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () => getImage(source: ImageSource.camera),
-                            child: const Text('Capture Image', style: TextStyle(fontSize: 12)),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () => getImage(source: ImageSource.gallery),
-                            child: const Text('Select Image', style: TextStyle(fontSize: 12)),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 10), // Add spacing between containers
-                  Expanded(
-                    child: Container(
+                  ],
+                )
+              else
+                Row(
+                  children: [
+                    Container(
                       height:250,
-                      alignment: Alignment.topRight,
+                      alignment: Alignment.topLeft,
                       child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Container(
                             width: 150,
                             height: 150,
-                    
+                            alignment: Alignment.topLeft,
                             decoration: BoxDecoration(
                               color: Colors.grey,
                               border: Border.all(width: 8, color: Colors.black12),
                               borderRadius: BorderRadius.circular(12.0),
                             ),
-                            child: const Text('Image should appear here', style: TextStyle(fontSize: 26)),
+                            child: const Text('person should appear here', style: TextStyle(fontSize: 26)),
                           ),
                           SizedBox(height: 10),
                           Expanded(
@@ -137,17 +90,119 @@ class _HomeState extends State<MyHomePage> {
                         ],
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 10), // Add spacing between containers
+                  ],
+                ),
+
+
+              const SizedBox(
+                width: 20,
               ),
 
 
-            const SizedBox(
-              height: 20,
-            ),
+              if(cloth != null )
+                Row(
+                  children: [
+                    Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: FileImage(cloth!),
+                            fit: BoxFit.cover
+                        ),
+                        border: Border.all(width: 8, color: Colors.black),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
 
+                    ),
+                  ],
+                )
+
+              else
+                Row(
+                  children: [
+                    Container(
+                      height:250,
+                      alignment: Alignment.topRight,
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 150,
+                            height: 150,
+                            alignment: Alignment.topRight,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              border: Border.all(width: 8, color: Colors.black12),
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: const Text('cloth should appear here', style: TextStyle(fontSize: 26)),
+                          ),
+                          SizedBox(height: 10),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => getcloth(source: ImageSource.camera),
+                              child: const Text('Capture Image', style: TextStyle(fontSize: 12)),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => getcloth(source: ImageSource.gallery),
+                              child: const Text('Select Image', style: TextStyle(fontSize: 12)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 10), // Add spacing between containers
+
+                          ],
+                        ),
+
+
+
+              const SizedBox(
+                height: 20,
+              ),
+            ],
+          ),
+
+        Expanded(
+          child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //You can populate it with different types of widgets like Icon
+            AnimatedButtonBar(
+              radius: 32.0,
+              padding: const EdgeInsets.all(16.0),
+              backgroundColor: Colors.blueGrey.shade800,
+              foregroundColor: Colors.blueGrey.shade300,
+              elevation: 24,
+              borderColor: Colors.white,
+              borderWidth: 2,
+              innerVerticalPadding: 16,
+              children: [
+                ButtonBarEntry(onTap: () => print('First item tapped'), child: Text("woman")),
+                ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text("men")),
+              ],
+            ),
+            //inverted selection button bar
+            AnimatedButtonBar(
+              radius: 8.0,
+              padding: const EdgeInsets.all(16.0),
+              invertedSelection: true,
+              children: [
+                ButtonBarEntry(onTap: () => print('First item tapped'), child: Text('upper')),
+                ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text('lower')),
+                ButtonBarEntry(onTap: () => print('Third item tapped'), child: Text('dress')),
+
+              ],
+            ),
           ],
         ),
+        )
+        ],
       ),
     );
   }
@@ -163,7 +218,22 @@ class _HomeState extends State<MyHomePage> {
 
     if(file?.path != null){
       setState(() {
-        imageFile = File(file!.path);
+        person = File(file!.path);
+      });
+    }
+  }
+  void getcloth({required ImageSource source}) async {
+
+    final file = await ImagePicker().pickImage(
+        source: source,
+        maxWidth: 640,
+        maxHeight: 480,
+        imageQuality: 70 //0 - 100
+    );
+
+    if(file?.path != null){
+      setState(() {
+        cloth = File(file!.path);
       });
     }
   }
