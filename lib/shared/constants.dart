@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 final textInputDecoration = InputDecoration(
   hintText: '12%fTks,l',
@@ -23,7 +24,7 @@ final logo = Padding(
 );
 
 final button = ButtonStyle(
-  backgroundColor: MaterialStateProperty.all(Colors.deepPurple[100]),
+  backgroundColor: MaterialStateProperty.all(HexColor("#3F72AF")),
   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
     RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10.0),
