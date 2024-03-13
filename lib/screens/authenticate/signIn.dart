@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grad/shared/loading.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 import '../../services/authenticate.dart';
 import '../../shared/constants.dart';
@@ -27,10 +28,10 @@ class _SignInState extends State<SignIn> {
     return loading
         ? const Loading()
         : Scaffold(
-            backgroundColor: Colors.deepPurple[200],
+            backgroundColor: HexColor("#DBE2EF"),
             appBar: AppBar(
               leading: logo,
-              backgroundColor: Colors.deepPurple[100],
+              backgroundColor:HexColor("#3F72AF"),
               elevation: 0.0,
               title: const Text('Sign in to FitMi'),
             ),

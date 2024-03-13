@@ -45,7 +45,12 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   google_sign_in: ^6.2.1
   font_awesome_flutter: ^10.7.0
-
+  animated_button_bar: ^1.0.0
+  #hl_image_picker: ^1.2.13
+  #image_picker_android: ^0.8.9+3
+  image_picker: ^1.0.7
+  image_cropper: ^5.0.1
+  hexcolor: ^3.0.1
 
 dev_dependencies:
   flutter_launcher_icons: "^0.13.1"
