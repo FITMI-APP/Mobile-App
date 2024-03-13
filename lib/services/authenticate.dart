@@ -65,30 +65,22 @@ class AuthService {
     }
   }
 
-  Future signInWithGoogle() async {
+  Future<dynamic> signInWithGoogle() async {
     try {
-      // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await GoogleSignIn(clientId: '318206584052-rh7le7vogpbo8qgrd2ol6u9iiqh9ov33.apps.googleusercontent.com').signIn();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication? googleAuth = await googleUser
-          ?.authentication;
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-      // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-      UserCredential result = await _auth.signInWithCredential(credential);
-      User user = result.user!;
-      // Once signed in, return the UserCredential
-     // return await FirebaseAuth.instance.signInWithCredential(credential);
-      return _myUser(user);
-    }catch(e){
-      print(e.toString());
-      return null;
+
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } on Exception catch (e) {
+      // TODO
+      print('exception->$e');
     }
-    // Once signed in, return the UserCredential
   }
 
   Future signInAnon() async {

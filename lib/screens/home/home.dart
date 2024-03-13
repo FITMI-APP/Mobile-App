@@ -46,40 +46,40 @@ class _HomeState extends State<Home> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Column(
-              //mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //You can populate it with different types of widgets like Icon
-                AnimatedButtonBar(
-                  radius: 32.0,
-                  padding: const EdgeInsets.all(10.0),
-                  backgroundColor: HexColor("#3F72AF"),
-                  foregroundColor: HexColor("#DBE2EF"),
-                  elevation: 24,
-                  borderColor: Colors.white,
-                  borderWidth: 2,
-                  innerVerticalPadding: 16,
-                  children: [
-                    ButtonBarEntry(onTap: () => print('First item tapped'), child: Text("woman")),
-                    ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text("men")),
-                  ],
-                ),
-                //inverted selection button bar
-                AnimatedButtonBar(
-                  radius: 32.0,
-                  padding: const EdgeInsets.all(10.0),
-                  //invertedSelection: true,
-                  backgroundColor: HexColor("#3F72AF"),
-                  foregroundColor: HexColor("#DBE2EF"),
-                  borderColor: Colors.white,
-                  children: [
-                    ButtonBarEntry(onTap: () => print('First item tapped'), child: Text('upper')),
-                    ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text('lower')),
-                    ButtonBarEntry(onTap: () => print('Third item tapped'), child: Text('dress')),
+            //mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              //You can populate it with different types of widgets like Icon
+              AnimatedButtonBar(
+                radius: 32.0,
+                padding: const EdgeInsets.all(10.0),
+                backgroundColor: HexColor("#3F72AF"),
+                foregroundColor: HexColor("#DBE2EF"),
+                elevation: 24,
+                borderColor: Colors.white,
+                borderWidth: 2,
+                innerVerticalPadding: 16,
+                children: [
+                  ButtonBarEntry(onTap: () => print('First item tapped'), child: Text("woman")),
+                  ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text("men")),
+                ],
+              ),
+              //inverted selection button bar
+              AnimatedButtonBar(
+                radius: 32.0,
+                padding: const EdgeInsets.all(10.0),
+                //invertedSelection: true,
+                backgroundColor: HexColor("#3F72AF"),
+                foregroundColor: HexColor("#DBE2EF"),
+                borderColor: Colors.white,
+                children: [
+                  ButtonBarEntry(onTap: () => print('First item tapped'), child: Text('upper')),
+                  ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text('lower')),
+                  ButtonBarEntry(onTap: () => print('Third item tapped'), child: Text('dress')),
 
-                  ],
-                ),
-              ],
-            ),
+                ],
+              ),
+            ],
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,6 +101,16 @@ class _HomeState extends State<Home> {
               ),
               //const SizedBox(height: 20),
             ],
+          ) ,
+          Container(
+            height: 50, // Adjust the height according to your preference
+            child: ElevatedButton(
+              onPressed: generate,
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(HexColor("#DBE2EF")),
+              ),
+              child: Text('Generate', style: TextStyle(fontSize: 12, color: Colors.black)),
+            ),
           )
 
         ],
@@ -126,6 +136,9 @@ class _HomeState extends State<Home> {
       });
     }
   }
+  void generate() async {
+
+  }
 
   Widget buildImageWidget({
     File? image,
@@ -136,75 +149,75 @@ class _HomeState extends State<Home> {
   }) {
     return image != null
         ? Column(
+      children: [
+        Container(
+          width: 150,
+          height: 150,
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            image: DecorationImage(
+              image: FileImage(image),
+              fit: BoxFit.cover,
+            ),
+            border: Border.all(width: 8, color: Colors.black),
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+        ),
+        SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: onRemove,
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(HexColor("#3F72AF")),
+          ),
+          child: Expanded(
+            child: const Text('remove image', style: TextStyle(fontSize: 12)),
+          ),
+        ),
+      ],
+    )
+        : Column(
+      children: [
+        Container(
+          height: 250,
+          alignment: Alignment.topLeft,
+          child: Column(
             children: [
               Container(
                 width: 150,
                 height: 150,
+                alignment: Alignment.topLeft,
                 decoration: BoxDecoration(
                   color: Colors.grey,
-                  image: DecorationImage(
-                    image: FileImage(image),
-                    fit: BoxFit.cover,
-                  ),
-                  border: Border.all(width: 8, color: Colors.black),
+                  border: Border.all(width: 8, color: Colors.black12),
                   borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Text(placeholderText, style: TextStyle(fontSize: 26)),
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: onCapture,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(HexColor("#DBE2EF")),
+                  ),
+                  child: const Text('Capture Image', style: TextStyle(fontSize: 12, color: Colors.black)),
                 ),
               ),
               SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: onRemove,
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(HexColor("#3F72AF")),
-                ),
-                child: Expanded(
-                  child: const Text('remove image', style: TextStyle(fontSize: 12)),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: onSelect,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(HexColor("#DBE2EF")),
+
+                  ),
+                  child: const Text('Select Image', style: TextStyle(fontSize: 12 , color: Colors.black)),
                 ),
               ),
             ],
-          )
-        : Column(
-          children: [
-            Container(
-              height: 250,
-              alignment: Alignment.topLeft,
-              child: Column(
-                children: [
-                  Container(
-                    width: 150,
-                    height: 150,
-                    alignment: Alignment.topLeft,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      border: Border.all(width: 8, color: Colors.black12),
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: Text(placeholderText, style: TextStyle(fontSize: 26)),
-                  ),
-                  SizedBox(height: 10),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: onCapture,
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(HexColor("#3F72AF")),
-                      ),
-                      child: const Text('Capture Image', style: TextStyle(fontSize: 12)),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: onSelect,
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(HexColor("#3F72AF")),
-
-                      ),
-                      child: const Text('Select Image', style: TextStyle(fontSize: 10 , color: Colors.black)),
-                    ),
-                  ),
-                ],
-              ),
-            ), SizedBox(width:20), // Add spacing between containers
-          ],
+          ),
+        ), SizedBox(width:20), // Add spacing between containers
+      ],
     );
   }
 }
