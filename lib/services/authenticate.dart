@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grad/models/user.dart';
 
+import 'database.dart';
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -20,7 +22,7 @@ class AuthService {
       );
 
       User user = result.user!;
-      //await DatabaseSer(uid: user.uid).update('6', 'name', 100);
+      await DatabaseSer(uid: user.uid).update('6', 'name', 100);
       return _myUser(user);
     } catch (error) {
       print(error.toString());
