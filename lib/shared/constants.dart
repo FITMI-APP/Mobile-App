@@ -12,7 +12,7 @@ final textInputDecoration = InputDecoration(
 );
 
 final logo = Padding(
-  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+  padding: const EdgeInsets.only(left: 10),
   child: Builder(
       builder: (BuildContext context) {
         return Image.asset(

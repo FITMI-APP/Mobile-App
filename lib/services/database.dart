@@ -17,6 +17,6 @@ class Database {
   }
 
   Future<void> addUser(MyUser user) async {
-    await _users.add(user);
+    await _users.doc(user.uid).set(user);
   }
 }
