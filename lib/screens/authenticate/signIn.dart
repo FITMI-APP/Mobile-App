@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grad/shared/loading.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 import '../../services/authenticate.dart';
 import '../../shared/constants.dart';
@@ -26,20 +28,12 @@ class _SignInState extends State<SignIn> {
     return loading
         ? const Loading()
         : Scaffold(
-            backgroundColor: Colors.deepPurple[200],
+            backgroundColor: HexColor("#DBE2EF"),
             appBar: AppBar(
-              backgroundColor: Colors.deepPurple[100],
+              leading: logo,
+              backgroundColor:HexColor("#3F72AF"),
               elevation: 0.0,
-              title: const Text('Sign in to Fluttora'),
-              actions: <Widget>[
-                TextButton.icon(
-                  icon: const Icon(Icons.person),
-                  label: const Text('Register'),
-                  style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all(Colors.black)),
-                  onPressed: () => widget.toggleView(),
-                ),
-              ],
+              title: const Text('Sign in to FitMi'),
             ),
             body: Container(
               padding:
@@ -70,9 +64,7 @@ class _SignInState extends State<SignIn> {
                     ),
                     const SizedBox(height: 20.0),
                     ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Colors.deepPurple[100])),
+                      style: button,
                       child: const Text(
                         'Sign In',
                         style: TextStyle(color: Colors.black),
@@ -80,8 +72,7 @@ class _SignInState extends State<SignIn> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           setState(() => loading = true);
-                          dynamic result = await _auth
-                              .signInWithEmailAndPassword(email, password);
+                          dynamic result = await _auth.signInWithEmailAndPassword(email, password);
                           if (result == null) {
                             setState(() {
                               error = 'Email or Password is Incorrect';
@@ -89,6 +80,35 @@ class _SignInState extends State<SignIn> {
                             });
                           }
                         }
+                      },
+                    ),
+                    const SizedBox(height: 20.0),
+                    ElevatedButton.icon(
+                      style: button,
+                      icon: FaIcon(FontAwesomeIcons.google, color: Colors.blue[700]),
+                      label: Text('Sign In with Google',),
+                      onPressed: () async {
+                        // if (_formKey.currentState!.validate()) {
+                        //   setState(() => loading = true);
+                           await _auth.signInWithGoogle();
+                        //   if (result == null) {
+                        //     setState(() {
+                        //       error = 'Email or Password is Incorrect';
+                        //       loading = false;
+                        //     });
+                        //   }
+                        // }
+                      },
+                    ),
+                    const SizedBox(height: 10.0),
+                    ElevatedButton(
+                      style: button,
+                      child: const Text(
+                        'Create Account',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      onPressed: () async {
+                        widget.toggleView();
                       },
                     ),
                     const SizedBox(height: 12.0),

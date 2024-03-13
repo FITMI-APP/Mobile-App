@@ -1,18 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:grad/models/user.dart';
 
-class DatabaseSer{
+class Database {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  late final CollectionReference<MyUser> _users;
 
-  final String uid;
+  Database() {
+    _users = _db.collection('Users').withConverter<MyUser>(
+      fromFirestore: (snapshots, _) => MyUser.fromJson(snapshots.data()!),
+      toFirestore: (user, _) => user.toJson(),
+    );
+  }
 
-  DatabaseSer({required this.uid});
+  Stream<QuerySnapshot<MyUser>> getUsers() {
+    return _users.snapshots();
+  }
 
-  final CollectionReference fluttoraColl = FirebaseFirestore.instance.collection('fluttora');
-
-  Future update(String sugars, String name, int strength) async {
-    return fluttoraColl.doc(uid).set({
-      'sugars': sugars,
-      'name': name,
-      'strength': strength
-    });
+  Future<void> addUser(MyUser user) async {
+    await _users.add(user);
   }
 }
