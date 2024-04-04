@@ -3,7 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 
 final textInputDecoration = InputDecoration(
   hintText: '12%fTks,l',
-  fillColor: Colors.white54,
+  fillColor: HexColor("#DBE2EF"),
   filled: true,
   border: OutlineInputBorder(
     borderRadius: BorderRadius.circular(20),
@@ -24,7 +24,7 @@ final logo = Padding(
 );
 
 final button = ButtonStyle(
-  backgroundColor: MaterialStateProperty.all(HexColor("#3F72AF")),
+  backgroundColor: MaterialStateProperty.all(HexColor("#DBE2EF")),
   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
     RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10.0),

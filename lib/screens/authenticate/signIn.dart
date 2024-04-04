@@ -28,10 +28,10 @@ class _SignInState extends State<SignIn> {
     return loading
         ? const Loading()
         : Scaffold(
-            backgroundColor: HexColor("#DBE2EF"),
+            backgroundColor: HexColor("#3F72AF"),
             appBar: AppBar(
               leading: logo,
-              backgroundColor:HexColor("#3F72AF"),
+              backgroundColor:HexColor("#DBE2EF"),
               elevation: 0.0,
               title: const Text('Sign in to FitMi'),
             ),
@@ -82,10 +82,10 @@ class _SignInState extends State<SignIn> {
                         }
                       },
                     ),
-                    const SizedBox(height: 20.0),
+                    const SizedBox(height: 10.0),
                     ElevatedButton.icon(
                       style: button,
-                      icon: FaIcon(FontAwesomeIcons.google, color: Colors.blue[700]),
+                      icon: FaIcon(FontAwesomeIcons.google, color:HexColor("#3F72AF")),
                       label: Text('Sign In with Google',),
                       onPressed: () async {
                         // if (_formKey.currentState!.validate()) {

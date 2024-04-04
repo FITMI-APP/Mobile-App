@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../services/authenticate.dart';
 import '../../shared/constants.dart';
 import '../../shared/loading.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 
 class Register extends StatefulWidget {
@@ -26,10 +27,10 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return loading ? const Loading() : Scaffold(
-      backgroundColor: Colors.deepPurple[200],
+      backgroundColor: HexColor("#F9F7F7"),
       appBar: AppBar(
         leading: logo,
-        backgroundColor: Colors.deepPurple[100],
+        backgroundColor:HexColor("#3F72AF"),
         elevation: 0.0,
         title: const Text('Sign up to FitMi'),
         actions: <Widget>[

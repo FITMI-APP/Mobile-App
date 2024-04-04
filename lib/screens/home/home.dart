@@ -4,6 +4,7 @@ import 'package:animated_button_bar/animated_button_bar.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:hexcolor/hexcolor.dart';
+import '../../shared/constants.dart';
 
 
 class Home extends StatefulWidget {
@@ -24,9 +25,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: HexColor("#F9F7F7"),
+      backgroundColor: HexColor("#3F72AF"),
       appBar: AppBar(
-        backgroundColor: HexColor("#3F72AF"),
+        leading: logo,
+        backgroundColor: HexColor("#DBE2EF"),
         elevation: 0,
         title: const Text('FitMi'),
         actions: [
@@ -52,24 +54,28 @@ class _HomeState extends State<Home> {
               AnimatedButtonBar(
                 radius: 32.0,
                 padding: const EdgeInsets.all(10.0),
-                backgroundColor: HexColor("#3F72AF"),
+                backgroundColor: HexColor("#aec2e6"),
                 foregroundColor: HexColor("#DBE2EF"),
-                elevation: 24,
+                //elevation: 24,
                 borderColor: Colors.white,
                 borderWidth: 2,
-                innerVerticalPadding: 16,
+                innerVerticalPadding: 14,
                 children: [
-                  ButtonBarEntry(onTap: () => print('First item tapped'), child: Text("woman")),
-                  ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text("men")),
+                  ButtonBarEntry(onTap: () => print('First item tapped'), child: Text("woman",style: const TextStyle(fontWeight: FontWeight.bold))),
+                  ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text("men", style: const TextStyle(fontWeight: FontWeight.bold))),
                 ],
               ),
               //inverted selection button bar
+              const SizedBox(height: 4),
+
               AnimatedButtonBar(
                 radius: 32.0,
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.fromLTRB(10.0,10.0,10.0,20.0),
                 //invertedSelection: true,
-                backgroundColor: HexColor("#3F72AF"),
+                backgroundColor: HexColor("#aec2e6"),
                 foregroundColor: HexColor("#DBE2EF"),
+                borderWidth: 2,
+                innerVerticalPadding: 14,
                 borderColor: Colors.white,
                 children: [
                   ButtonBarEntry(onTap: () => print('First item tapped'), child: Text('upper')),
@@ -78,8 +84,12 @@ class _HomeState extends State<Home> {
 
                 ],
               ),
+
+             // const SizedBox(width: 10),
+
             ],
           ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +99,8 @@ class _HomeState extends State<Home> {
                 onRemove: () => setState(() => person = null),
                 onCapture: () => getImage(source: ImageSource.camera, type: 'person'),
                 onSelect: () => getImage(source: ImageSource.gallery, type: 'person'),
-                placeholderText: 'person should appear here',
+                placeholderText: 'Input person image',
+
               ),
               const SizedBox(width: 20),
               buildImageWidget(
@@ -97,19 +108,27 @@ class _HomeState extends State<Home> {
                 onRemove: () => setState(() => cloth = null),
                 onCapture: () => getImage(source: ImageSource.camera, type: 'cloth'),
                 onSelect: () => getImage(source: ImageSource.gallery, type: 'cloth'),
-                placeholderText: 'cloth should appear here',
+                placeholderText: 'Input cloth image',
+               // backgroundColor: MaterialStateProperty.all<Color>(HexColor("#DBE2EF")),
               ),
-              //const SizedBox(height: 20),
+              //const SizedBox(height: 40),
             ],
           ) ,
+          const SizedBox(height: 20),
           Container(
-            height: 50, // Adjust the height according to your preference
-            child: ElevatedButton(
-              onPressed: generate,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(HexColor("#DBE2EF")),
+            height: 60, // Adjust the height according to your preference
+            child: SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(30.0,10.0,30.0,10.0),
+                child: ElevatedButton(
+                  onPressed: generate,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(HexColor("#DBE2EF")),
+                  ),
+                  child: Text('Generate', style: TextStyle(fontSize: 12, color: Colors.black,fontWeight: FontWeight.bold)),
+                ),
               ),
-              child: Text('Generate', style: TextStyle(fontSize: 12, color: Colors.black)),
             ),
           )
 
@@ -146,9 +165,9 @@ class _HomeState extends State<Home> {
     VoidCallback? onCapture,
     VoidCallback? onSelect,
     String placeholderText = '',
+
   }) {
-    return image != null
-        ? Column(
+    return image != null ? Column( // image is already inserted
       children: [
         Container(
           width: 150,
@@ -159,18 +178,18 @@ class _HomeState extends State<Home> {
               image: FileImage(image),
               fit: BoxFit.cover,
             ),
-            border: Border.all(width: 8, color: Colors.black),
+            border: Border.all(width: 5, color: Colors.black),
             borderRadius: BorderRadius.circular(12.0),
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 20),
         ElevatedButton(
           onPressed: onRemove,
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(HexColor("#3F72AF")),
+            backgroundColor: MaterialStateProperty.all<Color>(HexColor("#DBE2EF")),
           ),
           child: Expanded(
-            child: const Text('remove image', style: TextStyle(fontSize: 12)),
+            child: const Text('remove image', style: TextStyle(fontSize: 12, color: Colors.black)),
           ),
         ),
       ],
@@ -178,7 +197,7 @@ class _HomeState extends State<Home> {
         : Column(
       children: [
         Container(
-          height: 250,
+          height: 300,
           alignment: Alignment.topLeft,
           child: Column(
             children: [
@@ -187,13 +206,14 @@ class _HomeState extends State<Home> {
                 height: 150,
                 alignment: Alignment.topLeft,
                 decoration: BoxDecoration(
-                  color: Colors.grey,
-                  border: Border.all(width: 8, color: Colors.black12),
+                  color: HexColor("#DBE2EF"),
+                  border: Border.all(width: 5, color: Colors.black12),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                child: Text(placeholderText, style: TextStyle(fontSize: 26)),
+                child: Text(placeholderText, style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               Expanded(
                 child: ElevatedButton(
                   onPressed: onCapture,
@@ -203,7 +223,7 @@ class _HomeState extends State<Home> {
                   child: const Text('Capture Image', style: TextStyle(fontSize: 12, color: Colors.black)),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 20),
               Expanded(
                 child: ElevatedButton(
                   onPressed: onSelect,
@@ -216,7 +236,7 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
-        ), SizedBox(width:20), // Add spacing between containers
+        ), //SizedBox(width:20), // Add spacing between containers
       ],
     );
   }
