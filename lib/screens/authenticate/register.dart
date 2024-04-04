@@ -27,10 +27,10 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return loading ? const Loading() : Scaffold(
-      backgroundColor: HexColor("#F9F7F7"),
+      backgroundColor: HexColor("#3F72AF"),
       appBar: AppBar(
         leading: logo,
-        backgroundColor:HexColor("#3F72AF"),
+        backgroundColor:HexColor("#DBE2EF"),
         elevation: 0.0,
         title: const Text('Sign up to FitMi'),
         actions: <Widget>[
