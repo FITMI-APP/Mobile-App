@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 final textInputDecoration = InputDecoration(
   hintText: '12%fTks,l',
-  fillColor: Colors.white54,
+  fillColor: HexColor("#DBE2EF"),
   filled: true,
   border: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(20),
-    borderSide: const BorderSide(color: Colors.deepPurple, width: 50)
+      borderRadius: BorderRadius.circular(20),
+      borderSide: const BorderSide(color: Colors.deepPurple, width: 50)
   ),
 );
 
 final logo = Padding(
-  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+  padding: const EdgeInsets.only(left: 10),
   child: Builder(
       builder: (BuildContext context) {
         return Image.asset(
@@ -23,7 +24,7 @@ final logo = Padding(
 );
 
 final button = ButtonStyle(
-  backgroundColor: MaterialStateProperty.all(Colors.deepPurple[100]),
+  backgroundColor: MaterialStateProperty.all(HexColor("#DBE2EF")),
   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
     RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10.0),

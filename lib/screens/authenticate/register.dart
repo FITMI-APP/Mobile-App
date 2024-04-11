@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../services/authenticate.dart';
 import '../../shared/constants.dart';
 import '../../shared/loading.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 
 class Register extends StatefulWidget {
@@ -9,7 +10,7 @@ class Register extends StatefulWidget {
   const Register({super.key, required this.toggleView});
 
   @override
-  State<Register> createState() => _RegisterState();
+  _RegisterState createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
@@ -26,10 +27,10 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return loading ? const Loading() : Scaffold(
-      backgroundColor: Colors.deepPurple[200],
+      backgroundColor: HexColor("#3F72AF"),
       appBar: AppBar(
         leading: logo,
-        backgroundColor: Colors.deepPurple[100],
+        backgroundColor:HexColor("#DBE2EF"),
         elevation: 0.0,
         title: const Text('Sign up to FitMi'),
         actions: <Widget>[
@@ -47,12 +48,12 @@ class _RegisterState extends State<Register> {
           key: _formKey,
           child: Column(
             children: <Widget>[
-          TextFormField(
-          decoration: textInputDecoration.copyWith(hintText: 'Thaowpsta Saiid'),
-          validator: (val) => val!.isEmpty ? 'Enter your full name' : null,
-          onChanged: (val) {
-            setState(() => fullName = val);
-          }),
+              TextFormField(
+                  decoration: textInputDecoration.copyWith(hintText: 'Thaowpsta Saiid'),
+                  validator: (val) => val!.isEmpty ? 'Enter your full name' : null,
+                  onChanged: (val) {
+                    setState(() => fullName = val);
+                  }),
               const SizedBox(height: 20.0),
               TextFormField(
                 decoration: textInputDecoration.copyWith(hintText: 'Exampl@example.com'),
@@ -70,13 +71,13 @@ class _RegisterState extends State<Register> {
                   setState(() => password = val);
                 },
               ),
-                const SizedBox(height: 20.0),
-                TextFormField(
-                  decoration: textInputDecoration.copyWith(hintText: '0100000000'),
-                  validator: (val) => val!.length < 12 ? 'Enter a valid number' : null,
-                  onChanged: (val) {
-                    setState(() => phone = val);
-                  },
+              const SizedBox(height: 20.0),
+              TextFormField(
+                decoration: textInputDecoration.copyWith(hintText: '0100000000'),
+                validator: (val) => val!.length < 12 ? 'Enter a valid number' : null,
+                onChanged: (val) {
+                  setState(() => phone = val);
+                },
               ),
               const SizedBox(height: 20.0),
               ElevatedButton(
@@ -99,11 +100,11 @@ class _RegisterState extends State<Register> {
                   }
                 },
               ),
-          const SizedBox(height: 12.0),
-          Text(
-            error,
-            style: const TextStyle(color: Colors.red, fontSize: 14.0),
-          )
+              const SizedBox(height: 12.0),
+              Text(
+                error,
+                style: const TextStyle(color: Colors.red, fontSize: 14.0),
+              )
             ],
           ),
         ),
