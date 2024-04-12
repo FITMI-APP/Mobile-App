@@ -49,14 +49,14 @@ class _RegisterState extends State<Register> {
           child: Column(
             children: <Widget>[
               TextFormField(
-                  decoration: textInputDecoration.copyWith(hintText: 'Thaowpsta Saiid'),
+                  decoration: textInputDecoration.copyWith(hintText: 'Full Name'),
                   validator: (val) => val!.isEmpty ? 'Enter your full name' : null,
                   onChanged: (val) {
                     setState(() => fullName = val);
                   }),
               const SizedBox(height: 20.0),
               TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: 'Exampl@example.com'),
+                decoration: textInputDecoration.copyWith(hintText: 'Example@example.com'),
                 validator: (val) => val!.isEmpty ? 'Enter an Email' : null,
                 onChanged: (val) {
                   setState(() => email = val);
@@ -64,7 +64,7 @@ class _RegisterState extends State<Register> {
               ),
               const SizedBox(height: 20.0),
               TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: '12%fTks,l'),
+                decoration: textInputDecoration.copyWith(hintText: 'Password'),
                 validator: (val) => val!.length < 6 ? 'Enter a Password 6+ chars long' : null,
                 obscureText: true,
                 onChanged: (val) {
