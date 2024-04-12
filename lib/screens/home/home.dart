@@ -16,11 +16,16 @@ class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
   File? cloth;
   File? person;
-  List<bool> _isWomanSelected = [true, false];
+  bool _isWomanSelected = true;
   List<bool> _isClothTypeSelected = [true, false, false];
+
+  int _selectedIndex = 0;
+  List<String> _buttonLabels = ['Woman', 'Man'];
+
 
   @override
   Widget build(BuildContext context) {
+    Paint foregroundPaint = Paint()..color = _isWomanSelected ? HexColor("#aec2e6") : Colors.black;
     return Scaffold(
       backgroundColor: HexColor("#3F72AF"),
       appBar: AppBar(
@@ -46,57 +51,62 @@ class _HomeState extends State<Home> {
         children: [
           Column(
             children: [
+              SizedBox(height: 10),
               // ToggleButtons for Gender Selection
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isWomanSelected = [true, false];
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(32.0),
-                        color: _isWomanSelected[0] ? HexColor("#DBE2EF") : HexColor("#aec2e6"),
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                      child: Text(
-                        'Woman',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: _isWomanSelected[0] ? HexColor("#aec2e6") : Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isWomanSelected = [false, true];
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(32.0),
-                        color: _isWomanSelected[1] ? HexColor("#DBE2EF") : HexColor("#aec2e6"),
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                      child: Text(
-                        'Man',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: _isWomanSelected[1] ? HexColor("#aec2e6") : Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(32.0),
+        color: HexColor("#DBE2EF"),
+        border: Border.all(color: Colors.white, width: 2),
+            ),
+            child: Row(
+
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            GestureDetector(
+            onTap: () {
+            setState(() {
+            _isWomanSelected = true;
+            });
+            },
+            child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: Text(
+            'Woman',
+            style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: _isWomanSelected ? Colors.black : HexColor("#aec2e6"),
+            ),
+            ),
+            ),
+            ),
+            SizedBox(width: 5),
+            GestureDetector(
+            onTap: () {
+            setState(() {
+            _isWomanSelected = false;
+            });
+            },
+            child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: Text(
+            'Man',
+            style: TextStyle(
+            fontWeight: FontWeight.bold,
+            // color: _isWomanSelected ? HexColor("#aec2e6") : Colors.black,
+        foreground: foregroundPaint,
+            ),
+            ),
+            ),
+            ),
+            ],
+            ),
+        ),
+      ),
+
+
               const SizedBox(height: 4),
               // ToggleButtons for Cloth Type Selection
               Row(

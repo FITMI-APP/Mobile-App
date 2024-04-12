@@ -88,16 +88,7 @@ class _SignInState extends State<SignIn> {
                 icon: FaIcon(FontAwesomeIcons.google, color:HexColor("#3F72AF")),
                 label: Text('Sign In with Google',),
                 onPressed: () async {
-                  // if (_formKey.currentState!.validate()) {
-                  //   setState(() => loading = true);
                      await _auth.signInWithGoogle(context);
-                  //   if (result == null) {
-                  //     setState(() {
-                  //       error = 'Email or Password is Incorrect';
-                  //       loading = false;
-                  //     });
-                  //   }
-                  // }
                 },
               ),
               const SizedBox(height: 10.0),
