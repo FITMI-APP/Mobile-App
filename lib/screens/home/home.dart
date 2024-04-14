@@ -19,29 +19,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
    //final AuthService _auth = AuthService();
    File? cloth;
-
    File? person;
-
+   String category = '';
+   String gender = '';
    @override
    Widget build(BuildContext context) {
      return Scaffold(
        backgroundColor: HexColor("#3F72AF"),
-       // appBar: AppBar(
-       //   leading: logo,
-       //   backgroundColor: HexColor("#DBE2EF"),
-       //   elevation: 0,
-       //   title: const Text('FitMi'),
-       //   actions: [
-       //     TextButton.icon(
-       //         style: ButtonStyle(
-       //             foregroundColor: MaterialStateProperty.all(Colors.black)),
-       //         onPressed: () async {
-       //           await _auth.signOut();
-       //         },
-       //         icon: const Icon(Icons.person),
-       //         label: const Text('Logout'))
-       //   ],
-       // ),
        appBar: Header(),
 
        body: Column(
@@ -61,8 +45,14 @@ class _HomeState extends State<Home> {
                  borderWidth: 2,
                  innerVerticalPadding: 14,
                  children: [
-                   ButtonBarEntry(onTap: () => print('First item tapped'), child: Text("woman",style: const TextStyle(fontWeight: FontWeight.bold))),
-                   ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text("men", style: const TextStyle(fontWeight: FontWeight.bold))),
+                   ButtonBarEntry(
+                       onTap: ()  {setState(() {gender = 'woman';});
+                         print('woman tapped');},
+                       child: Text("woman",style: const TextStyle(fontWeight: FontWeight.bold))),
+                   ButtonBarEntry(
+                       onTap: ()  {setState(() {gender = 'man';});
+                         print('man tapped');},
+                       child: Text("man", style: const TextStyle(fontWeight: FontWeight.bold))),
                  ],
                ),
                //inverted selection button bar
@@ -78,10 +68,24 @@ class _HomeState extends State<Home> {
                  innerVerticalPadding: 14,
                  borderColor: Colors.white,
                  children: [
-                   ButtonBarEntry(onTap: () => print('First item tapped'), child: Text('upper')),
-                   ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text('lower')),
-                   ButtonBarEntry(onTap: () => print('Third item tapped'), child: Text('dress')),
-
+                   ButtonBarEntry(
+                     onTap: () {setState(() {category = 'upper';});
+                     print('upper tapped');
+                     },
+                     child: Text('upper'),
+                   ),
+                   ButtonBarEntry(
+                     onTap: () {setState(() {category = 'lower';});
+                     print('lower tapped');
+                     },
+                     child: Text('lower'),
+                   ),
+                   ButtonBarEntry(
+                     onTap: () {setState(() {category = 'dress';});
+                     print('dress tapped');
+                     },
+                     child: Text('dress'),
+                   ),
                  ],
                ),
 
