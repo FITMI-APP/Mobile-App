@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grad/services/authenticate.dart';
+//import 'package:grad/services/authenticate.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -7,6 +7,7 @@ import '../../shared/constants.dart';
 import '../../shared/Header.dart';
 import 'GenerateImageCard.dart';
 import 'package:animated_button_bar/animated_button_bar.dart';
+import 'package:path/path.dart' as path;
 
 
 class Home extends StatefulWidget {
@@ -22,6 +23,8 @@ class _HomeState extends State<Home> {
    File? person;
    String category = '';
    String gender = '';
+   String personImageName = ''; // Variable to store person image name
+   String clothImageName = ''; // Variable to store cloth image name
    @override
    Widget build(BuildContext context) {
      return Scaffold(
@@ -167,8 +170,11 @@ class _HomeState extends State<Home> {
       setState(() {
         if (type == 'person') {
           person = File(file!.path);
+          personImageName = path.basename(file!.path); // Store person image name
         } else if (type == 'cloth') {
           cloth = File(file!.path);
+          clothImageName = path.basename(file!.path); // Store cloth image name
+
         }
       });
     }
