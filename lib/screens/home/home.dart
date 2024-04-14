@@ -132,11 +132,21 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 10.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => GenerateImageCard()),
-                    );
+                    if (person != null && cloth != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GenerateImageCard(),
+                        ),
+                      );
+                    } else {
+                      // Show a message or prevent the button action if images are not inserted
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please insert both person and cloth images.'),
+                        ),
+                      );
+                    }
                   },
                   style: ButtonStyle(
                     backgroundColor:
