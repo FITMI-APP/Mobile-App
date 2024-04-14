@@ -6,6 +6,8 @@ import 'package:hexcolor/hexcolor.dart';
 import '../../shared/constants.dart';
 import '../../shared/Header.dart';
 import 'GenerateImageCard.dart';
+import 'package:animated_button_bar/animated_button_bar.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -15,178 +17,79 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
- // final AuthService _auth = AuthService();
-  File? cloth;
-  File? person;
-  bool _isWomanSelected = true;
-  List<bool> _isClothTypeSelected = [true, false, false];
+   //final AuthService _auth = AuthService();
+   File? cloth;
 
-  int _selectedIndex = 0;
-  List<String> _buttonLabels = ['Woman', 'Man'];
+   File? person;
 
-  @override
-  Widget build(BuildContext context) {
-    Paint foregroundPaint = Paint()
-      ..color = _isWomanSelected ? HexColor("#aec2e6") : Colors.black;
-    return Scaffold(
-      backgroundColor: HexColor("#3F72AF"),
-      appBar: Header(),
+   @override
+   Widget build(BuildContext context) {
+     return Scaffold(
+       backgroundColor: HexColor("#3F72AF"),
+       // appBar: AppBar(
+       //   leading: logo,
+       //   backgroundColor: HexColor("#DBE2EF"),
+       //   elevation: 0,
+       //   title: const Text('FitMi'),
+       //   actions: [
+       //     TextButton.icon(
+       //         style: ButtonStyle(
+       //             foregroundColor: MaterialStateProperty.all(Colors.black)),
+       //         onPressed: () async {
+       //           await _auth.signOut();
+       //         },
+       //         icon: const Icon(Icons.person),
+       //         label: const Text('Logout'))
+       //   ],
+       // ),
+       appBar: Header(),
 
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Column(
-            children: [
-              SizedBox(height: 10),
-              // ToggleButtons for Gender Selection
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(32.0),
-                    color: HexColor("#DBE2EF"),
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isWomanSelected = true;
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          child: Text(
-                            'Woman',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: _isWomanSelected
-                                  ? Colors.black
-                                  : HexColor("#aec2e6"),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isWomanSelected = false;
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          child: Text(
-                            'Man',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              // color: _isWomanSelected ? HexColor("#aec2e6") : Colors.black,
-                              foreground: foregroundPaint,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+       body: Column(
+         crossAxisAlignment: CrossAxisAlignment.center,
+         children: [
+           Column(
+             //mainAxisAlignment: MainAxisAlignment.center,
+             children: [
+               //You can populate it with different types of widgets like Icon
+               AnimatedButtonBar(
+                 radius: 32.0,
+                 padding: const EdgeInsets.all(10.0),
+                 backgroundColor: HexColor("#aec2e6"),
+                 foregroundColor: HexColor("#DBE2EF"),
+                 //elevation: 24,
+                 borderColor: Colors.white,
+                 borderWidth: 2,
+                 innerVerticalPadding: 14,
+                 children: [
+                   ButtonBarEntry(onTap: () => print('First item tapped'), child: Text("woman",style: const TextStyle(fontWeight: FontWeight.bold))),
+                   ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text("men", style: const TextStyle(fontWeight: FontWeight.bold))),
+                 ],
+               ),
+               //inverted selection button bar
+               const SizedBox(height: 4),
 
-              const SizedBox(height: 4),
-              // ToggleButtons for Cloth Type Selection
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isClothTypeSelected = [true, false, false];
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(32.0),
-                        color: _isClothTypeSelected[0]
-                            ? HexColor("#DBE2EF")
-                            : HexColor("#aec2e6"),
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                      child: Text(
-                        'Upper',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: _isClothTypeSelected[0]
-                              ? HexColor("#aec2e6")
-                              : Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isClothTypeSelected = [false, true, false];
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(32.0),
-                        color: _isClothTypeSelected[1]
-                            ? HexColor("#DBE2EF")
-                            : HexColor("#aec2e6"),
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                      child: Text(
-                        'Lower',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: _isClothTypeSelected[1]
-                              ? HexColor("#aec2e6")
-                              : Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isClothTypeSelected = [false, false, true];
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(32.0),
-                        color: _isClothTypeSelected[2]
-                            ? HexColor("#DBE2EF")
-                            : HexColor("#aec2e6"),
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                      child: Text(
-                        'Dress',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: _isClothTypeSelected[2]
-                              ? HexColor("#aec2e6")
-                              : Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+               AnimatedButtonBar(
+                 radius: 32.0,
+                 padding: const EdgeInsets.fromLTRB(10.0,10.0,10.0,20.0),
+                 //invertedSelection: true,
+                 backgroundColor: HexColor("#aec2e6"),
+                 foregroundColor: HexColor("#DBE2EF"),
+                 borderWidth: 2,
+                 innerVerticalPadding: 14,
+                 borderColor: Colors.white,
+                 children: [
+                   ButtonBarEntry(onTap: () => print('First item tapped'), child: Text('upper')),
+                   ButtonBarEntry(onTap: () => print('Second item tapped'), child: Text('lower')),
+                   ButtonBarEntry(onTap: () => print('Third item tapped'), child: Text('dress')),
+
+                 ],
+               ),
+
+               // const SizedBox(width: 10),
+
+             ],
+           ),
+
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -224,7 +127,8 @@ class _HomeState extends State<Home> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => GenerateImageCard()),
+                      MaterialPageRoute(
+                          builder: (context) => GenerateImageCard()),
                     );
                   },
                   style: ButtonStyle(
