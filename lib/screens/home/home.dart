@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:grad/screens/Dress.dart';
+import 'package:grad/screens/Lower.dart';
+import 'package:grad/screens/Upper.dart';
 //import 'package:grad/services/authenticate.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -24,7 +27,9 @@ class _HomeState extends State<Home> {
    String category = '';
    String gender = '';
    String personImageName = ''; // Variable to store person image name
-   String clothImageName = ''; // Variable to store cloth image name
+   String clothImageName = '';// Variable to store cloth image name
+   String? _selectedCategory;
+   bool _isDropdownVisible = false;
    @override
    Widget build(BuildContext context) {
      return Scaffold(
@@ -125,40 +130,100 @@ class _HomeState extends State<Home> {
           ),
           const SizedBox(height: 20),
           Container(
-            height: 60, // Adjust the height according to your preference
+            height: 200, // Adjust the height according to your preference
             child: SizedBox(
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 10.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (person != null && cloth != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GenerateImageCard(),
-                        ),
-                      );
-                    } else {
-                      // Show a message or prevent the button action if images are not inserted
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Please insert both person and cloth images.'),
-                        ),
-                      );
-                    }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(HexColor("#DBE2EF")),
-                  ),
-                  child: const Text(
-                    'Generate',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                  ),
+                child: Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        if (person != null && cloth != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GenerateImageCard(),
+                            ),
+                          );
+                        } else {
+                          // Show a message or prevent the button action if images are not inserted
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Please insert both person and cloth images.'),
+                            ),
+                          );
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(HexColor("#DBE2EF")),
+                      ),
+                      child: const Text(
+                        'Generate',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Center(
+                      child: Column(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _isDropdownVisible = true;
+                              });
+                            },
+                            child: Text('My wardrobe'),
+                          ),
+                           // Add some space between the button and the dropdown list
+                          if (_isDropdownVisible) // Only show the dropdown list if a category is selected
+                            DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: _selectedCategory,
+                                items: <String>['upper', 'lower', 'dress'].map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedCategory = value; // Update the selected category
+                                  },
+                                  );
+                           switch (value) {
+                             case 'upper':
+                               Navigator.push(
+                                 context,
+                                 MaterialPageRoute(builder: (context) => Upper()),
+                               );
+                               break;
+                             case 'lower':
+                               Navigator.push(
+                                 context,
+                                 MaterialPageRoute(builder: (context) => Lower()),
+                               );
+                               break;
+                             case 'dress':
+                               Navigator.push(
+                                 context,
+                                 MaterialPageRoute(builder: (context) => Dress()),
+                               );
+                               break;
+                           }
+                           },
+                                borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+
+                  ],
                 ),
               ),
             ),
