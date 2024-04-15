@@ -49,8 +49,9 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
                 heightImage: 250,
                 imageProvider: widget.generatedImageResponse != null
                     ? MemoryImage(widget.generatedImageResponse!.bodyBytes) // Use generated image response
-                    : AssetImage('assets/logoo.png'), // Fallback to default image
+                    : AssetImage('assets/logoo.png') as ImageProvider, // Fallback to default image
               ),
+
               SizedBox(height: 20), // Adding space between image and buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
