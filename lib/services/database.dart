@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:grad/models/user.dart';
 
+
 class Database {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   late final CollectionReference<MyUser> _users;
@@ -19,4 +20,7 @@ class Database {
   Future<void> addUser(MyUser user) async {
     await _users.doc(user.uid).set(user);
   }
+
+
+
 }

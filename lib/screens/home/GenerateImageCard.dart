@@ -3,15 +3,33 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:image_card/image_card.dart';
 import '../../shared/Header.dart';
 import '../../shared/constants.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class GenerateImageCard extends StatefulWidget {
-  const GenerateImageCard({Key? key}) : super(key: key);
+
+  final String gender;
+  final String category;
+  final String personImageName;
+  final String clothImageName;
+  final http.Response? generatedImageResponse;
+
+  const GenerateImageCard({
+    Key? key,
+    required this.gender,
+    required this.category,
+    required this.personImageName,
+    required this.clothImageName,
+    this.generatedImageResponse,
+  }) : super(key: key);
   @override
   _GenerateImageCardState createState() => _GenerateImageCardState();
 }
 
 class _GenerateImageCardState extends State<GenerateImageCard> {
   bool showRecommendations = false;
+  // http.Response? generatedImageResponse;
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +47,9 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
               FillImageCard(
                 width: 250,
                 heightImage: 250,
-                imageProvider: AssetImage('assets/logoo.png'),
-                // title: const Text('FitMi'),
-                // description: const Text('FitMi'),
+                imageProvider: widget.generatedImageResponse != null
+                    ? MemoryImage(widget.generatedImageResponse!.bodyBytes) // Use generated image response
+                    : AssetImage('assets/logoo.png'), // Fallback to default image
               ),
               SizedBox(height: 20), // Adding space between image and buttons
               Row(

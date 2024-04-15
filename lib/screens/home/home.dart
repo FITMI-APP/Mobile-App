@@ -143,7 +143,7 @@ class _HomeState extends State<Home> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => GenerateImageCard(),
+                              builder: (context) => GenerateImageCard(gender: gender, category: category, personImageName: personImageName, clothImageName: clothImageName),
                             ),
                           );
                         } else {
@@ -179,7 +179,7 @@ class _HomeState extends State<Home> {
                             },
                             child: Text('My wardrobe'),
                           ),
-                           // Add some space between the button and the dropdown list
+                           // Add som e space between the button and the dropdown list
                           if (_isDropdownVisible) // Only show the dropdown list if a category is selected
                             DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
