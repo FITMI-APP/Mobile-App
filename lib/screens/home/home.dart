@@ -1,13 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:grad/screens/Dress.dart';
 import 'package:grad/screens/Lower.dart';
 import 'package:grad/screens/Upper.dart';
 //import 'package:grad/services/authenticate.dart';
-import 'dart:io';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '../../shared/constants.dart';
 import '../../shared/Header.dart';
+import '../../widget/button_widget.dart';
+import '../../widget/navigation_drawer_widget.dart';
 import 'GenerateImageCard.dart';
 import 'package:animated_button_bar/animated_button_bar.dart';
 import 'package:path/path.dart' as path;
@@ -26,22 +30,29 @@ class _HomeState extends State<Home> {
    File? person;
    String category = '';
    String gender = '';
-   String personImageName = ''; // Variable to store person image name
-   String clothImageName = '';// Variable to store cloth image name
+   File? personImageName ; // Variable to store person image name
+   File? clothImageName;// Variable to store cloth image name
    String? _selectedCategory;
    bool _isDropdownVisible = false;
    @override
    Widget build(BuildContext context) {
+
+     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
      return Scaffold(
        backgroundColor: HexColor("#3F72AF"),
+       drawer: NavigationDrawerWidget(),
        appBar: Header(),
 
-       body: Column(
+       body:
+       Column(
          crossAxisAlignment: CrossAxisAlignment.center,
+
          children: [
            Column(
              //mainAxisAlignment: MainAxisAlignment.center,
              children: [
+
                //You can populate it with different types of widgets like Icon
                AnimatedButtonBar(
                  radius: 32.0,
@@ -53,6 +64,7 @@ class _HomeState extends State<Home> {
                  borderWidth: 2,
                  innerVerticalPadding: 14,
                  children: [
+                   //if man remove dress
                    ButtonBarEntry(
                        onTap: ()  {setState(() {gender = 'woman';});
                          print('woman tapped');},
@@ -129,8 +141,10 @@ class _HomeState extends State<Home> {
             ],
           ),
           const SizedBox(height: 20),
+          // Generate button & wardrobe
           Container(
-            height: 200, // Adjust the height according to your preference
+            height: 200,
+            // Adjust the height according to your preference
             child: SizedBox(
               width: double.infinity,
               child: Padding(
@@ -245,10 +259,10 @@ class _HomeState extends State<Home> {
       setState(() {
         if (type == 'person') {
           person = File(file!.path);
-          personImageName = path.basename(file!.path); // Store person image name
+          personImageName = path.basename(file!.path) as File?; // Store person image name
         } else if (type == 'cloth') {
           cloth = File(file!.path);
-          clothImageName = path.basename(file!.path); // Store cloth image name
+          clothImageName = path.basename(file!.path) as File?; // Store cloth image name
 
         }
       });

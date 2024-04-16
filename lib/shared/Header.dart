@@ -11,25 +11,32 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
     final AuthService _auth = AuthService();
 
     return AppBar(
-      leading: logo,
-      backgroundColor: HexColor("#DBE2EF"),
-      elevation: 0,
-      title: const Text('FitMi'),
-      actions: [
-        TextButton.icon(
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all(Colors.black),
+        backgroundColor: HexColor("#DBE2EF"),
+        elevation: 0,
+      title: Row(
+        children: [
+          Image.asset(
+            'assets/logoo.png', // Replace 'assets/your_image.png' with the path to your image asset
+            height: 40, // Adjust the height of the image as needed
           ),
-          onPressed: () async {
-            await _auth.signOut();
-          },
-          icon: const Icon(Icons.person),
-          label: const Text('Logout'),
-        )
+          const SizedBox(width: 8), // Add some space between the image and the title
+          const Text('FitMi'),
+        ],
+      ),
+        actions: [
+    TextButton.icon(
+    style: ButtonStyle(
+    foregroundColor: MaterialStateProperty.all(Colors.black),
+    ),
+    onPressed: () async {
+    await _auth.signOut();
+    },
+    icon: const Icon(Icons.person),
+    label: const Text('Logout'),
+    )
       ],
     );
   }
-
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);

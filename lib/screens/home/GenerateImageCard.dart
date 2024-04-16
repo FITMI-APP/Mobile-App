@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_card/image_card.dart';
@@ -10,8 +12,8 @@ class GenerateImageCard extends StatefulWidget {
 
   final String gender;
   final String category;
-  final String personImageName;
-  final String clothImageName;
+  final File? personImageName;
+  final File? clothImageName;
   final http.Response? generatedImageResponse;
 
   const GenerateImageCard({
