@@ -30,8 +30,8 @@ class _HomeState extends State<Home> {
    File? person;
    String category = '';
    String gender = '';
-   File? personImageName ; // Variable to store person image name
-   File? clothImageName;// Variable to store cloth image name
+   // File? personImageName ; // Variable to store person image name
+   // File? clothImageName;// Variable to store cloth image name
    String? _selectedCategory;
    bool _isDropdownVisible = false;
    @override
@@ -157,7 +157,7 @@ class _HomeState extends State<Home> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => GenerateImageCard(gender: gender, category: category, personImageName: personImageName, clothImageName: clothImageName),
+                              builder: (context) => GenerateImageCard(gender: gender, category: category, personImageName: person, clothImageName: cloth),
                             ),
                           );
                         } else {
@@ -259,10 +259,10 @@ class _HomeState extends State<Home> {
       setState(() {
         if (type == 'person') {
           person = File(file!.path);
-          personImageName = path.basename(file!.path) as File?; // Store person image name
+          // String personImageName = path.basename(file.path);
         } else if (type == 'cloth') {
           cloth = File(file!.path);
-          clothImageName = path.basename(file!.path) as File?; // Store cloth image name
+          // String clothImageName = path.basename(file.path);
 
         }
       });
