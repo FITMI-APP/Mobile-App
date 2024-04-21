@@ -114,14 +114,6 @@ class FillImageCard extends StatelessWidget {
             height: heightImage,
             fit: BoxFit.cover,
           ),
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //  // child: title,
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   //child: description,
-          // ),
         ],
       ),
     );

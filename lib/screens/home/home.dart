@@ -1,9 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:grad/screens/Dress.dart';
-import 'package:grad/screens/Lower.dart';
-import 'package:grad/screens/Upper.dart';
+import 'package:grad/screens/waredrobe/wardrobe.dart';
 //import 'package:grad/services/authenticate.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -15,7 +12,6 @@ import '../../widget/navigation_drawer_widget.dart';
 import 'GenerateImageCard.dart';
 import 'package:animated_button_bar/animated_button_bar.dart';
 import 'package:path/path.dart' as path;
-
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -187,52 +183,55 @@ class _HomeState extends State<Home> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              setState(() {
-                                _isDropdownVisible = true;
-                              });
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Wardrobe(),
+                                ),
+                              );
                             },
-                            child: Text('My wardrobe'),
+                            child: const Text('My Wardrobe'),
                           ),
-                           // Add som e space between the button and the dropdown list
-                          if (_isDropdownVisible) // Only show the dropdown list if a category is selected
-                            DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: _selectedCategory,
-                                items: <String>['upper', 'lower', 'dress'].map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedCategory = value; // Update the selected category
-                                  },
-                                  );
-                           switch (value) {
-                             case 'upper':
-                               Navigator.push(
-                                 context,
-                                 MaterialPageRoute(builder: (context) => Upper()),
-                               );
-                               break;
-                             case 'lower':
-                               Navigator.push(
-                                 context,
-                                 MaterialPageRoute(builder: (context) => Lower()),
-                               );
-                               break;
-                             case 'dress':
-                               Navigator.push(
-                                 context,
-                                 MaterialPageRoute(builder: (context) => Dress()),
-                               );
-                               break;
-                           }
-                           },
-                                borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
+                          // Add som e space between the button and the dropdown list
+                          // if (_isDropdownVisible) // Only show the dropdown list if a category is selected
+                          //   DropdownButtonHideUnderline(
+                          //     child: DropdownButton<String>(
+                          //       value: _selectedCategory,
+                          //       items: <String>['upper', 'lower', 'dress'].map((String value) {
+                          //         return DropdownMenuItem<String>(
+                          //           value: value,
+                          //           child: Text(value),
+                          //         );
+                          //       }).toList(),
+                          //       onChanged: (value) {
+                          //         setState(() {
+                          //           _selectedCategory = value; // Update the selected category
+                          //         },
+                          //         );
+                          //         switch (value) {
+                          //           case 'upper':
+                          //             Navigator.push(
+                          //               context,
+                          //               MaterialPageRoute(builder: (context) => Upper()),
+                          //             );
+                          //             break;
+                          //           case 'lower':
+                          //             Navigator.push(
+                          //               context,
+                          //               MaterialPageRoute(builder: (context) => Lower()),
+                          //             );
+                          //             break;
+                          //           case 'dress':
+                          //             Navigator.push(
+                          //               context,
+                          //               MaterialPageRoute(builder: (context) => Dress()),
+                          //             );
+                          //             break;
+                          //         }
+                          //       },
+                          //       borderRadius: BorderRadius.circular(8),
+                          //     ),
+                          //   ),
                         ],
                       ),
                     )
@@ -242,10 +241,10 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
+         ],
+       ),
+     );
+   }
 
   void getImage({required ImageSource source, required String type}) async {
     final file = await ImagePicker().pickImage(
