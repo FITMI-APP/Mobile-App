@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grad/screens/ProfilePage.dart';
 import '../screens/favourites_page.dart';
 import '../screens/people_page.dart';
 import '../screens/user_page.dart';
@@ -21,12 +22,7 @@ class NavigationDrawerWidget extends StatelessWidget {
               urlImage: urlImage,
               name: name,
               email: email,
-              onClicked: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => UserPage(
-                  name: 'Sarah Abs',
-                  urlImage: urlImage,
-                ),
-              )),
+              onClicked: () => selectedItem(context, 2),
             ),
             Container(
               padding: padding,
@@ -172,6 +168,11 @@ class NavigationDrawerWidget extends StatelessWidget {
       case 1:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => FavouritesPage(),
+        ));
+        break;
+      case 2:
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => ProfilePage(),
         ));
         break;
     }
