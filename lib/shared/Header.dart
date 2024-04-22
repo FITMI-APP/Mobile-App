@@ -31,7 +31,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
     onPressed: () async {
     await _auth.signOut();
     },
-    icon: const Icon(Icons.person),
+    icon: const Icon(Icons.exit_to_app_rounded),
     label: const Text('Logout'),
     )
       ],

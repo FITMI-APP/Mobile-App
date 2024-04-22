@@ -8,7 +8,7 @@ import '../../shared/constants.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
-  const SignIn({super.key, required this.toggleView});
+  const SignIn({super.key,  required this.toggleView});
 
   @override
   State<SignIn> createState() => _SignInState();

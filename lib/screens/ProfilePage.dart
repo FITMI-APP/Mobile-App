@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:grad/shared/Header.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -114,11 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile'),
-        centerTitle: true,
-        backgroundColor: Colors.green,
-      ),
+      appBar: Header(),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20.0),
         child: Column(

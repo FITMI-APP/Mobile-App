@@ -177,64 +177,6 @@ class _HomeState extends State<Home> {
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Center(
-                      child: Column(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Wardrobe(),
-                                ),
-                              );
-                            },
-                            child: const Text('My Wardrobe'),
-                          ),
-                          // Add som e space between the button and the dropdown list
-                          // if (_isDropdownVisible) // Only show the dropdown list if a category is selected
-                          //   DropdownButtonHideUnderline(
-                          //     child: DropdownButton<String>(
-                          //       value: _selectedCategory,
-                          //       items: <String>['upper', 'lower', 'dress'].map((String value) {
-                          //         return DropdownMenuItem<String>(
-                          //           value: value,
-                          //           child: Text(value),
-                          //         );
-                          //       }).toList(),
-                          //       onChanged: (value) {
-                          //         setState(() {
-                          //           _selectedCategory = value; // Update the selected category
-                          //         },
-                          //         );
-                          //         switch (value) {
-                          //           case 'upper':
-                          //             Navigator.push(
-                          //               context,
-                          //               MaterialPageRoute(builder: (context) => Upper()),
-                          //             );
-                          //             break;
-                          //           case 'lower':
-                          //             Navigator.push(
-                          //               context,
-                          //               MaterialPageRoute(builder: (context) => Lower()),
-                          //             );
-                          //             break;
-                          //           case 'dress':
-                          //             Navigator.push(
-                          //               context,
-                          //               MaterialPageRoute(builder: (context) => Dress()),
-                          //             );
-                          //             break;
-                          //         }
-                          //       },
-                          //       borderRadius: BorderRadius.circular(8),
-                          //     ),
-                          //   ),
-                        ],
-                      ),
-                    )
 
                   ],
                 ),
