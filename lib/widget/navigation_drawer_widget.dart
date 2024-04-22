@@ -1,76 +1,149 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grad/screens/ProfilePage.dart';
+import 'package:grad/screens/home/home.dart';
+import '../screens/authenticate/signIn.dart';
 import '../screens/favourites_page.dart';
 import '../screens/people_page.dart';
 import '../screens/user_page.dart';
+import '../screens/waredrobe/wardrobe.dart';
+import 'package:hexcolor/hexcolor.dart';
 
-class NavigationDrawerWidget extends StatelessWidget {
+import '../services/authenticate.dart';
+
+
+class NavigationDrawerWidget extends StatefulWidget {
+
+  @override
+  _NavigationDrawerWidgetState createState() => _NavigationDrawerWidgetState();
+}
+
+class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final AuthService _auth1 = AuthService();
+  // Instantiate your AuthService
+  String _email = '';
+  String _name = ''; // Initialize user name as an empty string
+  static const IconData checkroom_rounded = IconData(0xf639, fontFamily: 'MaterialIcons');
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserInfo(); // Load user name when the widget initializes
+  }
+
+  Future<void> _getUserInfo() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      await user.reload();
+      user = _auth.currentUser;
+
+      setState(() {
+        _email = user?.email ?? '';
+        _name = _extractName(_email);
+      });
+    }
+  }
+
+  String _extractName(String email) {
+    // Extracting the name from email by cutting the domain part
+    int atIndex = email.indexOf('@');
+    if (atIndex != -1) {
+      return email.substring(0, atIndex);
+    }
+    return '';
+  }
+
   final padding = EdgeInsets.symmetric(horizontal: 20);
   @override
   Widget build(BuildContext context) {
-    final name = 'Sarah Abs';
-    final email = 'sarah@abs.com';
-    final urlImage =
-        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80';
 
     return Drawer(
       child: Material(
-        color: Color.fromRGBO(50, 75, 205, 1),
+        color:  HexColor("#265785"),
         child: ListView(
           children: <Widget>[
-            buildHeader(
-              urlImage: urlImage,
-              name: name,
-              email: email,
-              onClicked: () => selectedItem(context, 2),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+              child: AppBar(
+                backgroundColor: HexColor("#265785"),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset(
+                          'assets/logoo.png', // Replace 'assets/your_image.png' with the path to your image asset
+                          height: 40, // Adjust the height of the image as needed
+                        ),
+                        const SizedBox(width: 8), // Add some space between the image and the title
+                        const Text(
+                          'FitMi',
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10), // Add some space between the logo/app name and user's info
+
+                  ],
+                ),
+                automaticallyImplyLeading: false, // This will hide the default leading icon (usually the back button)
+              ),
+
             ),
+
             Container(
               padding: padding,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 12),
-                  buildSearchField(),
-                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            _name,
+                            style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            _email,
+                            style: TextStyle(fontSize: 14, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   buildMenuItem(
-                    text: 'People',
-                    icon: Icons.people,
+                    text: 'Home',
+                    icon: Icons.home,
                     onClicked: () => selectedItem(context, 0),
                   ),
                   const SizedBox(height: 16),
                   buildMenuItem(
-                    text: 'Favourites',
-                    icon: Icons.favorite_border,
+                    text: 'Wardrobe',
+                    icon: checkroom_rounded,
                     onClicked: () => selectedItem(context, 1),
                   ),
                   const SizedBox(height: 16),
                   buildMenuItem(
-                    text: 'Workflow',
-                    icon: Icons.workspaces_outline,
+                    text: 'Profile',
+                    icon: Icons.person,
                     onClicked: () => selectedItem(context, 2),
-                  ),
-                  const SizedBox(height: 16),
-                  buildMenuItem(
-                    text: 'Updates',
-                    icon: Icons.update,
-                    onClicked: () => selectedItem(context, 3),
                   ),
                   const SizedBox(height: 24),
                   Divider(color: Colors.white70),
                   const SizedBox(height: 24),
                   buildMenuItem(
-                    text: 'Plugins',
-                    icon: Icons.account_tree_outlined,
-                    onClicked: () => selectedItem(context, 4),
-                  ),
-                  const SizedBox(height: 16),
-                  buildMenuItem(
-                    text: 'Notifications',
-                    icon: Icons.notifications_outlined,
-                    onClicked: () => selectedItem(context, 5),
+                    text: 'Sign Out',
+                    icon: Icons.exit_to_app_rounded,
+                    onClicked: () => selectedItem(context, 3),
                   ),
                 ],
               ),
             ),
+
           ],
         ),
       ),
@@ -86,10 +159,9 @@ class NavigationDrawerWidget extends StatelessWidget {
       InkWell(
         onTap: onClicked,
         child: Container(
-          padding: padding.add(EdgeInsets.symmetric(vertical: 40)),
+          padding: padding.add(EdgeInsets.symmetric(vertical: 100)),
           child: Row(
             children: [
-              CircleAvatar(radius: 30, backgroundImage: NetworkImage(urlImage)),
               SizedBox(width: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,39 +178,11 @@ class NavigationDrawerWidget extends StatelessWidget {
                 ],
               ),
               Spacer(),
-              CircleAvatar(
-                radius: 24,
-                backgroundColor: Color.fromRGBO(30, 60, 168, 1),
-                child: Icon(Icons.add_comment_outlined, color: Colors.white),
-              )
             ],
           ),
         ),
       );
 
-  Widget buildSearchField() {
-    final color = Colors.white;
-
-    return TextField(
-      style: TextStyle(color: color),
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-        hintText: 'Search',
-        hintStyle: TextStyle(color: color),
-        prefixIcon: Icon(Icons.search, color: color),
-        filled: true,
-        fillColor: Colors.white12,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5),
-          borderSide: BorderSide(color: color.withOpacity(0.7)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5),
-          borderSide: BorderSide(color: color.withOpacity(0.7)),
-        ),
-      ),
-    );
-  }
 
   Widget buildMenuItem({
     required String text,
@@ -156,18 +200,18 @@ class NavigationDrawerWidget extends StatelessWidget {
     );
   }
 
-  void selectedItem(BuildContext context, int index) {
+  void selectedItem(BuildContext context, int index) async {
     Navigator.of(context).pop();
 
     switch (index) {
       case 0:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => PeoplePage(),
+          builder: (context) => Home(),
         ));
         break;
       case 1:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => FavouritesPage(),
+          builder: (context) => Wardrobe(),
         ));
         break;
       case 2:
@@ -175,6 +219,11 @@ class NavigationDrawerWidget extends StatelessWidget {
           builder: (context) => ProfilePage(),
         ));
         break;
+      case 3:
+        await _auth1.signOut();
+        break;
     }
   }
 }
+
+

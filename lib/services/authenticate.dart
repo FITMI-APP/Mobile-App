@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -6,15 +7,17 @@ import 'package:grad/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'database.dart';
 
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Database _database = Database();
+  late final CollectionReference<MyUser> _users;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 
   MyUser? _myUser(User? user, {String fullName = ''}) {
-    return user != null
-        ? MyUser(
+    return user != null ?
+    MyUser(
       uid: user.uid,
       fullName: fullName,
       email: user.email ?? '',
@@ -27,6 +30,8 @@ class AuthService {
   Stream<MyUser?> get user {
     return _auth.authStateChanges().map(_myUser);
   }
+
+
   Future registerWithEmailAndPassword(String fullName, String email, String password, String phone) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
@@ -110,6 +115,8 @@ class AuthService {
         // Sign in to Firebase with the Google Auth credential
         final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
 
+        final fullName = googleUser.displayName ?? '';
+
         // Return the signed-in user
         return userCredential.user;
       } else {
@@ -122,5 +129,28 @@ class AuthService {
       print('Error signing in with Google: $e');
       return null;
     }
+
+
   }
+
+  // Future<UserInfo?> getUserInfo(User user) async {
+  //   try {
+  //     if (user.providerData[0].providerId == 'password') {
+  //       // If user signed in with email/password, fullName will be empty for now.
+  //       return newUser(user: user, fullName: '');
+  //     } else if (user.providerData[0].providerId == 'google.com') {
+  //       // If user signed in with Google, get the full name from GoogleSignIn
+  //       final googleUser = await _googleSignIn.signInSilently();
+  //       final fullName = googleUser?.displayName ?? '';
+  //       return newUser(user: user, fullName: fullName);
+  //     } else {
+  //       // Handle other sign-in providers if needed
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     // Handle any errors that occur during the retrieval process
+  //     print('Error retrieving user info: $e');
+  //     return null;
+  //   }
+  // }
 }
