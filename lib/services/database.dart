@@ -17,23 +17,56 @@ class Database {
     return _users.snapshots();
   }
 
+  // Future<void> addUser(MyUser user) async {
+  //   await _users.doc(user.uid).set(user);
+  //
+  // }
   Future<void> addUser(MyUser user) async {
-    await _users.doc(user.uid).set(user);
+    try {
+      // await _users.doc(user.uid).set(user); // Assuming MyUser has a toMap() method to convert it to a Map
+      // await _createUserCollections(user.uid);
+      await _users.doc(user.uid).set(user).then((_) async {
+        await _createUserCollections(user.uid);
+      });
+    } catch (e) {
+      // Handle errors
+      print("Error adding user: $e");
+    }
   }
 
-  Future<MyUser?> getUserById(String userId) async {
+  Future<void> _createUserCollections(String? userId) async {
     try {
-      final userDoc = await _users.doc(userId).get();
-      if (userDoc.exists) {
-        return userDoc.data();
-      } else {
-        print('User document does not exist in Firestore');
-        return null;
-      }
+      final userRef = _users.doc(userId);
+
+      // Create the "upper" subcollection
+      await userRef.collection('upper').add({});
+
+      // Create the "lower" subcollection
+      await userRef.collection('lower').add({});
+
+      // Create the "dress" subcollection
+      await userRef.collection('dress').add({});
     } catch (e) {
-      // Handle any errors that occur during the retrieval process
-      print('Error retrieving user info: $e');
-      return null;
+      // Handle errors
+      print("Error creating user collections: $e");
+      rethrow; // Rethrow the exception to propagate it further if needed
     }
   }
 }
+
+  // Future<MyUser?> getUserById(String userId) async {
+  //   try {
+  //     final userDoc = await _users.doc(userId).get();
+  //     if (userDoc.exists) {
+  //       return userDoc.data();
+  //     } else {
+  //       print('User document does not exist in Firestore');
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     // Handle any errors that occur during the retrieval process
+  //     print('Error retrieving user info: $e');
+  //     return null;
+  //   }
+  // }
+// }

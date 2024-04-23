@@ -93,7 +93,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
             ),
 
             Container(
-              padding: padding,
+              // padding: padding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
