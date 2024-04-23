@@ -40,6 +40,11 @@
     </script>
     <!-- This script adds the flutter initialization JS code -->
     <script src="flutter.js" defer></script>
+
+    <!--batool-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.css" />
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
 </head>
 <body>
 <script>
@@ -56,6 +61,24 @@
         }
       });
     });
+
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+<!-- Firebase Auth SDK -->
+<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+<script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: 'AIzaSyA_2mJBvyt-vu3wHYReWfL6-nbs8RI1uGI',
+      projectId: 'fitmi-d65a1',
+      messagingSenderId: '318206584052',
+      appId: '1:318206584052:web:b180a8b3ed96fdf4df6aa1',
+    }
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig)
+</script>
+<!-- END OF FIREBASE INIT CODE -->
+
+<script src="main.dart.js" type="application/javascript"></script>
 </script>
 </body>
 </html>
