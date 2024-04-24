@@ -3,6 +3,7 @@ import '../../services/authenticate.dart';
 import '../../shared/constants.dart';
 import '../../shared/loading.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:dropdown_button2/dropdown_button2.dart'; // Import DropdownButton2 package
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -20,7 +21,7 @@ class _RegisterState extends State<Register> {
   String password = '';
   String phone = '';
   String fullName = '';
-  String gender = 'Select Gender'; // Default value for gender dropdown
+  String gender = ''; // Initialize selectedItem with an empty string
   String error = '';
   bool loading = false;
 
@@ -49,11 +50,12 @@ class _RegisterState extends State<Register> {
           child: Column(
             children: <Widget>[
               TextFormField(
-                  decoration: textInputDecoration.copyWith(hintText: 'Full Name'),
-                  validator: (val) => val!.isEmpty ? 'Enter your full name' : null,
-                  onChanged: (val) {
-                    setState(() => fullName = val);
-                  }),
+                decoration: textInputDecoration.copyWith(hintText: 'Full Name'),
+                validator: (val) => val!.isEmpty ? 'Enter your full name' : null,
+                onChanged: (val) {
+                  setState(() => fullName = val);
+                },
+              ),
               const SizedBox(height: 20.0),
               TextFormField(
                 decoration: textInputDecoration.copyWith(hintText: 'Example@example.com'),
@@ -81,32 +83,20 @@ class _RegisterState extends State<Register> {
               ),
               const SizedBox(height: 20.0),
               // Gender dropdown
-              DropdownButtonFormField<String>(
-                decoration: textInputDecoration.copyWith(hintText: 'Select Gender'),
-                value: gender,
-                icon: const Icon(Icons.arrow_drop_down), // Add an icon to the dropdown button
-                iconSize: 24, // Set the icon size
-                elevation: 16, // Set the elevation of the dropdown menu
-                style: const TextStyle(color: Colors.black), // Set the text color
-                onChanged: (String? val) {
-                  setState(() => gender = val ?? '');
+              DropdownButton2<String>(
+                hint: const Text('Select Gender'),
+                items: ['Male', 'Female']
+                    .map((String value) => DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                ))
+                    .toList(),
+                onChanged: (String? value) {
+                  setState(() {
+                    gender = value!;
+                  });
                 },
-                validator: (val) => val!.isEmpty || val == 'Select Gender' ? 'Select your gender' : null,
-                items: <String>['Select Gender', 'Male', 'Female'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7, // Set the width of the dropdown menu
-                      child: Text(
-                        value,
-                        style: const TextStyle(fontSize: 16), // Set the text size
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  );
-                }).toList(),
               ),
-
               const SizedBox(height: 20.0),
               ElevatedButton(
                 style: button,
