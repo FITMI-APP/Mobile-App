@@ -4,10 +4,9 @@ import '../../shared/constants.dart';
 import '../../shared/loading.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-
 class Register extends StatefulWidget {
   final Function toggleView;
-  const Register({super.key, required this.toggleView});
+  const Register({Key? key, required this.toggleView});
 
   @override
   _RegisterState createState() => _RegisterState();
@@ -21,6 +20,7 @@ class _RegisterState extends State<Register> {
   String password = '';
   String phone = '';
   String fullName = '';
+  String gender = 'Select Gender'; // Default value for gender dropdown
   String error = '';
   bool loading = false;
 
@@ -80,6 +80,34 @@ class _RegisterState extends State<Register> {
                 },
               ),
               const SizedBox(height: 20.0),
+              // Gender dropdown
+              DropdownButtonFormField<String>(
+                decoration: textInputDecoration.copyWith(hintText: 'Select Gender'),
+                value: gender,
+                icon: const Icon(Icons.arrow_drop_down), // Add an icon to the dropdown button
+                iconSize: 24, // Set the icon size
+                elevation: 16, // Set the elevation of the dropdown menu
+                style: const TextStyle(color: Colors.black), // Set the text color
+                onChanged: (String? val) {
+                  setState(() => gender = val ?? '');
+                },
+                validator: (val) => val!.isEmpty || val == 'Select Gender' ? 'Select your gender' : null,
+                items: <String>['Select Gender', 'Male', 'Female'].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7, // Set the width of the dropdown menu
+                      child: Text(
+                        value,
+                        style: const TextStyle(fontSize: 16), // Set the text size
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+
+              const SizedBox(height: 20.0),
               ElevatedButton(
                 style: button,
                 child: const Text(
@@ -89,7 +117,13 @@ class _RegisterState extends State<Register> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     setState(() => loading = true);
-                    dynamic result = await _auth.registerWithEmailAndPassword(fullName,email, password, phone);
+                    dynamic result = await _auth.registerWithEmailAndPassword(
+                      fullName,
+                      email,
+                      password,
+                      phone,
+                      gender, // Include gender in registration
+                    );
                     if (result == null) {
                       // Registration failed, display an error message
                       setState(() {

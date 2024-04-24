@@ -5,6 +5,8 @@ class MyUser {
   final String email;
   final String phone;
   final String password;
+  final String gender;
+
 
   MyUser({
     this.uid,
@@ -12,6 +14,7 @@ class MyUser {
     required this.email,
     required this.phone,
     required this.password,
+    required this.gender,
   });
 
   toJson() {
@@ -29,6 +32,7 @@ class MyUser {
     email: json['Email'] as String,
     phone: json['Phone'] as String,
     password: json['Password'] as String,
+    gender: json['Gender'] as String,
   );
 
   MyUser copyWith({
@@ -36,12 +40,14 @@ class MyUser {
     String? email,
     String? phone,
     String? password,
+    String? gender,
   }) {
     return MyUser(
       fullName: fullName ?? this.fullName,
       email: email ?? this.email,
       phone: phone ?? this.phone,
       password: password ?? this.password,
+      gender: gender ?? this.gender,
     );
   }
 }
