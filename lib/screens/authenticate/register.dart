@@ -3,7 +3,7 @@ import '../../services/authenticate.dart';
 import '../../shared/constants.dart';
 import '../../shared/loading.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:dropdown_button2/dropdown_button2.dart'; // Import DropdownButton2 package
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -17,107 +17,105 @@ class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
-  String email = '';
-  String password = '';
-  String phone = '';
-  String fullName = '';
-  String gender = ''; // Initialize selectedItem with an empty string
+  // Use TextEditingController to maintain input field states
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  String gender = ''; // Gender field
   String error = '';
   bool loading = false;
 
   @override
+  void dispose() {
+    _fullNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return loading ? const Loading() : Scaffold(
+    return loading
+        ? const Loading()
+        : Scaffold(
       backgroundColor: HexColor("#3F72AF"),
       appBar: AppBar(
-        leading: logo,
-        backgroundColor:HexColor("#DBE2EF"),
+        backgroundColor: HexColor("#DBE2EF"),
         elevation: 0.0,
         title: const Text('Sign up to FitMi'),
         actions: <Widget>[
           TextButton.icon(
             icon: const Icon(Icons.person),
             label: const Text('Sign In'),
-            style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.black)),
             onPressed: () => widget.toggleView(),
           ),
         ],
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 80.0),
         child: Form(
           key: _formKey,
-          child: Column(
+          child: ListView(
             children: <Widget>[
               TextFormField(
+                controller: _fullNameController,
                 decoration: textInputDecoration.copyWith(hintText: 'Full Name'),
                 validator: (val) => val!.isEmpty ? 'Enter your full name' : null,
-                onChanged: (val) {
-                  setState(() => fullName = val);
-                },
               ),
               const SizedBox(height: 20.0),
               TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: 'Example@example.com'),
-                validator: (val) => val!.isEmpty ? 'Enter an Email' : null,
-                onChanged: (val) {
-                  setState(() => email = val);
-                },
+                controller: _emailController,
+                decoration: textInputDecoration.copyWith(hintText: 'Email'),
+                validator: (val) => val!.isEmpty ? 'Enter an email' : null,
               ),
               const SizedBox(height: 20.0),
               TextFormField(
+                controller: _passwordController,
                 decoration: textInputDecoration.copyWith(hintText: 'Password'),
-                validator: (val) => val!.length < 6 ? 'Enter a Password 6+ chars long' : null,
                 obscureText: true,
-                onChanged: (val) {
-                  setState(() => password = val);
-                },
+                validator: (val) => val!.length < 6 ? 'Password must be at least 6 characters' : null,
               ),
               const SizedBox(height: 20.0),
               TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: '0100000000'),
-                validator: (val) => val!.length < 12 ? 'Enter a valid number' : null,
-                onChanged: (val) {
-                  setState(() => phone = val);
-                },
+                controller: _phoneController,
+                decoration: textInputDecoration.copyWith(hintText: 'Phone Number'),
+                validator: (val) => val!.length < 10 ? 'Enter a valid phone number' : null,
               ),
               const SizedBox(height: 20.0),
-              // Gender dropdown
-              DropdownButton2<String>(
-                hint: const Text('Select Gender'),
+              DropdownButtonFormField<String>(
+                decoration: textInputDecoration.copyWith(hintText: 'Select Gender'),
+                value: gender.isNotEmpty ? gender : null,
                 items: ['Male', 'Female']
-                    .map((String value) => DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                ))
+                    .map(
+                      (String gender) => DropdownMenuItem<String>(
+                    value: gender,
+                    child: Text(gender),
+                  ),
+                )
                     .toList(),
                 onChanged: (String? value) {
-                  setState(() {
-                    gender = value!;
-                  });
+                  setState(() => gender = value ?? ''); // Update the gender
                 },
+                validator: (value) => value == null ? 'Please select a gender' : null,
               ),
               const SizedBox(height: 20.0),
               ElevatedButton(
-                style: button,
-                child: const Text(
-                  'Register',
-                  style: TextStyle(color: Colors.black),
-                ),
+                child: const Text('Register'),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     setState(() => loading = true);
                     dynamic result = await _auth.registerWithEmailAndPassword(
-                      fullName,
-                      email,
-                      password,
-                      phone,
-                      gender, // Include gender in registration
+                      _fullNameController.text,
+                      _emailController.text,
+                      _passwordController.text,
+                      _phoneController.text,
+                      gender,
                     );
                     if (result == null) {
-                      // Registration failed, display an error message
                       setState(() {
-                        error = 'Please Enter a valid email and password';
+                        error = 'Registration failed. Please try again.';
                         loading = false;
                       });
                     }
@@ -128,7 +126,7 @@ class _RegisterState extends State<Register> {
               Text(
                 error,
                 style: const TextStyle(color: Colors.red, fontSize: 14.0),
-              )
+              ),
             ],
           ),
         ),
