@@ -19,18 +19,18 @@ class AuthService {
 
   User? get currentUser => _auth.currentUser;
 
-  MyUser? _myUser(User? user, {String fullName = ''}) {
-    return user != null ?
-    MyUser(
+  MyUser? _myUser(User? user, {String fullName = '', String gender = ''}) {
+    return user != null
+        ? MyUser(
       uid: user.uid,
       fullName: fullName,
       email: user.email ?? '',
       phone: '',
       password: '',
+      gender: gender,
     )
         : null;
   }
-
   Stream<MyUser?> get user {
     return _auth.authStateChanges().map(_myUser);
   }
@@ -56,8 +56,7 @@ class AuthService {
     return '';
   }
 
-
-  Future registerWithEmailAndPassword(String fullName, String email, String password, String phone) async {
+  Future registerWithEmailAndPassword(String fullName, String email, String password, String phone, String gender) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -73,6 +72,7 @@ class AuthService {
         email: email,
         phone: phone,
         password: password,
+        gender: gender,
       );
 
       return _database.addUser(newUser);
@@ -83,7 +83,6 @@ class AuthService {
       return null;
     }
   }
-
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(

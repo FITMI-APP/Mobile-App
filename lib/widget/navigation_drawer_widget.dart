@@ -10,6 +10,8 @@ import '../screens/waredrobe/wardrobe.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import '../services/authenticate.dart';
+import '../screens/GenerateClothPage.dart'; // Adjust if needed
+
 
 
 class NavigationDrawerWidget extends StatefulWidget {
@@ -132,6 +134,16 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                     icon: Icons.person,
                     onClicked: () => selectedItem(context, 2),
                   ),
+                  // Add this block in the ListView where other menu items are defined
+                  buildMenuItem(
+                    text: 'Generate Your Own Cloth', // Name of the new menu item
+                    icon: Icons.design_services, // Icon for the new menu item
+                    onClicked: () => selectedItem(context, 4), // Unique index for the new item
+                  ),
+
+
+
+
                   const SizedBox(height: 24),
                   Divider(color: Colors.white70),
                   const SizedBox(height: 24),
@@ -214,6 +226,11 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
           builder: (context) => Wardrobe(),
         ));
         break;
+      case 4: // Case for the new menu item
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => GenerateImageFromTextPage(),
+        ));
+        break;
       case 2:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ProfilePage(),
@@ -225,5 +242,3 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
     }
   }
 }
-
-
