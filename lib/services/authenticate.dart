@@ -14,6 +14,10 @@ class AuthService {
   late final CollectionReference<MyUser> _users;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
+  String _email = '';
+  String _name = '';
+
+  User? get currentUser => _auth.currentUser;
 
   MyUser? _myUser(User? user, {String fullName = ''}) {
     return user != null ?
@@ -29,6 +33,27 @@ class AuthService {
 
   Stream<MyUser?> get user {
     return _auth.authStateChanges().map(_myUser);
+  }
+
+  Future<Map<String, String>> getUserInfo() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      await user.reload();
+      user = _auth.currentUser;
+
+      _email = user?.email ?? '';
+      _name = _extractName(_email);
+    }
+    return {'email': _email, 'name': _name};
+  }
+
+  String _extractName(String email) {
+    // Extracting the name from email by cutting the domain part
+    int atIndex = email.indexOf('@');
+    if (atIndex != -1) {
+      return email.substring(0, atIndex);
+    }
+    return '';
   }
 
 
@@ -133,24 +158,24 @@ class AuthService {
 
   }
 
-  // Future<UserInfo?> getUserInfo(User user) async {
-  //   try {
-  //     if (user.providerData[0].providerId == 'password') {
-  //       // If user signed in with email/password, fullName will be empty for now.
-  //       return newUser(user: user, fullName: '');
-  //     } else if (user.providerData[0].providerId == 'google.com') {
-  //       // If user signed in with Google, get the full name from GoogleSignIn
-  //       final googleUser = await _googleSignIn.signInSilently();
-  //       final fullName = googleUser?.displayName ?? '';
-  //       return newUser(user: user, fullName: fullName);
-  //     } else {
-  //       // Handle other sign-in providers if needed
-  //       return null;
-  //     }
-  //   } catch (e) {
-  //     // Handle any errors that occur during the retrieval process
-  //     print('Error retrieving user info: $e');
-  //     return null;
-  //   }
-  // }
+// Future<UserInfo?> getUserInfo(User user) async {
+//   try {
+//     if (user.providerData[0].providerId == 'password') {
+//       // If user signed in with email/password, fullName will be empty for now.
+//       return newUser(user: user, fullName: '');
+//     } else if (user.providerData[0].providerId == 'google.com') {
+//       // If user signed in with Google, get the full name from GoogleSignIn
+//       final googleUser = await _googleSignIn.signInSilently();
+//       final fullName = googleUser?.displayName ?? '';
+//       return newUser(user: user, fullName: fullName);
+//     } else {
+//       // Handle other sign-in providers if needed
+//       return null;
+//     }
+//   } catch (e) {
+//     // Handle any errors that occur during the retrieval process
+//     print('Error retrieving user info: $e');
+//     return null;
+//   }
+// }
 }

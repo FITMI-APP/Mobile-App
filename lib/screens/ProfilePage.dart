@@ -2,44 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grad/shared/Header.dart';
 
+import '../services/authenticate.dart';
+
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  String _email = '';
-  String _name = '';
+  final AuthService _auth = AuthService();
   TextEditingController _oldPasswordController = TextEditingController();
   TextEditingController _newPasswordController = TextEditingController();
+
+  String _email = '';
+  String _name = '';
 
   @override
   void initState() {
     super.initState();
-    _getUserInfo();
+    getUserInfo();
   }
 
-  Future<void> _getUserInfo() async {
-    User? user = _auth.currentUser;
-    if (user != null) {
-      await user.reload();
-      user = _auth.currentUser;
-
-      setState(() {
-        _email = user?.email ?? '';
-        _name = _extractName(_email);
-      });
-    }
-  }
-
-  String _extractName(String email) {
-    // Extracting the name from email by cutting the domain part
-    int atIndex = email.indexOf('@');
-    if (atIndex != -1) {
-      return email.substring(0, atIndex);
-    }
-    return '';
+  Future<void> getUserInfo() async {
+    Map<String, String> userInfo = await _auth.getUserInfo();
+    setState(() {
+      _email = userInfo['email'] ?? '';
+      _name = userInfo['name'] ?? '';
+    });
   }
 
   Future<void> _changePassword() async {
