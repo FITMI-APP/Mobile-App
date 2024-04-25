@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grad/shared/Header.dart';
-
+import 'package:grad/widget/navigation_drawer_widget.dart'; // Add the import for your navigation drawer
 import '../services/authenticate.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -10,6 +10,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); // Global key for the Scaffold
+
   final AuthService _auth = AuthService();
   TextEditingController _oldPasswordController = TextEditingController();
   TextEditingController _newPasswordController = TextEditingController();
@@ -43,34 +45,15 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       User? user = _auth.currentUser;
       if (user != null) {
-        // Re-authenticate user
         AuthCredential credential = EmailAuthProvider.credential(email: user.email!, password: oldPassword);
         await user.reauthenticateWithCredential(credential);
 
-        // Change password
         await user.updatePassword(newPassword);
 
-        // Clear text fields
         _oldPasswordController.clear();
         _newPasswordController.clear();
 
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Success"),
-              content: Text("Password changed successfully."),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
+        _showSuccessDialog("Password changed successfully.");
       }
     } on FirebaseAuthException catch (error) {
       if (error.code == 'wrong-password') {
@@ -101,10 +84,40 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  void _showSuccessDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Success"),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(),
+      key: _scaffoldKey, // Use the GlobalKey for the Scaffold
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer(); // Open the drawer
+          },
+        ),
+        title: Text("Profile"),
+      ),
+      drawer: NavigationDrawerWidget(), // Add the navigation drawer
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20.0),
         child: Column(

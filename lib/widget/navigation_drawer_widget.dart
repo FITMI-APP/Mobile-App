@@ -6,9 +6,8 @@ import '../screens/authenticate/signIn.dart';
 import '../screens/favourites_page.dart';
 import '../screens/people_page.dart';
 import '../screens/user_page.dart';
-import '../screens/waredrobe/wardrobe.dart';
 import 'package:hexcolor/hexcolor.dart';
-
+import 'package:grad/screens/waredrobe/wardrobe.dart';
 import '../services/authenticate.dart';
 import '../screens/GenerateClothPage.dart'; // Adjust if needed
 
@@ -223,7 +222,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
         break;
       case 1:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => Wardrobe(),
+          builder: (context) => WardrobeScreen(),
         ));
         break;
       case 4: // Case for the new menu item

@@ -23,6 +23,7 @@ class MyUser {
       "Email": email,
       "Phone": phone,
       "Password": password,
+      "gender" : gender ,
     };
   }
 
@@ -32,7 +33,7 @@ class MyUser {
     email: json['Email'] as String,
     phone: json['Phone'] as String,
     password: json['Password'] as String,
-    gender: json['Gender'] as String,
+    gender: json['gender'] as String,
   );
 
   MyUser copyWith({

@@ -35,13 +35,13 @@ class Database {
       final userRef = _users.doc(userId);
 
       // Create the "upper" subcollection
-      await userRef.collection('upper').add({});
+      await userRef.collection('Upper').add({});
 
       // Create the "lower" subcollection
-      await userRef.collection('lower').add({});
+      await userRef.collection('Lower').add({});
 
       // Create the "dress" subcollection
-      await userRef.collection('dress').add({});
+      await userRef.collection('Dresses').add({});
     } catch (e) {
       // Handle errors
       print("Error creating user collections: $e");

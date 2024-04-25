@@ -16,7 +16,8 @@ class AuthService {
 
   String _email = '';
   String _name = '';
-
+  String _userid = '';
+  String _gender = '';
   User? get currentUser => _auth.currentUser;
 
   MyUser? _myUser(User? user, {String fullName = '', String gender = ''}) {
@@ -31,6 +32,7 @@ class AuthService {
     )
         : null;
   }
+
   Stream<MyUser?> get user {
     return _auth.authStateChanges().map(_myUser);
   }
@@ -42,9 +44,12 @@ class AuthService {
       user = _auth.currentUser;
 
       _email = user?.email ?? '';
-      _name = _extractName(_email);
+      _name = _extractName(_email)?? '';
+      _userid = user!.uid ?? '';
+      //_gender = user.gender ?? '';
+
     }
-    return {'email': _email, 'name': _name};
+    return {'email': _email, 'name': _name  ,  'userid': _userid , 'gender': _gender};
   }
 
   String _extractName(String email) {

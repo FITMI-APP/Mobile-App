@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import '../../services/authenticate.dart';
+import '../../services/wardrobeService.dart';
+import '../../widget/navigation_drawer_widget.dart';
+import 'ImageSelectionPage.dart';
 
 void main() {
   runApp(Wardrobe());
 }
-
 class ClothItems extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -34,17 +38,16 @@ class ClothItems extends StatelessWidget {
     );
   }
 }
-
 class Wardrobe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My Wardrobe',
       theme: ThemeData(
-        primaryColor: HexColor("#3F72AF"), // Adjusted primary color
-        scaffoldBackgroundColor: HexColor("#3F72AF"), // Adjusted background color
+        primaryColor: HexColor("#3F72AF"),
+        scaffoldBackgroundColor: HexColor("#3F72AF"),
       ),
-      home: WardrobeScreen(),
+      home: WardrobeScreen(), // Your main screen with the drawer
     );
   }
 }
@@ -55,18 +58,29 @@ class WardrobeScreen extends StatefulWidget {
 }
 
 class _WardrobeScreenState extends State<WardrobeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); // Global key for the Scaffold
+
   File? uppercloth;
   File? lowercloth;
   File? dressescloth;
+  final AuthService _auth = AuthService();
+  String userID = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey, // Use the GlobalKey for the Scaffold
       appBar: AppBar(
         title: const Text('My Wardrobe'),
-        backgroundColor: HexColor("#3F72AF"), // Set the app bar color
+        backgroundColor: HexColor("#3F72AF"),
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer(); // Open the drawer
+          },
+        ),
       ),
-      backgroundColor: HexColor("#3F72AF"), // Set the background color of the Scaffold
+      drawer: NavigationDrawerWidget(), // Attach the navigation drawer
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,6 +90,66 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
             buildCategorySection(context, "Dresses", dressescloth),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildCategorySection(BuildContext context, String categoryTitle, File? clothFile) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                categoryTitle,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ImageSelectionPage(
+                        category: categoryTitle,
+                        onImageSelected: (File? file) {
+                          setState(() {
+                            switch (categoryTitle) {
+                              case 'Upper':
+                                uppercloth = file;
+                                break;
+                              case 'Lower':
+                                lowercloth = file;
+                                break;
+                              case 'Dresses':
+                                dressescloth = file;
+                                break;
+                              default:
+                                break;
+                            }
+                          });
+                        },
+                        onUploadToFirebase: (File? file) => uploadImageToFirebase(file!, categoryTitle),
+                      ),
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          ClothItems(), // Example list of items
+        ],
       ),
     );
   }
@@ -100,215 +174,21 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
             dressescloth = File(file.path);
             break;
           default:
-          // Handle default case
             break;
         }
       });
     }
   }
 
-  void removeCloth(String category) {
-    setState(() {
-      switch (category) {
-        case 'Upper':
-          uppercloth = null;
-          break;
-        case 'Lower':
-          lowercloth = null;
-          break;
-        case 'Dresses':
-          dressescloth = null;
-          break;
-        default:
-        // Handle default case
-          break;
-      }
-    });
-  }
+  Future<void> uploadImageToFirebase(File imageFile, String category) async {
+    Map<String, String> userInfo = await _auth.getUserInfo();
+    userID = userInfo['userid'] ?? '';
 
-  void uploadImageToFirebase(File imageFile, String category) {
-    // Implement Firebase storage upload here
-    // Example: FirebaseStorage.instance.ref().child('path/to/image').putFile(imageFile);
-    print('Uploading $category image to Firebase storage...');
-  }
-
-  Widget buildCategorySection(BuildContext context, String categoryTitle, File? clothfile) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                categoryTitle,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black, // Adjusted text color
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  // Navigate to a new page for image selection
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ImageSelectionPage(
-                        category: categoryTitle,
-                        onImageSelected: (File? file) {
-                          setState(() {
-                            switch (categoryTitle) {
-                              case 'Upper':
-                                uppercloth = file;
-                                break;
-                              case 'Lower':
-                                lowercloth = file;
-                                break;
-                              case 'Dresses':
-                                dressescloth = file;
-                                break;
-                              default:
-                              // Handle default case
-                                break;
-                            }
-                          });
-                        },
-                        onUploadToFirebase: (File? file) {
-                          uploadImageToFirebase(file!, categoryTitle);
-                        },
-                      ),
-                    ),
-                  );
-                },
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.black, // Adjusted icon color
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          ClothItems(),
-        ],
-      ),
-    );
-  }
-}
-
-class ImageSelectionPage extends StatefulWidget {
-  final String category;
-  final Function(File?) onImageSelected;
-  final Function(File?) onUploadToFirebase;
-
-  ImageSelectionPage({
-    required this.category,
-    required this.onImageSelected,
-    required this.onUploadToFirebase,
-  });
-
-  @override
-  _ImageSelectionPageState createState() => _ImageSelectionPageState();
-}
-
-class _ImageSelectionPageState extends State<ImageSelectionPage> {
-  File? _imageFile;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Add Item to ${widget.category}'),
-        backgroundColor: HexColor("#3F72AF"), // Set the app bar color
-      ),
-      backgroundColor: HexColor("#3F72AF"), // Set the background color of the Scaffold
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _imageFile != null
-                ? Image.file(
-              _imageFile!,
-              height: 150,
-              width: 150,
-              fit: BoxFit.cover,
-            )
-                : Text(
-              'No image selected',
-              style: TextStyle(fontSize: 20, color: Colors.white),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                getImage(ImageSource.camera);
-              },
-              child: Text('Capture Image'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                getImage(ImageSource.gallery);
-              },
-              child: Text('Select Image'),
-            ),
-            _imageFile != null
-                ? ElevatedButton(
-              onPressed: () {
-                removeImage();
-              },
-              child: Text('Remove Image'),
-            )
-                : SizedBox(),
-            ElevatedButton(
-              onPressed: () {
-                if (_imageFile != null) {
-                  widget.onUploadToFirebase(_imageFile);
-                  Navigator.pop(context);
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('No Image Selected'),
-                        content: Text('Please select an image first.'),
-                        actions: <Widget>[
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-              child: Text('Add image'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void getImage(ImageSource source) async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: source,
-      maxWidth: 640,
-      maxHeight: 480,
-      imageQuality: 70,
-    );
-    setState(() {
-      _imageFile = pickedFile != null ? File(pickedFile.path) : null;
-      widget.onImageSelected(_imageFile);
-    });
-  }
-
-  void removeImage() {
-    setState(() {
-      _imageFile = null;
-      widget.onImageSelected(null);
-    });
+    String? imageUrl = await uploadImage(imageFile, userID, category);
+    if (imageUrl != null) {
+      await saveImageUrlToDatabase(userID, category, imageUrl);
+    } else {
+      print('Image upload failed');
+    }
   }
 }
