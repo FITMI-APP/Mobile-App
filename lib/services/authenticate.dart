@@ -47,7 +47,7 @@ class AuthService {
       _email = user?.email ?? '';
       _name = _extractName(_email)?? '';
       _userid = user!.uid ?? '';
-      DocumentSnapshot<Map<String, dynamic>> userData = await FirebaseFirestore.instance.collection('users').doc(_userid).get();
+      DocumentSnapshot<Map<String, dynamic>> userData = await FirebaseFirestore.instance.collection('Users').doc(_userid).get();
       if (userData.exists) {
         _gender = userData.data()?['gender'] ?? '';
         print('from ath $_gender');

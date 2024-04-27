@@ -90,16 +90,19 @@ class _RegisterState extends State<Register> {
                 items: ['Male', 'Female']
                     .map(
                       (String gender) => DropdownMenuItem<String>(
-                    value: gender,
+                    value: gender.toLowerCase(), // Convert to lowercase here
                     child: Text(gender),
                   ),
                 )
                     .toList(),
                 onChanged: (String? value) {
-                  setState(() => gender = value ?? ''); // Update the gender
+                  if (value != null) {
+                    setState(() => gender = value.toLowerCase()); // Update the gender in lowercase
+                  }
                 },
                 validator: (value) => value == null ? 'Please select a gender' : null,
               ),
+
               const SizedBox(height: 20.0),
               ElevatedButton(
                 child: const Text('Register'),
