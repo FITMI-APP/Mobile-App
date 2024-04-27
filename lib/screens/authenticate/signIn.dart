@@ -5,15 +5,17 @@ import 'package:hexcolor/hexcolor.dart';
 import '../../services/authenticate.dart';
 import '../../shared/constants.dart';
 
-// Define your Home Page or the page to navigate to after login
-import '../home/home.dart'; // Adjust the import path as necessary
+// Importing the Home and Register page
+import '../home/home.dart';
+import 'register.dart'; // The Register screen for account creation
 
 class SignIn extends StatefulWidget {
   final Function? toggleView;
-  const SignIn({super.key, this.toggleView});
+
+  const SignIn({Key? key, this.toggleView}) : super(key: key);
 
   @override
-  State<SignIn> createState() => _SignInState();
+  _SignInState createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
@@ -25,109 +27,130 @@ class _SignInState extends State<SignIn> {
   String error = '';
   bool loading = false;
 
-  void signInWithEmail() async {
-    setState(() => loading = true);
+  void _signInWithEmail() async {
     if (_formKey.currentState!.validate()) {
-      dynamic result = await _auth.signInWithEmailAndPassword(email, password);
+      setState(() => loading = true);
+      var result = await _auth.signInWithEmailAndPassword(email, password);
       if (result == null) {
         setState(() {
-          error = 'Email or Password is Incorrect';
+          error = 'Email or Password is incorrect';
           loading = false;
         });
       } else {
-        // Navigate to the home page after successful sign-in
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => Home(), // Adjust to your actual home page
-          ),
+          MaterialPageRoute(builder: (context) => Home()),
         );
       }
-    } else {
-      setState(() => loading = false); // Validation failed, stop loading
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return loading
-        ? const Loading() // Display the loading widget if loading is true
+        ? const Loading()
         : Scaffold(
-            backgroundColor: HexColor("#3F72AF"),
-            appBar: AppBar(
-              backgroundColor: HexColor("#DBE2EF"),
-              elevation: 0.0,
-              title: const Text('Sign in to FitMi'),
-            ),
-            body: Container(
-              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    const SizedBox(height: 20.0),
-                    TextFormField(
-                      decoration: textInputDecoration.copyWith(
-                          hintText: 'Example@example.com'),
-                      validator: (val) => val!.isEmpty ? 'Invalid Email' : null,
-                      onChanged: (val) {
-                        setState(() => email = val);
-                      },
-                    ),
-                    const SizedBox(height: 20.0),
-                    TextFormField(
-                      decoration: textInputDecoration.copyWith(hintText: 'Password'),
-                      validator: (val) => val!.isEmpty ? 'Invalid Password' : null,
-                      obscureText: true,
-                      onChanged: (val) {
-                        setState(() => password = val);
-                      },
-                    ),
-                    const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      style: button,
-                      child: const Text('Sign In', style: TextStyle(color: Colors.black)),
-                      onPressed: signInWithEmail,
-                    ),
-                    const SizedBox(height: 10.0),
-                    ElevatedButton.icon(
-                      style: button,
-                      icon: FaIcon(FontAwesomeIcons.google, color: HexColor("#3F72AF")),
-                      label: Text('Sign In with Google'),
-                      onPressed: () async {
-                        setState(() => loading = true);
-                        await _auth.signInWithGoogle(context);
-                        // Navigate to the home page after successful Google sign-in
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Home(),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 10.0),
-                    ElevatedButton(
-                      style: button,
-                      child: const Text(
-                        'Create Account',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      onPressed: () {
-                        if (widget.toggleView != null) {
-                          widget.toggleView!();
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 12.0),
-                    Text(
-                      error,
-                      style: const TextStyle(color: Colors.red, fontSize: 14.0),
-                    ),
-                  ],
+      backgroundColor: HexColor("#FFFFFF"),
+      appBar: AppBar(
+        backgroundColor: HexColor("#FFFFFF"),
+        elevation: 0,
+        title: const Text('Sign in to FitMi'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Image.asset(
+                'assets/logoo.png',
+                height: 60,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Welcome to FitMi!',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Try on endless styles, effortlessly',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 30),
+              TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  prefixIcon: Icon(Icons.email),
+                ),
+                validator: (val) => val!.isEmpty ? 'Invalid Email' : null,
+                onChanged: (val) {
+                  setState(() => email = val);
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  prefixIcon: Icon(Icons.lock),
+                ),
+                validator: (val) => val!.isEmpty ? 'Invalid Password' : null,
+                onChanged: (val) {
+                  setState(() => password = val);
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: button,
+                onPressed: _signInWithEmail,
+                child: const Text(
+                  'Sign in',
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
-            ),
-          );
+              const SizedBox(height: 10),
+              ElevatedButton.icon(
+                style: button,
+                icon: FaIcon(FontAwesomeIcons.google, color: Colors.white),
+                label: const Text(
+                  'Sign in with Google',
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                onPressed: () async {
+                  setState(() => loading = true);
+                  await _auth.signInWithGoogle(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home()),
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                style: button,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Register()), // Navigate to Register
+                  );
+                },
+                child: const Text(
+                  'Create Account',
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                error,
+                style: const TextStyle(color: Colors.red, fontSize: 14),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
