@@ -56,4 +56,42 @@ Future<void> saveImageUrlToDatabase(String userId, String category, String image
   }
 }
 
+Future<List<String>> getImageUrlsByCategory(String userId, String category) async {
+  try {
+    // Get reference to the user's category subcollection
+    CollectionReference categoryCollection = FirebaseFirestore.instance.collection('Users').doc(userId).collection(category);
+
+    // Retrieve the document from the subcollection
+    QuerySnapshot querySnapshot = await categoryCollection.get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Get the first (and only) document in the subcollection
+      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+
+      // Check if the document contains the 'imageUrls' field
+      if (documentSnapshot.exists) {
+        Map<String, dynamic>? data = documentSnapshot.data() as Map<String, dynamic>?;
+
+        if (data != null && data.containsKey('imageUrls')) {
+          List<dynamic> imageUrlsDynamic = data['imageUrls'];
+          List<String> imageUrls = List<String>.from(imageUrlsDynamic);
+          return imageUrls;
+        } else {
+          print('Image URLs not found for the specified category');
+          return [];
+        }
+      } else {
+        print('Document does not exist for the specified category');
+        return [];
+      }
+    } else {
+      print('No documents found in the specified category');
+      return [];
+    }
+  } catch (e) {
+    print('Error retrieving image URLs: $e');
+    return [];
+  }
+}
+
 
