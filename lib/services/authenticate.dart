@@ -64,32 +64,85 @@ class AuthService {
     }
     return '';
   }
-
-  Future registerWithEmailAndPassword(String fullName, String email, String password, String phone, String gender) async {
+  //
+  // Future registerWithEmailAndPassword(String fullName, String email, String password, String phone, String gender) async {
+  //   try {
+  //     UserCredential result = await _auth.createUserWithEmailAndPassword(
+  //       email: email,
+  //       password: password,
+  //     );
+  //
+  //     User user = result.user!;
+  //
+  //     // Create a MyUser instance and add it to Firestore
+  //     MyUser newUser = MyUser(
+  //       uid: user.uid,
+  //       fullName: fullName,
+  //       email: email,
+  //       phone: phone,
+  //       password: password,
+  //       gender: gender,
+  //     );
+  //
+  //     return _database.addUser(newUser);
+  //
+  //     // return _myUser(user);
+  //   } catch (error) {
+  //     print(error.toString());
+  //     return null;
+  //   }
+  // }
+  Future<bool> registerWithEmailAndPassword(
+      String fullName,
+      String email,
+      String password,
+      String phone,
+      String gender) async {
     try {
+      print("Attempting to create user with email: $email");
+
+      // Validate input data (email and password)
+      if (email.isEmpty || password.isEmpty) {
+        throw Exception("Email and password must not be empty.");
+      }
+
       UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       User user = result.user!;
+      if (user == null) {
+        print("User creation returned null");
+        throw Exception("Failed to create user.");
+      }
 
-      // Create a MyUser instance and add it to Firestore
+      print("User created with UID: ${user.uid}");
+
       MyUser newUser = MyUser(
         uid: user.uid,
         fullName: fullName,
         email: email,
         phone: phone,
-        password: password,
         gender: gender,
+        password :password,
       );
 
-      return _database.addUser(newUser);
+      // Add user to Firestore and handle any exceptions
+      await _database.addUser(newUser).catchError((error) {
+        throw Exception("Error adding user to Firestore: $error");
+      });
 
-      // return _myUser(user);
-    } catch (error) {
-      print(error.toString());
-      return null;
+      print("User information added to Firestore");
+
+      return true; // Registration succeeded
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        print("Firebase Auth error: ${e.code}, ${e.message}");
+      } else {
+        print("General error during registration: ${e.toString()}");
+      }
+      return false; // Registration failed
     }
   }
   Future signInWithEmailAndPassword(String email, String password) async {
