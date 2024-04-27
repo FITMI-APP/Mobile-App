@@ -236,7 +236,11 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
         ));
         break;
       case 3:
-        await _auth1.signOut();
+        await _auth.signOut();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SignIn()), // Replace LoginPage with your actual login page
+        );
         break;
     }
   }

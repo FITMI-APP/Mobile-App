@@ -7,8 +7,8 @@ import '../../services/authenticate.dart';
 import '../../shared/constants.dart';
 
 class SignIn extends StatefulWidget {
-  final Function toggleView;
-  const SignIn({super.key,  required this.toggleView});
+  final Function? toggleView;
+  const SignIn({super.key,  this.toggleView});
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -99,7 +99,7 @@ class _SignInState extends State<SignIn> {
                   style: TextStyle(color: Colors.black),
                 ),
                 onPressed: () async {
-                  widget.toggleView();
+                  widget.toggleView!();
                 },
               ),
               const SizedBox(height: 12.0),

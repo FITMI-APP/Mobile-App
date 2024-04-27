@@ -6,8 +6,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 class Register extends StatefulWidget {
-  final Function toggleView;
-  const Register({Key? key, required this.toggleView});
+  final Function? toggleView;
+  const Register({Key? key,  this.toggleView});
 
   @override
   _RegisterState createState() => _RegisterState();
@@ -49,7 +49,7 @@ class _RegisterState extends State<Register> {
           TextButton.icon(
             icon: const Icon(Icons.person),
             label: const Text('Sign In'),
-            onPressed: () => widget.toggleView(),
+            onPressed: () => widget.toggleView!(),
           ),
         ],
       ),

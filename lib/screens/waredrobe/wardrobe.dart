@@ -68,31 +68,57 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey, // Use the GlobalKey for the Scaffold
-      appBar: AppBar(
-        title: const Text('My Wardrobe'),
-        backgroundColor: HexColor("#3F72AF"),
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer(); // Open the drawer
-          },
-        ),
-      ),
-      drawer: NavigationDrawerWidget(), // Attach the navigation drawer
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildCategorySection(context, "Upper", uppercloth),
-            buildCategorySection(context, "Lower", lowercloth),
-            buildCategorySection(context, "Dresses", dressescloth),
-          ],
-        ),
-      ),
+    return FutureBuilder<Map<String, String>>(
+      future: _auth.getUserInfo(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Show loading indicator while fetching user info
+        }
+
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        final userGender = snapshot.data?['gender'];
+
+        print('from wardrobe $userGender');
+
+        return Scaffold(
+          key: _scaffoldKey, // Use the GlobalKey for the Scaffold
+          appBar: AppBar(
+            title: const Text('My Wardrobe'),
+            backgroundColor: HexColor("#3F72AF"),
+            leading: IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                _scaffoldKey.currentState?.openDrawer(); // Open the drawer
+              },
+            ),
+          ),
+          drawer: NavigationDrawerWidget(), // Attach the navigation drawer
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (userGender == 'female') // Conditionally show categories for woman
+                  ...[
+                    buildCategorySection(context, "Upper", uppercloth),
+                    buildCategorySection(context, "Lower", lowercloth),
+                    buildCategorySection(context, "Dresses", dressescloth),
+                  ],
+                if (userGender == 'male') // Conditionally show categories for man
+                  ...[
+                    buildCategorySection(context, "Upper", uppercloth),
+                    buildCategorySection(context, "Lower", lowercloth),
+                  ],
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
+
 
   Widget buildCategorySection(BuildContext context, String categoryTitle, File? clothFile) {
     return Padding(

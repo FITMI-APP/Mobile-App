@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:grad/models/user.dart';
 import 'package:http/http.dart' as http;
+import '../screens/authenticate/signIn.dart';
 import 'database.dart';
 
 
@@ -46,8 +47,11 @@ class AuthService {
       _email = user?.email ?? '';
       _name = _extractName(_email)?? '';
       _userid = user!.uid ?? '';
-      //_gender = user.gender ?? '';
-
+      DocumentSnapshot<Map<String, dynamic>> userData = await FirebaseFirestore.instance.collection('users').doc(_userid).get();
+      if (userData.exists) {
+        _gender = userData.data()?['gender'] ?? '';
+        print('from ath $_gender');
+      }
     }
     return {'email': _email, 'name': _name  ,  'userid': _userid , 'gender': _gender};
   }
@@ -114,14 +118,15 @@ class AuthService {
     }
   }
 
-  Future signOut() async {
-    try {
-      return await _auth.signOut();
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
+
+  Future<void> signOut() async {
+  try {
+  await _auth.signOut();
+  } catch (e) {
+  print(e.toString());
   }
+  }
+
 
   Future<User?> signInWithGoogle(BuildContext context) async {
     try {

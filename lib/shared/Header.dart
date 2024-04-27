@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grad/screens/authenticate/signIn.dart';
 import 'package:grad/services/authenticate.dart';
 import '../../shared/constants.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -29,7 +30,11 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
     foregroundColor: MaterialStateProperty.all(Colors.black),
     ),
     onPressed: () async {
-    await _auth.signOut();
+      await _auth.signOut();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SignIn()), // Replace LoginPage with your actual login page
+      );
     },
     icon: const Icon(Icons.exit_to_app_rounded),
     label: const Text('Logout'),
