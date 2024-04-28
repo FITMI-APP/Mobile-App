@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:grad/shared/Header.dart';
 import 'package:grad/shared/loading.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '../../services/authenticate.dart';
@@ -51,11 +52,7 @@ class _SignInState extends State<SignIn> {
         ? const Loading()
         : Scaffold(
       backgroundColor: HexColor("#FFFFFF"),
-      appBar: AppBar(
-        backgroundColor: HexColor("#FFFFFF"),
-        elevation: 0,
-        title: const Text('Sign in to FitMi'),
-      ),
+      appBar: Header(title: 'Sign in to FitMi'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
         child: Form(

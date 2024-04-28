@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grad/screens/authenticate/signIn.dart';
+import 'package:grad/shared/Header.dart';
 import '../../services/authenticate.dart';
 import '../../shared/constants.dart';
 import '../../shared/loading.dart';
@@ -44,27 +45,7 @@ class _RegisterState extends State<Register> {
         ? const Loading()
         : Scaffold(
             backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor: HexColor("#FFFFFF"),
-              elevation: 0.0,
-              title: const Text('Sign up to FitMi'),
-              actions: <Widget>[
-                TextButton.icon(
-                  icon: const Icon(Icons.person, color: Colors.black),
-                  label: const Text(
-                    'Sign In',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SignIn()), // Navigate to SignIn
-                    );
-                  },
-                ),
-              ],
-            ),
+            appBar: Header(title: 'Sign up to FitMi'),
             body: SingleChildScrollView(
               child: Container(
                 padding: const EdgeInsets.all(20.0),
