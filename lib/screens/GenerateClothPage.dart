@@ -26,15 +26,7 @@ class _GenerateImageFromTextPageState extends State<GenerateImageFromTextPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey, // Assign the key to the Scaffold
-      appBar: AppBar(
-        title: Text("Generate Image from Text"),
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer(); // Use the GlobalKey to open the drawer
-          },
-        ),
-      ),
+      appBar: Header(title: 'Generate Image from Text'),
       drawer: NavigationDrawerWidget(), // Ensure this widget works
       body: Padding(
         padding: const EdgeInsets.all(16.0),
