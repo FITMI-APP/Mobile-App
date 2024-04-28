@@ -11,14 +11,15 @@ import 'package:grad/screens/waredrobe/wardrobe.dart';
 import '../services/authenticate.dart';
 import '../screens/GenerateClothPage.dart'; // Adjust if needed
 
+
 class NavigationDrawerWidget extends StatefulWidget {
   @override
   _NavigationDrawerWidgetState createState() => _NavigationDrawerWidgetState();
 }
 
 class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final AuthService _auth1 = AuthService();
+  final AuthService _auth = AuthService();
+
   String _email = '';
   String _name = '';
   static const IconData checkroom_rounded = IconData(0xf639, fontFamily: 'MaterialIcons');
@@ -26,28 +27,15 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
   @override
   void initState() {
     super.initState();
-    _getUserInfo();
+    getUserInfo();
   }
 
-  Future<void> _getUserInfo() async {
-    User? user = _auth.currentUser;
-    if (user != null) {
-      await user.reload();
-      user = _auth.currentUser;
-
-      setState(() {
-        _email = user?.email ?? '';
-        _name = _extractName(_email);
-      });
-    }
-  }
-
-  String _extractName(String email) {
-    int atIndex = email.indexOf('@');
-    if (atIndex != -1) {
-      return email.substring(0, atIndex);
-    }
-    return '';
+  Future<void> getUserInfo() async {
+    Map<String, String> userInfo = await _auth.getUserInfo();
+    setState(() {
+      _email = userInfo['email'] ?? '';
+      _name = userInfo['name'] ?? '';
+    });
   }
 
   final padding = EdgeInsets.symmetric(horizontal: 20);

@@ -45,25 +45,28 @@ class AuthService {
       user = _auth.currentUser;
 
       _email = user?.email ?? '';
-      _name = _extractName(_email)?? '';
       _userid = user!.uid ?? '';
       DocumentSnapshot<Map<String, dynamic>> userData = await FirebaseFirestore.instance.collection('Users').doc(_userid).get();
       if (userData.exists) {
         _gender = userData.data()?['gender'] ?? '';
-        print('from ath $_gender');
+        _name = userData.data()?['FullName'] ?? '';
+         // print('from ath $_gender');
+         // print('from ath profile is $_name');
+
       }
+
     }
     return {'email': _email, 'name': _name  ,  'userid': _userid , 'gender': _gender};
   }
 
-  String _extractName(String email) {
-    // Extracting the name from email by cutting the domain part
-    int atIndex = email.indexOf('@');
-    if (atIndex != -1) {
-      return email.substring(0, atIndex);
-    }
-    return '';
-  }
+  // String _extractName(String email) {
+  //   // Extracting the name from email by cutting the domain part
+  //   int atIndex = email.indexOf('@');
+  //   if (atIndex != -1) {
+  //     return email.substring(0, atIndex);
+  //   }
+  //   return '';
+  // }
   //
   // Future registerWithEmailAndPassword(String fullName, String email, String password, String phone, String gender) async {
   //   try {
