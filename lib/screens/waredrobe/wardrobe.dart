@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grad/shared/Header.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -137,16 +138,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
 
         return Scaffold(
           key: _scaffoldKey, // Use the GlobalKey for the Scaffold
-          appBar: AppBar(
-            title: const Text('My Wardrobe'),
-            backgroundColor: HexColor("#3F72AF"),
-            leading: IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                _scaffoldKey.currentState?.openDrawer(); // Open the drawer
-              },
-            ),
-          ),
+          appBar: Header(title: 'Wardrobe'),
           drawer: NavigationDrawerWidget(), // Attach the navigation drawer
           body: SingleChildScrollView(
             child: Column(

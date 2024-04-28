@@ -108,15 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey, // Use the GlobalKey for the Scaffold
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer(); // Open the drawer
-          },
-        ),
-        title: Text("Profile"),
-      ),
+      appBar:Header(title: 'Profile'),
       drawer: NavigationDrawerWidget(), // Add the navigation drawer
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20.0),
