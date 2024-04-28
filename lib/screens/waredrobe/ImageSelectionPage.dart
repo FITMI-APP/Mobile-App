@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grad/shared/Header.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -26,83 +27,84 @@ class _ImageSelectionPageState extends State<ImageSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Assign GlobalKey to Scaffold
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Add Item to ${widget.category}'),
-        backgroundColor: HexColor("#3F72AF"), // AppBar color
-        leading: IconButton(
-          icon: Icon(Icons.menu), // Menu icon for the drawer
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer(); // Open the drawer
-          },
-        ),
       ),
-      drawer: NavigationDrawerWidget(), // Your custom navigation drawer
-      backgroundColor: HexColor("#3F72AF"), // Background color of the Scaffold
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _imageFile != null
-                ? Image.file(
-              _imageFile!,
-              height: 150,
-              width: 150,
-              fit: BoxFit.cover,
-            )
-                : Text(
-              'No image selected',
-              style: TextStyle(fontSize: 20, color: Colors.white),
-            ),
-            SizedBox(height: 20),
-            if (_imageFile == null) // If no image is selected, show these options
-              Column(
-                children: [
-                  ElevatedButton(
-                    onPressed: () => getImage(ImageSource.camera), // Capture image
-                    child: Text('Capture Image'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => getImage(ImageSource.gallery), // Select from gallery
-                    child: Text('Select Image'),
-                  ),
-                ],
+      drawer: NavigationDrawerWidget(), // Dummy drawer implementation
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/background_image.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _imageFile != null
+                  ? Image.file(
+                _imageFile!,
+                height: 150,
+                width: 150,
+                fit: BoxFit.cover,
+              )
+                  : Text(
+                'No image selected',
+                style: TextStyle(fontSize: 20, color: Colors.white),
               ),
-            if (_imageFile != null)
+              SizedBox(height: 20),
+              if (_imageFile == null)
+                Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => getImage(ImageSource.camera),
+                      child: Text('Capture Image'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => getImage(ImageSource.gallery),
+                      child: Text('Select Image'),
+                    ),
+                  ],
+                ),
+              if (_imageFile != null)
+                ElevatedButton(
+                  onPressed: removeImage,
+                  child: Text('Remove Image'),
+                ),
               ElevatedButton(
-                onPressed: () => removeImage(), // Remove the image
-                child: Text('Remove Image'),
+                onPressed: () {
+                  if (_imageFile != null) {
+                    widget.onUploadToFirebase(_imageFile);
+                    Navigator.pop(context);
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('No Image Selected'),
+                          content: Text('Please select an image first.'),
+                          actions: <Widget>[
+                            ElevatedButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                child: Text('Save image'),
               ),
-            ElevatedButton(
-              onPressed: () {
-                if (_imageFile != null) {
-                  widget.onUploadToFirebase(_imageFile);
-                  Navigator.pop(context); // Go back after saving
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('No Image Selected'),
-                        content: Text('Please select an image first.'),
-                        actions: <Widget>[
-                          ElevatedButton(
-                            onPressed: () => Navigator.pop(context), // Close dialog
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-              child: Text('Save image'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
+
 
   void getImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(
