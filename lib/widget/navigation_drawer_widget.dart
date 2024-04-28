@@ -178,9 +178,10 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
         break;
       case 3:
         await _auth.signOut();
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => SignIn()),
+              (Route<dynamic> route) => false,
         );
         break;
     }
