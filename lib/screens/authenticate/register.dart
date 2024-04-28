@@ -129,7 +129,7 @@ class _RegisterState extends State<Register> {
                           ),
                           const SizedBox(width: 10.0),
                           Radio<String>(
-                            value: 'Male',
+                            value: 'male',
                             groupValue: gender,
                             onChanged: (val) {
                               setState(() {
@@ -140,7 +140,7 @@ class _RegisterState extends State<Register> {
                           const Text('Male'),
                           const SizedBox(width: 10.0),
                           Radio<String>(
-                            value: 'Female',
+                            value: 'female',
                             groupValue: gender,
                             onChanged: (val) {
                               setState(() {
