@@ -76,7 +76,7 @@ class _HomeState extends State<Home> {
                       getImage(source: ImageSource.camera, type: 'person'),
                   onSelect: () =>
                       getImage(source: ImageSource.gallery, type: 'person'),
-                  placeholderText: 'Input person image',
+                  placeholderText: 'Person image',
                 ),
                 const SizedBox(width: 20),
                 buildImageWidget(
@@ -86,7 +86,7 @@ class _HomeState extends State<Home> {
                       getImage(source: ImageSource.camera, type: 'cloth'),
                   onSelect: () =>
                       getImage(source: ImageSource.gallery, type: 'cloth'),
-                  placeholderText: 'Input cloth image',
+                  placeholderText: 'Cloth image',
                 ),
               ],
             ),
@@ -117,14 +117,11 @@ class _HomeState extends State<Home> {
                   );
                 }
               },
-              child: const Text(
-                "Generate",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+                child: const Text(
+                  "    Generate    ",
                 ),
               ),
-            ),
+
           ],
         ),
       ),
@@ -195,7 +192,7 @@ class _HomeState extends State<Home> {
             children: [
               Container(
                 width: 150,
-                height: 150,
+                height: 200,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: HexColor("#DBE2EF"),
