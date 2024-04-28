@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:animated_button_bar/animated_button_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:path/path.dart' as path;
 import '../../shared/Header.dart';
 import '../../widget/navigation_drawer_widget.dart';
 import 'GenerateImageCard.dart';
@@ -21,220 +20,146 @@ class _HomeState extends State<Home> {
   String gender = 'woman'; // Default selection
   String category = 'upper';
 
+  // Define a consistent style for buttons
+  final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+    backgroundColor: HexColor("#F5F5F5"), // Button background color
+    foregroundColor: Colors.black, // Button text color
+    padding: const EdgeInsets.all(12),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: Header(),
+      appBar: Header(title: 'Home'),
       drawer: NavigationDrawerWidget(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          AnimatedButtonBar(
-            radius: 32.0,
-            padding: const EdgeInsets.all(10.0),
-            backgroundColor: HexColor("#aec2e6"),
-            foregroundColor: HexColor("#DBE2EF"),
-            borderColor: Colors.white,
-            borderWidth: 2,
-            innerVerticalPadding: 14,
-            children: [
-              ButtonBarEntry(
-                onTap: () {
-                  setState(() {
-                    gender = 'woman';
-                  });
-                  print('woman tapped');
-                },
-                child: Text(
-                  "woman",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/background_image.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Gender selection button bar with consistent style
+            buildAnimatedButtonBar([
+              buildButtonBarEntry(
+                  "woman", () => setState(() => gender = "woman")),
+              buildButtonBarEntry("man", () => setState(() => gender = "man")),
+            ]),
+
+            // Category selection button bar with consistent style
+            buildAnimatedButtonBar([
+              buildButtonBarEntry(
+                  "upper", () => setState(() => category = "upper")),
+              buildButtonBarEntry(
+                  "lower", () => setState(() => category = "lower")),
+              if (gender == 'woman')
+                buildButtonBarEntry(
+                    "dress", () => setState(() => category = "dress")),
+            ]),
+
+            const SizedBox(height: 10),
+
+            // Image widgets with consistent style
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                buildImageWidget(
+                  image: person,
+                  onRemove: () => setState(() => person = null),
+                  onCapture: () =>
+                      getImage(source: ImageSource.camera, type: 'person'),
+                  onSelect: () =>
+                      getImage(source: ImageSource.gallery, type: 'person'),
+                  placeholderText: 'Input person image',
                 ),
-              ),
-              ButtonBarEntry(
-                onTap: () {
-                  setState(() {
-                    gender = 'man';
-                    if (category == 'dress') {
-                      category = 'upper'; // Change category if 'dress' is selected when gender is switched to 'man'
-                    }
-                  });
-                  print('man tapped');
-                },
-                child: Text(
-                  "man",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                const SizedBox(width: 20),
+                buildImageWidget(
+                  image: cloth,
+                  onRemove: () => setState(() => cloth = null),
+                  onCapture: () =>
+                      getImage(source: ImageSource.camera, type: 'cloth'),
+                  onSelect: () =>
+                      getImage(source: ImageSource.gallery, type: 'cloth'),
+                  placeholderText: 'Input cloth image',
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          AnimatedButtonBar(
-            radius: 32.0,
-            padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 20.0),
-            backgroundColor: HexColor("#aec2e6"),
-            foregroundColor: HexColor("#DBE2EF"),
-            borderWidth: 2,
-            innerVerticalPadding: 14,
-            borderColor: Colors.white,
-            children: gender == 'woman'
-                ? [
-              ButtonBarEntry(
-                onTap: () {
-                  setState(() {
-                    category = 'upper';
-                  });
-                  print('upper tapped');
-                },
-                child: Text('upper'),
-              ),
-              ButtonBarEntry(
-                onTap: () {
-                  setState(() {
-                    category = 'lower';
-                  });
-                  print('lower tapped');
-                },
-                child: Text('lower'),
-              ),
-              ButtonBarEntry(
-                onTap: () {
-                  setState(() {
-                    category = 'dress';
-                  });
-                  print('dress tapped');
-                },
-                child: Text('dress'),
-              ),
-            ]
-                : [
-              ButtonBarEntry(
-                onTap: () {
-                  setState(() {
-                    category = 'upper';
-                  });
-                  print('upper tapped');
-                },
-                child: Text('upper'),
-              ),
-              ButtonBarEntry(
-                onTap: () {
-                  setState(() {
-                    category = 'lower';
-                  });
-                  print('lower tapped');
-                },
-                child: Text('lower'),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildImageWidget(
-                image: person,
-                onRemove: () => setState(() => person = null),
-                onCapture: () =>
-                    getImage(source: ImageSource.camera, type: 'person'),
-                onSelect: () =>
-                    getImage(source: ImageSource.gallery, type: 'person'),
-                placeholderText: 'Input person image',
-              ),
-              const SizedBox(width: 20),
-              buildImageWidget(
-                image: cloth,
-                onRemove: () => setState(() => cloth = null),
-                onCapture: () =>
-                    getImage(source: ImageSource.camera, type: 'cloth'),
-                onSelect: () =>
-                    getImage(source: ImageSource.gallery, type: 'cloth'),
-                placeholderText: 'Input cloth image',
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Container(
-            height: 200,
-            child: SizedBox(
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 10.0),
-                child: Column(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        if (person != null && cloth != null) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => GenerateImageCard(
-                                gender: gender,
-                                category: category,
-                                personImageName: person,
-                                clothImageName: cloth,
-                              ),
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  'Please insert both person and cloth images.'),
-                            ),
-                          );
-                        }
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                        MaterialStateProperty.all<Color>(HexColor("#DBE2EF")),
-                      ),
-                      child: const Text(
-                        'Generate',
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            // "Generate" button with consistent style
+            ElevatedButton(
+              style: buttonStyle,
+              onPressed: () {
+                if (person != null && cloth != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GenerateImageCard(
+                        gender: gender,
+                        category: category,
+                        personImageName: person,
+                        clothImageName: cloth,
                       ),
                     ),
-                  ],
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text(
+                            "Please insert both person and cloth images.")),
+                  );
+                }
+              },
+              child: const Text(
+                "Generate",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-
-  void getImage({required ImageSource source, required String type}) async {
-    final file = await ImagePicker().pickImage(
-      source: source,
-      maxWidth: 640,
-      maxHeight: 480,
-      imageQuality: 70, //0 - 100
+  // Helper method to build consistent animated button bars
+  Widget buildAnimatedButtonBar(List<ButtonBarEntry> entries) {
+    return AnimatedButtonBar(
+      radius: 32.0,
+      padding: const EdgeInsets.all(10.0),
+      backgroundColor: HexColor("#DBE2EF"),
+      foregroundColor: HexColor("#FFFFFF"),
+      borderWidth: 2,
+      innerVerticalPadding: 14,
+      borderColor: Colors.white,
+      children: entries,
     );
-
-    if (file?.path != null) {
-      setState(() {
-        if (type == 'person') {
-          person = File(file!.path);
-          // String personImageName = path.basename(file.path);
-        } else if (type == 'cloth') {
-          cloth = File(file!.path);
-          // String clothImageName = path.basename(file.path);
-
-        }
-      });
-    }
   }
 
-  // void generate(){
-  //   const GenerateImageCard();
-  // }
+  // Helper method to create consistent button bar entries
+  ButtonBarEntry buildButtonBarEntry(String text, VoidCallback onTap) {
+    return ButtonBarEntry(
+      onTap: onTap,
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+        ),
+      ),
+    );
+  }
 
+  // Helper method to build image widgets with consistent styling
   Widget buildImageWidget({
     File? image,
     VoidCallback? onRemove,
@@ -255,75 +180,62 @@ class _HomeState extends State<Home> {
                     fit: BoxFit.cover,
                   ),
                   border: Border.all(width: 5, color: Colors.black),
-                  borderRadius: BorderRadius.circular(12.0),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
+                style: buttonStyle, // Consistent style for all ElevatedButtons
                 onPressed: onRemove,
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(HexColor("#DBE2EF")),
-                ),
-                child: Expanded(
-                  child: const Text('remove image',
-                      style: TextStyle(fontSize: 12, color: Colors.black)),
-                ),
+                child: const Text("Remove Image"),
               ),
             ],
           )
         : Column(
             children: [
               Container(
-                height: 300,
-                alignment: Alignment.topLeft,
-                child: Column(
-                  children: [
-                    Container(
-                      width: 150,
-                      height: 150,
-                      alignment: Alignment.topLeft,
-                      decoration: BoxDecoration(
-                        color: HexColor("#DBE2EF"),
-                        border: Border.all(width: 5, color: Colors.black12),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Text(
-                        placeholderText,
-                        style: TextStyle(fontSize: 20),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: onCapture,
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              HexColor("#DBE2EF")),
-                        ),
-                        child: const Text('Capture Image',
-                            style:
-                                TextStyle(fontSize: 12, color: Colors.black)),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: onSelect,
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              HexColor("#DBE2EF")),
-                        ),
-                        child: const Text('Select Image',
-                            style:
-                                TextStyle(fontSize: 12, color: Colors.black)),
-                      ),
-                    ),
-                  ],
+                width: 150,
+                height: 150,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: HexColor("#DBE2EF"),
+                  border: Border.all(width: 5, color: Colors.black12),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ), //SizedBox(width:20), // Add spacing between containers
+                child: Text(
+                  placeholderText,
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: buttonStyle,
+                onPressed: onCapture,
+                child: const Text("Capture Image"),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: buttonStyle,
+                onPressed: onSelect,
+                child: const Text("Select Image"),
+              ),
             ],
           );
+  }
+
+  // Helper method to get images from the camera or gallery
+  void getImage({required ImageSource source, required String type}) async {
+    final file = await ImagePicker().pickImage(
+      source: source,
+      maxWidth: 640,
+      maxHeight: 480,
+      imageQuality: 70, // Image quality (0 - 100)
+    );
+
+    if (file != null) {
+      setState(() => type == 'person'
+          ? person = File(file.path)
+          : cloth = File(file.path));
+    }
   }
 }

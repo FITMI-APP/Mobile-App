@@ -6,7 +6,9 @@ import 'package:hexcolor/hexcolor.dart';
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class Header extends StatelessWidget implements PreferredSizeWidget {
-  const Header({Key? key}) : super(key: key);
+  final String title;
+
+  const Header({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,31 +34,13 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
             elevation: 0, // Set elevation to 0 to avoid double shadow
             title: Row(
               children: [
-                Image.asset(
-                  'assets/logoo.png', // Replace with your image asset path
-                  height: 40,
-                ),
-                const SizedBox(width: 8),
-                const Text('FitMi'),
+                Text(title),
               ],
             ),
-            actions: [
-              TextButton.icon(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all(Colors.black),
-                ),
-                onPressed: () async {
-                  await _auth.signOut();
-                },
-                icon: const Icon(Icons.exit_to_app_rounded),
-                label: const Text('Logout'),
-              ),
-            ],
           ),
         ),
       ),
     );
-
   }
 
   @override
