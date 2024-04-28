@@ -24,9 +24,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: HexColor("#3F72AF"),
-      drawer: NavigationDrawerWidget(),
+      backgroundColor: Colors.white,
       appBar: Header(),
+      drawer: NavigationDrawerWidget(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

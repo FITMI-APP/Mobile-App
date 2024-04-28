@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:grad/screens/authenticate/signIn.dart';
 import 'package:grad/services/authenticate.dart';
 import '../../shared/constants.dart';
 import 'package:hexcolor/hexcolor.dart';
+
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class Header extends StatelessWidget implements PreferredSizeWidget {
   const Header({Key? key}) : super(key: key);
@@ -12,42 +13,50 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
     final AuthService _auth = AuthService();
 
     return AppBar(
-      backgroundColor: HexColor("#DBE2EF"), // Set the background color
-      elevation: 0, // Remove the shadow
-      title: Row(
-        children: [
-          Image.asset(
-            'assets/logoo.png', // Replace with the path to your image asset
-            height: 40, // Adjust the height of the image as needed
+      backgroundColor: Colors.white,
+      bottom: PreferredSize(
+        preferredSize: Size.fromHeight(56), // Adjust the height as needed
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // Shadow color
+                spreadRadius: 2, // Spread radius
+                blurRadius: 4, // Blur radius
+                offset: Offset(0, 2), // Shadow offset (vertical and horizontal)
+              ),
+            ],
           ),
-          const SizedBox(width: 8), // Add space between the image and the title
-          const Text(
-            'FitMi', // Display the app title
-            style: TextStyle(
-              color: Colors.black, // Set the text color
-              fontSize: 20, // Adjust the font size
-              fontWeight: FontWeight.bold, // Make it bold
+          child: AppBar(
+            backgroundColor: HexColor("#FFFFFF"),
+            elevation: 0, // Set elevation to 0 to avoid double shadow
+            title: Row(
+              children: [
+                Image.asset(
+                  'assets/logoo.png', // Replace with your image asset path
+                  height: 40,
+                ),
+                const SizedBox(width: 8),
+                const Text('FitMi'),
+              ],
             ),
+            actions: [
+              TextButton.icon(
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all(Colors.black),
+                ),
+                onPressed: () async {
+                  await _auth.signOut();
+                },
+                icon: const Icon(Icons.exit_to_app_rounded),
+                label: const Text('Logout'),
+              ),
+            ],
           ),
-        ],
-      ),
-      actions: [
-        TextButton.icon(
-          style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all(Colors.black),
-          ),
-          onPressed: () async {
-            await _auth.signOut();
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => SignIn()), // Replace with your actual login page
-            );
-          },
-          icon: const Icon(Icons.exit_to_app_rounded),
-          label: const Text('Logout'),
         ),
-      ],
+      ),
     );
+
   }
 
   @override
