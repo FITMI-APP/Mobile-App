@@ -73,31 +73,32 @@ class _ImageSelectionPageState extends State<ImageSelectionPage> {
                   onPressed: removeImage,
                   child: Text('Remove Image'),
                 ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_imageFile != null) {
-                    widget.onUploadToFirebase(_imageFile);
-                    Navigator.pop(context);
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('No Image Selected'),
-                          content: Text('Please select an image first.'),
-                          actions: <Widget>[
-                            ElevatedButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                },
-                child: Text('Save image'),
-              ),
+              if (_imageFile != null) // Only show the button when _imageFile is not null
+                ElevatedButton(
+                  onPressed: () {
+                    if (_imageFile != null) {
+                      widget.onUploadToFirebase(_imageFile);
+                      Navigator.pop(context);
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('No Image Selected'),
+                            content: Text('Please select an image first.'),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+                  child: Text('Save image'),
+                ),
             ],
           ),
         ),

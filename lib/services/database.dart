@@ -22,7 +22,7 @@ class Database {
       // await _users.doc(user.uid).set(user); // Assuming MyUser has a toMap() method to convert it to a Map
       // await _createUserCollections(user.uid);
       await _users.doc(user.uid).set(user).then((_) async {
-        await _createUserCollections(user.uid);
+        await _createUserCollections(user.uid,user.gender);
       });
     } catch (e) {
       // Handle errors
@@ -30,24 +30,39 @@ class Database {
     }
   }
 
-  Future<void> _createUserCollections(String? userId) async {
+  // Future<void> _createUserCollections(String? userId) async {
+  //   try {
+  //     final userRef = _users.doc(userId);
+  //
+  //     // Create the "upper" subcollection
+  //     await userRef.collection('Upper').add({});
+  //
+  //     // Create the "lower" subcollection
+  //     await userRef.collection('Lower').add({});
+  //
+  //     // Create the "dress" subcollection
+  //     await userRef.collection('Dresses').add({});
+  //   } catch (e) {
+  //     // Handle errors
+  //     print("Error creating user collections: $e");
+  //     rethrow; // Rethrow the exception to propagate it further if needed
+  //   }
+  // }
+  Future<void> _createUserCollections(String? userId, String gender) async {
     try {
       final userRef = _users.doc(userId);
-
-      // Create the "upper" subcollection
       await userRef.collection('Upper').add({});
-
-      // Create the "lower" subcollection
       await userRef.collection('Lower').add({});
-
-      // Create the "dress" subcollection
-      await userRef.collection('Dresses').add({});
+      if (gender.toLowerCase() == 'female') {
+        await userRef.collection('Dresses').add({});
+      }
     } catch (e) {
       // Handle errors
       print("Error creating user collections: $e");
       rethrow; // Rethrow the exception to propagate it further if needed
     }
   }
+
 }
 
 // Future<MyUser?> getUserById(String userId) async {
