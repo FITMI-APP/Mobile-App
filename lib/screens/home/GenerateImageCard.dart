@@ -57,14 +57,17 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
           filename: 'cloth_image.jpg',
         ));
 
-      // Send the request
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
 
-      // Update the state with the generated image response
-      setState(() {
-        generatedImageResponse = response;
-      });
+      // Check if the response was successful (status code 200)
+      if (response.statusCode == 200) {
+        setState(() {
+          generatedImageResponse = response;
+        });
+      } else {
+        throw 'Failed to fetch generated image: ${response.statusCode}';
+      }
     } catch (e) {
       // Handle errors
       print('Error fetching generated image: $e');
@@ -72,7 +75,7 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Error'),
-          content: Text('Failed to fetch generated image. Please check your internet connection and try again.'),
+          content: Text('Failed to fetch generated image. Error: $e'), // Display the actual error message
           actions: [
             TextButton(
               onPressed: () {
@@ -85,8 +88,7 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
       );
     }
   }
-
-  @override
+      @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue,
