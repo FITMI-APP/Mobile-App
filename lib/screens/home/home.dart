@@ -17,7 +17,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   File? cloth;
   File? person;
-  String gender = 'male'; // Default selection
+  String gender = 'female'; // Default selection
   String category = 'upper_body';
 
   // Define a consistent style for buttons

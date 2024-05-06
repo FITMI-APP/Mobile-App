@@ -37,7 +37,7 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
   Future<void> fetchGeneratedImage() async {
     try {
       // Construct the API endpoint URL
-      var url = Uri.parse('http://192.168.1.2:5000/api/generate_tryon'); // Update with your actual server URL
+      var url = Uri.parse('http://192.168.1.10:5000/api/generate_tryon'); // Update with your actual server URL
       // Create a multipart request
       var request = http.MultipartRequest('POST', url)
       // Add fields to the request (category and gender)
@@ -88,10 +88,10 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
       );
     }
   }
-  @override
+      @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Generated Image Card'),
       ),
@@ -104,7 +104,7 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
               if (generatedImageResponse != null)
                 FillImageCard(
                   width: 250,
-                  heightImage: 250,
+                  heightImage: 350,
                   imageProvider: MemoryImage(generatedImageResponse!.bodyBytes),
                 )
               else
