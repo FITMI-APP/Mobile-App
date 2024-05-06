@@ -17,8 +17,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   File? cloth;
   File? person;
-  String gender = 'woman'; // Default selection
-  String category = 'upper';
+  String gender = 'male'; // Default selection
+  String category = 'upper_body';
 
   // Define a consistent style for buttons
   final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
@@ -48,19 +48,19 @@ class _HomeState extends State<Home> {
             // Gender selection button bar with consistent style
             buildAnimatedButtonBar([
               buildButtonBarEntry(
-                  "woman", () => setState(() => gender = "woman")),
-              buildButtonBarEntry("man", () => setState(() => gender = "man")),
+                  "woman", () => setState(() => gender = "female")),
+              buildButtonBarEntry("man", () => setState(() => gender = "male")),
             ]),
 
             // Category selection button bar with consistent style
             buildAnimatedButtonBar([
               buildButtonBarEntry(
-                  "upper", () => setState(() => category = "upper")),
+                  "upper", () => setState(() => category = "upper_body")),
               buildButtonBarEntry(
-                  "lower", () => setState(() => category = "lower")),
+                  "lower", () => setState(() => category = "lower_body")),
               if (gender == 'woman')
                 buildButtonBarEntry(
-                    "dress", () => setState(() => category = "dress")),
+                    "dress", () => setState(() => category = "dresses")),
             ]),
 
             const SizedBox(height: 10),
