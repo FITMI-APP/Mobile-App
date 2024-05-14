@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class GenerateImageCard extends StatefulWidget {
   final String gender; // Gender of the person trying on the clothes
@@ -24,20 +26,27 @@ class GenerateImageCard extends StatefulWidget {
 
 class _GenerateImageCardState extends State<GenerateImageCard> {
   bool showRecommendations = false;
+  bool showComplementaryItems = false;
   http.Response? generatedImageResponse; // Response containing the generated image
+  List<Uint8List> photos = []; // List to store photo data for recommendations
+  List<Uint8List> complementaryPhotos = []; // List to store complementary items data
 
   @override
   void initState() {
     super.initState();
     // Call the function to fetch the generated image when the widget is initialized
     fetchGeneratedImage();
+    // Call the function to fetch the photo data for recommendations after another delay
+    fetchPhotos();
+    // Call the function to fetch complementary photos after another delay
+    fetchComplementaryPhotos();
   }
 
   // Function to call the API and fetch the generated image
   Future<void> fetchGeneratedImage() async {
     try {
       // Construct the API endpoint URL
-      var url = Uri.parse('http://192.168.1.10:5000/api/generate_tryon'); // Update with your actual server URL
+      var url = Uri.parse('http://192.168.1.2:5000/api/generate_tryon'); // Update with your actual server URL
       // Create a multipart request
       var request = http.MultipartRequest('POST', url)
       // Add fields to the request (category and gender)
@@ -88,7 +97,54 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
       );
     }
   }
-      @override
+
+  // Function to fetch photo data from the API for recommendations
+  Future<void> fetchPhotos() async {
+    try {
+      for (int i = 1; i <= 10; i++) {
+        var url = Uri.parse('http://192.168.1.2:5000/get_cloth_rec?category=${widget.category}&id=$i');
+        var response = await http.get(url);
+
+        if (response.statusCode == 200) {
+          // If the request is successful, directly add the photo data to the list
+          setState(() {
+            this.photos.add(response.bodyBytes);
+          });
+        } else {
+          // If the request fails, show an error message
+          print('Failed to fetch photo: ${response.statusCode}');
+        }
+      }
+    } catch (e) {
+      // Handle any exceptions
+      print('Error fetching photos: $e');
+    }
+  }
+
+  // Function to fetch photo data for complementary items
+  Future<void> fetchComplementaryPhotos() async {
+    try {
+      for (int i = 1; i <= 10; i++) {
+        var url = Uri.parse('http://192.168.1.2:5000/get_comp_rec?gender=${widget.gender}&id=$i');
+        var response = await http.get(url);
+
+        if (response.statusCode == 200) {
+          // If the request is successful, directly add the photo data to the list
+          setState(() {
+            this.complementaryPhotos.add(response.bodyBytes);
+          });
+        } else {
+          // If the request fails, show an error message
+          print('Failed to fetch complementary photo: ${response.statusCode}');
+        }
+      }
+    } catch (e) {
+      // Handle any exceptions
+      print('Error fetching complementary photos: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -96,44 +152,53 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
         title: Text('Generated Image Card'),
       ),
       body: Center(
-        child: Card(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(height: 20),
-              if (generatedImageResponse != null)
-                FillImageCard(
-                  width: 250,
-                  heightImage: 350,
-                  imageProvider: MemoryImage(generatedImageResponse!.bodyBytes),
-                )
-              else
-                Text("No image generated"),
+        child: SingleChildScrollView(
+          child: Card(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(height: 20),
+                if (generatedImageResponse != null)
+                  FillImageCard(
+                    width: 250,
+                    heightImage: 350,
+                    imageProvider: MemoryImage(generatedImageResponse!.bodyBytes),
+                  )
+                else
+                  Text("No image generated"),
 
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Back'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        showRecommendations = !showRecommendations;
-                      });
-                    },
-                    child: Text('Recommend Other Cloth'),
-                  ),
-                ],
-              ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          showRecommendations = !showRecommendations;
+                          showComplementaryItems = false;
+                        });
+                      },
+                      child: Text('Recommend Other Cloth'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          showComplementaryItems = !showComplementaryItems;
+                          showRecommendations = false;
+                        });
+                      },
+                      child: Text('Complementary Items'),
+                    ),
+                  ],
+                ),
 
-              SizedBox(height: 20),
-              if (showRecommendations) RecommendationSection(),
-            ],
+                SizedBox(height: 20),
+                if (showRecommendations)
+                  RecommendationSection(photos: photos),
+                if (showComplementaryItems)
+                  ComplementarySection(photos: complementaryPhotos),
+              ],
+            ),
           ),
         ),
       ),
@@ -172,16 +237,22 @@ class FillImageCard extends StatelessWidget {
   }
 }
 
-// Widget for recommendation section
 class RecommendationSection extends StatelessWidget {
+  final List<Uint8List> photos;
+
+  const RecommendationSection({
+    required this.photos,
+  });
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 10,
+        itemCount: photos.length,
         itemBuilder: (context, index) {
+          final photoData = photos[index];
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Card(
@@ -189,8 +260,53 @@ class RecommendationSection extends StatelessWidget {
                 width: 150,
                 height: 150,
                 color: Colors.grey[200],
-                child: Center(
-                  child: Text('Image $index'),
+                child: Image.memory(
+                  photoData,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    print('Error loading image: $error');
+                    return Center(child: Text('Error loading image'));
+                  },
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class ComplementarySection extends StatelessWidget {
+  final List<Uint8List> photos;
+
+  const ComplementarySection({
+    required this.photos,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: photos.length,
+        itemBuilder: (context, index) {
+          final photoData = photos[index];
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              child: Container(
+                width: 150,
+                height: 150,
+                color: Colors.grey[200],
+                child: Image.memory(
+                  photoData,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    print('Error loading image: $error');
+                    return Center(child: Text('Error loading image'));
+                  },
                 ),
               ),
             ),

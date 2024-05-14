@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
                   "upper", () => setState(() => category = "upper_body")),
               buildButtonBarEntry(
                   "lower", () => setState(() => category = "lower_body")),
-              if (gender == 'woman')
+              if (gender == 'female')
                 buildButtonBarEntry(
                     "dress", () => setState(() => category = "dresses")),
             ]),
