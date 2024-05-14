@@ -37,10 +37,10 @@ class _HomeState extends State<Home> {
       drawer: NavigationDrawerWidget(),
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/background_image.jpg"),
-            fit: BoxFit.cover,
-          ),
+          // image: DecorationImage(
+          //   image: AssetImage("assets/background_image.jpg"),
+          //   fit: BoxFit.cover,
+          // ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,36 +94,56 @@ class _HomeState extends State<Home> {
             const SizedBox(height: 20),
 
             // "Generate" button with consistent style
-            ElevatedButton(
-              style: buttonStyle,
-              onPressed: () {
-                if (person != null && cloth != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => GenerateImageCard(
-                        gender: gender,
-                        category: category,
-                        personImageName: person,
-                        clothImageName: cloth,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: SizedBox(
+                    width: 300,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (person != null && cloth != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GenerateImageCard(
+                                gender: gender,
+                                category: category,
+                                personImageName: person,
+                                clothImageName: cloth,
+                              ),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Please insert both person and cloth images."),
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: HexColor("#DBE2EF"), // Background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 0), // Adjust vertical padding as needed
+                        child: Text(
+                          "Generate",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black, // Change text color
+                          ),
+                        ),
                       ),
                     ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text(
-                            "Please insert both person and cloth images.")),
-                  );
-                }
-              },
-                child: const Text(
-                  "    Generate    ",
+                  ),
                 ),
-              ),
-
-          ],
-        ),
+              ],
+            ),
+          ],        ),
       ),
     );
   }
@@ -136,7 +156,7 @@ class _HomeState extends State<Home> {
       backgroundColor: HexColor("#DBE2EF"),
       foregroundColor: HexColor("#FFFFFF"),
       borderWidth: 2,
-      innerVerticalPadding: 14,
+      innerVerticalPadding: 12,
       borderColor: Colors.white,
       children: entries,
     );
@@ -169,7 +189,7 @@ class _HomeState extends State<Home> {
             children: [
               Container(
                 width: 150,
-                height: 150,
+                height: 200,
                 decoration: BoxDecoration(
                   color: Colors.grey,
                   image: DecorationImage(
@@ -205,16 +225,34 @@ class _HomeState extends State<Home> {
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                style: buttonStyle,
-                onPressed: onCapture,
-                child: const Text("Capture Image"),
+              SizedBox(
+                width: 150, // Adjust the width as needed
+                height: 50, // Adjust the height as needed
+                child: ElevatedButton(
+                  onPressed: onCapture,
+                  style: buttonStyle,
+                  child: const Text("Wardrobe",textAlign: TextAlign.center),
+                ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                style: buttonStyle,
-                onPressed: onSelect,
-                child: const Text("Select Image"),
+              SizedBox(
+                width: 150, // Adjust the width as needed
+                height: 50, // Adjust the height as needed
+                child: ElevatedButton(
+                  onPressed: onCapture,
+                  style: buttonStyle,
+                  child: const Text("Capture Image",textAlign: TextAlign.center),
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: 150, // Adjust the width as needed
+                height: 50, // Adjust the height as needed
+                child: ElevatedButton(
+                  onPressed: onSelect,
+                  style: buttonStyle,
+                  child: const Text("Image from gallery",textAlign: TextAlign.center),
+                ),
               ),
             ],
           );
