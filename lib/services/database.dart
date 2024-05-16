@@ -51,10 +51,10 @@ class Database {
   Future<void> _createUserCollections(String? userId, String gender) async {
     try {
       final userRef = _users.doc(userId);
-      await userRef.collection('Upper').add({});
-      await userRef.collection('Lower').add({});
+      await userRef.collection('upper_body').add({});
+      await userRef.collection('lower_body').add({});
       if (gender.toLowerCase() == 'female') {
-        await userRef.collection('Dresses').add({});
+        await userRef.collection('dresses').add({});
       }
     } catch (e) {
       // Handle errors

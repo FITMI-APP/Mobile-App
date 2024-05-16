@@ -146,14 +146,14 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
               children: [
                 if (userGender == 'female') // Conditionally show categories for woman
                   ...[
-                    buildCategorySection(context, "Upper", uppercloth),
-                    buildCategorySection(context, "Lower", lowercloth),
-                    buildCategorySection(context, "Dresses", dressescloth),
+                    buildCategorySection(context, "upper_body", uppercloth),
+                    buildCategorySection(context, "lower_body", lowercloth),
+                    buildCategorySection(context, "dresses", dressescloth),
                   ],
                 if (userGender == 'male') // Conditionally show categories for man
                   ...[
-                    buildCategorySection(context, "Upper", uppercloth),
-                    buildCategorySection(context, "Lower", lowercloth),
+                    buildCategorySection(context, "upper_body", uppercloth),
+                    buildCategorySection(context, "lower_body", lowercloth),
                   ],
               ],
             ),
@@ -191,13 +191,13 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                         onImageSelected: (File? file) {
                           setState(() {
                             switch (categoryTitle) {
-                              case 'Upper':
+                              case 'upper_body':
                                 uppercloth = file;
                                 break;
-                              case 'Lower':
+                              case 'lower_body':
                                 lowercloth = file;
                                 break;
-                              case 'Dresses':
+                              case 'dresses':
                                 dressescloth = file;
                                 break;
                               default:
@@ -226,31 +226,6 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
     );
   }
 
-  // void getImage({required ImageSource source, required String category}) async {
-  //   final file = await ImagePicker().pickImage(
-  //     source: source,
-  //     maxWidth: 640,
-  //     maxHeight: 480,
-  //     imageQuality: 70,
-  //   );
-  //   if (file != null) {
-  //     setState(() {
-  //       switch (category) {
-  //         case 'Upper':
-  //           uppercloth = File(file.path);
-  //           break;
-  //         case 'Lower':
-  //           lowercloth = File(file.path);
-  //           break;
-  //         case 'Dresses':
-  //           dressescloth = File(file.path);
-  //           break;
-  //         default:
-  //           break;
-  //       }
-  //     });
-  //   }
-  // }
 
   Future<void> uploadImageToFirebase(File imageFile, String category) async {
     Map<String, String> userInfo = await _auth.getUserInfo();
