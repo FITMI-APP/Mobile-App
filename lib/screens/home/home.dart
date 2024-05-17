@@ -13,7 +13,6 @@ import '../../services/authenticate.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart'; // Import path_provider
 
-
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -39,6 +38,7 @@ class _HomeState extends State<Home> {
       borderRadius: BorderRadius.circular(12),
     ),
   );
+
   @override
   void initState() {
     super.initState();
@@ -65,6 +65,7 @@ class _HomeState extends State<Home> {
       throw Exception('Failed to download file');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,8 +102,10 @@ class _HomeState extends State<Home> {
             const SizedBox(height: 10),
 
             // Image widgets with consistent style
+            // Image widgets with consistent style
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center, // Center the row horizontally
+              crossAxisAlignment: CrossAxisAlignment.start, // Align items at the start vertically
               children: [
                 buildImageWidget(
                   image: person,
@@ -113,7 +116,7 @@ class _HomeState extends State<Home> {
                       getImage(source: ImageSource.gallery, type: 'person'),
                   placeholderText: 'Person image',
                 ),
-                const SizedBox(width: 20),
+                const SizedBox(width: 20), // Space between the images
                 buildImageWidget(
                   image: cloth,
                   onRemove: () => setState(() => cloth = null),
@@ -122,9 +125,11 @@ class _HomeState extends State<Home> {
                   onSelect: () =>
                       getImage(source: ImageSource.gallery, type: 'cloth'),
                   placeholderText: 'Cloth image',
+                  onWardrobe: _showImageUrlsModal, // Pass the callback for Wardrobe button
                 ),
               ],
             ),
+
 
             const SizedBox(height: 20),
 
@@ -184,27 +189,24 @@ class _HomeState extends State<Home> {
             const SizedBox(height: 20),
 
             // Wardrobe button and ListView.builder
-            // Wardrobe button and ListView.builder
-            Expanded(
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: 150, // Adjust the width as needed
-                    height: 50, // Adjust the height as needed
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Wardrobe(); // Fetch image URLs
-                        _showImageUrlsModal(); // Show modal bottom sheet
-                      },
-                      style: buttonStyle,
-                      child: const Text("Wardrobe", textAlign: TextAlign.center),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            ),
-
+            // Expanded(
+            //   child: Column(
+            //     children: [
+            //       SizedBox(
+            //         width: 150, // Adjust the width as needed
+            //         height: 50, // Adjust the height as needed
+            //         child: ElevatedButton(
+            //           onPressed: () {
+            //             _showImageUrlsModal(); // Show modal bottom sheet
+            //           },
+            //           style: buttonStyle,
+            //           child: const Text("Wardrobe", textAlign: TextAlign.center),
+            //         ),
+            //       ),
+            //       const SizedBox(height: 20),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -246,67 +248,75 @@ class _HomeState extends State<Home> {
     VoidCallback? onCapture,
     VoidCallback? onSelect,
     String placeholderText = '',
+    VoidCallback? onWardrobe, // Add this parameter for the Wardrobe button
   }) {
-    return image != null
-        ? Column(
+    return Column(
       children: [
         Container(
           width: 150,
           height: 200,
           decoration: BoxDecoration(
-            color: Colors.grey,
-            image: DecorationImage(
+            color: image != null ? Colors.transparent : HexColor("#DBE2EF"),
+            image: image != null
+                ? DecorationImage(
               image: FileImage(image),
               fit: BoxFit.cover,
-            ),
-            border: Border.all(width: 5, color: Colors.black),
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        const SizedBox(height: 20),
-        ElevatedButton(
-          style: buttonStyle, // Consistent style for all ElevatedButtons
-          onPressed: onRemove,
-          child: const Text("Remove Image"),
-        ),
-      ],
-    )
-        : Column(
-      children: [
-        Container(
-          width: 150,
-          height: 200,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: HexColor("#DBE2EF"),
+            )
+                : null,
             border: Border.all(width: 5, color: Colors.black12),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Text(
+          alignment: Alignment.center,
+          child: image == null
+              ? Text(
             placeholderText,
             style: const TextStyle(fontSize: 20),
-          ),
+          )
+              : null,
         ),
         const SizedBox(height: 20),
-        SizedBox(
-          width: 150, // Adjust the width as needed
-          height: 50, // Adjust the height as needed
-          child: ElevatedButton(
-            onPressed: onCapture,
-            style: buttonStyle,
-            child: const Text("Capture Image", textAlign: TextAlign.center),
+        if (image != null)
+          ElevatedButton(
+            style: buttonStyle, // Consistent style for all ElevatedButtons
+            onPressed: onRemove,
+            child: const Text("Remove Image"),
+          )
+        else ...[
+          SizedBox(
+            width: 150, // Adjust the width as needed
+            height: 50, // Adjust the height as needed
+            child: ElevatedButton(
+              onPressed: onCapture,
+              style: buttonStyle,
+              child: const Text("Capture Image", textAlign: TextAlign.center),
+            ),
           ),
-        ),
-        const SizedBox(height: 20),
-        SizedBox(
-          width: 150, // Adjust the width as needed
-          height: 50, // Adjust the height as needed
-          child: ElevatedButton(
-            onPressed: onSelect,
-            style: buttonStyle,
-            child: const Text("Image from gallery", textAlign: TextAlign.center),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: 150, // Adjust the width as needed
+            height: 50, // Adjust the height as needed
+            child: ElevatedButton(
+              onPressed: onSelect,
+              style: buttonStyle,
+              child: const Text("Image from gallery", textAlign: TextAlign.center),
+            ),
           ),
-        ),
+          if (onWardrobe != null) // Show "Wardrobe" button only if onWardrobe is provided
+            Column(
+              children: [
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: 150, // Adjust the width as needed
+                  height: 50, // Adjust the height as needed
+                  child: ElevatedButton(
+                    onPressed: onWardrobe,
+                    style: buttonStyle,
+                    child: const Text("Wardrobe", textAlign: TextAlign.center),
+                  ),
+                ),
+              ],
+            ),
+        ],
       ],
     );
   }
@@ -321,49 +331,29 @@ class _HomeState extends State<Home> {
     );
 
     if (file != null) {
-      setState(() => type == 'person'
-          ? person = File(file.path)
-          : cloth = File(file.path));
+      setState(() => type == 'person' ? person = File(file.path) : cloth = File(file.path));
     }
   }
 
-  // Future<void> fetchWardrobeImages() async {
-  //   try {
-  //     print("Fetching image URLs...");
-  //     final List<String> urls = await getImageUrlsByCategory(_userId, category);
-  //     setState(() {
-  //       imageUrls = urls;
-  //     });
-  //     print("Fetched image URLs: $imageUrls");
-  //   } catch (e) {
-  //     print("Error fetching image URLs: $e");
-  //     // Handle error gracefully
-  //   }
-  // }
-
+  // Function to fetch wardrobe images
+  Future<void> fetchWardrobeImages() async {
+    try {
+      print("Fetching image URLs...");
+      final List<String> urls = await getImageUrlsByCategory(_userId, category);
+      setState(() {
+        imageUrls = urls;
+      });
+      print("Fetched image URLs: $imageUrls");
+    } catch (e) {
+      print("Error fetching image URLs: $e");
+      // Handle error gracefully
+    }
+  }
 
   void _showImageUrlsModal() {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        // Function to fetch wardrobe images
-        Future<void> fetchWardrobeImages() async {
-          try {
-            print("Fetching image URLs...");
-            final List<String> urls = await getImageUrlsByCategory(_userId, category);
-            setState(() {
-              imageUrls = urls;
-            });
-            print("Fetched image URLs: $imageUrls");
-          } catch (e) {
-            print("Error fetching image URLs: $e");
-            // Handle error gracefully
-          }
-        }
-
-        // Call the function to fetch wardrobe images
-        fetchWardrobeImages();
-
         return FutureBuilder<void>(
           future: fetchWardrobeImages(),
           builder: (BuildContext context, AsyncSnapshot<void> snapshot) {

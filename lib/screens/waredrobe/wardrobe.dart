@@ -70,11 +70,21 @@ class _ClothItemsState extends State<ClothItems> {
                         height: 100,
                         color: Colors.grey[200],
                         child: Center(
-                          child: Image.network(
-                            imageUrls[index],
-                            width: 90,
-                            height: 100,
-                            fit: BoxFit.cover,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EnlargedImage(imageUrl: imageUrls[index]),
+                                ),
+                              );
+                            },
+                            child: Image.network(
+                              imageUrls[index],
+                              width: 90,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
@@ -165,6 +175,20 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
 
 
   Widget buildCategorySection(BuildContext context, String categoryTitle, File? clothFile) {
+    // Function to get display text based on category
+    String getDisplayText(String category) {
+      switch (category) {
+        case 'upper_body':
+          return 'Upper';
+        case 'lower_body':
+          return 'Lower';
+        case 'dresses':
+          return 'Dresses';
+        default:
+          return category; // Default to the original category if no match found
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -174,7 +198,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                categoryTitle,
+                getDisplayText(categoryTitle), // Use the mapping function here
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -218,9 +242,9 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
             ],
           ),
           const SizedBox(height: 10),
-      ClothItems(
-        category: categoryTitle,
-      ), // Example list of items
+          ClothItems(
+            category: categoryTitle,
+          ), // Example list of items
         ],
       ),
     );
@@ -247,5 +271,26 @@ Future<void> getImageUrlsForUserAndCategory(String userId, String category) asyn
     print('Image URLs for user $userId and category $category: $imageUrls');
   } else {
     print('No image URLs found for user $userId and category $category');
+  }
+}
+
+class EnlargedImage extends StatelessWidget {
+  final String imageUrl;
+
+  const EnlargedImage({Key? key, required this.imageUrl}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(), // You can customize the app bar as needed
+      body: Center(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.pop(context); // Close the enlarged image view when tapped
+          },
+          child: Image.network(imageUrl), // Show the enlarged image
+        ),
+      ),
+    );
   }
 }

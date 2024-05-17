@@ -94,4 +94,46 @@ Future<List<String>> getImageUrlsByCategory(String userId, String category) asyn
   }
 }
 
+Future<void> deleteImageUrlFromDatabase(String userId, String category, String imageUrl) async {
+  try {
+    // Get reference to the user's category subcollection
+    CollectionReference categoryCollection = FirebaseFirestore.instance.collection('Users').doc(userId).collection(category);
+
+    // Retrieve the document from the subcollection
+    QuerySnapshot querySnapshot = await categoryCollection.get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Get the first (and only) document in the subcollection
+      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+
+      // Check if the document exists
+      if (documentSnapshot.exists) {
+        // Fetch existing image URLs
+        List<String> existingImageUrls = [];
+        var existingData = documentSnapshot.data();
+        if (existingData != null && existingData is Map<String, dynamic> && existingData.containsKey('imageUrls')) {
+          existingImageUrls = List<String>.from(existingData['imageUrls']);
+        }
+
+        // Remove the specified image URL from the list
+        existingImageUrls.remove(imageUrl);
+
+        // Update the document with the updated list of image URLs
+        await categoryCollection.doc(documentSnapshot.id).set({
+          'imageUrls': existingImageUrls,
+        });
+
+        print('Image URL deleted from database successfully');
+      } else {
+        print('Document does not exist for the specified category');
+      }
+    } else {
+      print('No documents found in the specified category');
+    }
+  } catch (e) {
+    print('Error deleting image URL from database: $e');
+  }
+}
+
+
 
