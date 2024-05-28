@@ -12,6 +12,8 @@ Future<String?> uploadImage(File imageFile, String userId, String category) asyn
     String imageUrl = await storageReference.getDownloadURL();
     return imageUrl;
   } catch (e) {
+    // print ("category is $category");
+    // print ("id is $userId");
     print('Error uploading image: $e');
     return null;
   }

@@ -14,12 +14,13 @@ void main() {
 }
 
 class ClothItems extends StatefulWidget {
-
   final String category;
+  final VoidCallback onImageDeleted;
 
   const ClothItems({
     Key? key,
     required this.category,
+    required this.onImageDeleted,
   }) : super(key: key);
 
   @override
@@ -29,6 +30,7 @@ class ClothItems extends StatefulWidget {
 class _ClothItemsState extends State<ClothItems> {
   String _userId = '';
   final AuthService _auth = AuthService();
+
   @override
   void initState() {
     super.initState();
@@ -36,18 +38,20 @@ class _ClothItemsState extends State<ClothItems> {
   }
 
   Future<void> _getUserInfo() async {
-    // Implement your getUserInfo function here
-    // For example, if _auth is your authentication object
     Map<String, String> userInfo = await _auth.getUserInfo();
     setState(() {
       _userId = userInfo['userid'] ?? '';
     });
   }
 
+  Future<List<String>> _fetchImageUrls() {
+    return getImageUrlsByCategory(_userId, widget.category);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<String>>(
-      future: getImageUrlsByCategory(_userId, widget.category),
+      future: _fetchImageUrls(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -75,7 +79,15 @@ class _ClothItemsState extends State<ClothItems> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EnlargedImage(imageUrl: imageUrls[index]),
+                                  builder: (context) => EnlargedImage(
+                                    imageUrl: imageUrls[index],
+                                    userId: _userId,
+                                    category: widget.category,
+                                    onImageDeleted: () {
+                                      widget.onImageDeleted();
+                                      setState(() {});
+                                    },
+                                  ),
                                 ),
                               );
                             },
@@ -101,6 +113,8 @@ class _ClothItemsState extends State<ClothItems> {
     );
   }
 }
+
+
 class Wardrobe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -128,6 +142,10 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
   File? dressescloth;
   final AuthService _auth = AuthService();
   String userID = '';
+
+  void _refreshPage() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +190,6 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
       },
     );
   }
-
 
   Widget buildCategorySection(BuildContext context, String categoryTitle, File? clothFile) {
     // Function to get display text based on category
@@ -244,12 +261,12 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
           const SizedBox(height: 10),
           ClothItems(
             category: categoryTitle,
+            onImageDeleted: _refreshPage,
           ), // Example list of items
         ],
       ),
     );
   }
-
 
   Future<void> uploadImageToFirebase(File imageFile, String category) async {
     Map<String, String> userInfo = await _auth.getUserInfo();
@@ -264,6 +281,8 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
     }
   }
 }
+
+
 Future<void> getImageUrlsForUserAndCategory(String userId, String category) async {
   List<String> imageUrls = await getImageUrlsByCategory(userId, category);
   if (imageUrls.isNotEmpty) {
@@ -276,13 +295,59 @@ Future<void> getImageUrlsForUserAndCategory(String userId, String category) asyn
 
 class EnlargedImage extends StatelessWidget {
   final String imageUrl;
+  final String userId;
+  final String category;
+  final VoidCallback onImageDeleted;
 
-  const EnlargedImage({Key? key, required this.imageUrl}) : super(key: key);
+  const EnlargedImage({
+    Key? key,
+    required this.imageUrl,
+    required this.userId,
+    required this.category,
+    required this.onImageDeleted,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(), // You can customize the app bar as needed
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () async {
+              bool? confirmDelete = await showDialog<bool>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Delete Image'),
+                    content: Text('Are you sure you want to delete this picture?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(false); // Return false
+                        },
+                        child: Text('No'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(true); // Return true
+                        },
+                        child: Text('Yes'),
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              if (confirmDelete == true) {
+                await deleteImageUrlFromDatabase(userId, category, imageUrl);
+                onImageDeleted(); // Call the callback to refresh the page
+                Navigator.of(context).pop(); // Close the image view
+              }
+            },
+          ),
+        ],
+      ),
       body: Center(
         child: GestureDetector(
           onTap: () {

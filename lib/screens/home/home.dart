@@ -130,10 +130,8 @@ class _HomeState extends State<Home> {
               ],
             ),
 
-
             const SizedBox(height: 20),
 
-            // "Generate" button with consistent style
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -188,25 +186,7 @@ class _HomeState extends State<Home> {
 
             const SizedBox(height: 20),
 
-            // Wardrobe button and ListView.builder
-            // Expanded(
-            //   child: Column(
-            //     children: [
-            //       SizedBox(
-            //         width: 150, // Adjust the width as needed
-            //         height: 50, // Adjust the height as needed
-            //         child: ElevatedButton(
-            //           onPressed: () {
-            //             _showImageUrlsModal(); // Show modal bottom sheet
-            //           },
-            //           style: buttonStyle,
-            //           child: const Text("Wardrobe", textAlign: TextAlign.center),
-            //         ),
-            //       ),
-            //       const SizedBox(height: 20),
-            //     ],
-            //   ),
-            // ),
+
           ],
         ),
       ),
