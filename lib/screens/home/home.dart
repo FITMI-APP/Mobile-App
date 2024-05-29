@@ -99,11 +99,11 @@ class _HomeState extends State<Home> {
                     "dress", () => setState(() => category = "dresses")),
             ]),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
 
             // Image widgets with consistent style
             // Image widgets with consistent style
-            Row(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center, // Center the row horizontally
               crossAxisAlignment: CrossAxisAlignment.start, // Align items at the start vertically
               children: [
@@ -116,7 +116,7 @@ class _HomeState extends State<Home> {
                       getImage(source: ImageSource.gallery, type: 'person'),
                   placeholderText: 'Person image',
                 ),
-                const SizedBox(width: 20), // Space between the images
+                const SizedBox(height: 15), // Space between the images
                 buildImageWidget(
                   image: cloth,
                   onRemove: () => setState(() => cloth = null),
@@ -130,7 +130,7 @@ class _HomeState extends State<Home> {
               ],
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -184,7 +184,7 @@ class _HomeState extends State<Home> {
               ],
             ),
 
-            const SizedBox(height: 20),
+            // const SizedBox(height: 20),
 
           ],
         ),
@@ -306,65 +306,116 @@ class _HomeState extends State<Home> {
     VoidCallback? onCapture,
     VoidCallback? onSelect,
     String placeholderText = '',
-    VoidCallback? onWardrobe, // Add this parameter for the Wardrobe button
+    VoidCallback? onWardrobe,
   }) {
     return Column(
       children: [
-        Container(
-          width: 150,
-          height: 200,
-          decoration: BoxDecoration(
-            color: image != null ? Colors.transparent : Colors.grey[300],
-            image: image != null
-                ? DecorationImage(
-              image: FileImage(image),
-              fit: BoxFit.cover,
-            )
-                : null,
-            border: Border.all(width: 5, color: Colors.black12),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          alignment: Alignment.center,
-          child: image == null
-              ? Text(
-            placeholderText,
-            style: const TextStyle(fontSize: 20),
-          )
-              : null,
+        Stack(
+          children: [
+            Container(
+              width: 300,
+              height: 250,
+              decoration: BoxDecoration(
+                color: image != null ? Colors.transparent : Colors.white,
+                image: image != null
+                    ? DecorationImage(
+                  image: FileImage(image),
+                  fit: BoxFit.contain,
+                )
+                    : null,
+                border: Border.all(width: 1, color: Colors.grey[300]!),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                    offset: Offset(2, 2),
+                  ),
+                ],
+              ),
+              alignment: Alignment.center,
+              child: image == null
+                  ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildGradientIconButton(
+                        icon: Icons.camera_alt,
+                        onPressed: onCapture,
+                        tooltip: "Capture Image",
+                      ),
+                      const SizedBox(width: 20),
+                      _buildGradientIconButton(
+                        icon: Icons.image,
+                        onPressed: onSelect,
+                        tooltip: "Image from Gallery",
+                      ),
+                      if (onWardrobe != null) ...[
+                        const SizedBox(width: 20),
+                        _buildGradientIconButton(
+                          icon: Icons.checkroom_rounded,
+                          onPressed: onWardrobe,
+                          tooltip: "Wardrobe",
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    placeholderText,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              )
+                  : null,
+            ),
+            if (image != null)
+              Positioned(
+                top: 10,
+                right: 10,
+                child: _buildGradientIconButton(
+                  icon: Icons.remove_circle,
+                  onPressed: onRemove,
+                  tooltip: "Remove Image",
+                ),
+              ),
+          ],
         ),
         const SizedBox(height: 20),
-        if (image != null)
-          IconButton(
-            onPressed: onRemove,
-            icon: Icon(Icons.remove_circle),
-            tooltip: "Remove Image",
-          )
-        else
-          Row( // Use Row instead of Column for horizontal alignment
-            mainAxisAlignment: MainAxisAlignment.center, // Align buttons horizontally in the center
-            children: [
-              IconButton(
-                onPressed: onCapture,
-                icon: Icon(Icons.camera_alt),
-                tooltip: "Capture Image",
-              ),
-              const SizedBox(width: 20), // Add spacing between buttons
-              IconButton(
-                onPressed: onSelect,
-                icon: Icon(Icons.image),
-                tooltip: "Image from Gallery",
-              ),
-              if (onWardrobe != null)
-                IconButton(
-                  onPressed: onWardrobe,
-                  icon: Icon(Icons.checkroom_rounded),
-                  tooltip: "Wardrobe",
-                ),
-            ],
-          ),
       ],
     );
   }
+
+  Widget _buildGradientIconButton({
+    required IconData icon,
+    required VoidCallback? onPressed,
+    required String tooltip,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors:  [Color(0xFFADD8E6), Color(0xFF808080)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: IconButton(
+        icon: Icon(icon, color: Colors.white),
+        onPressed: onPressed,
+        tooltip: tooltip,
+      ),
+    );
+  }
+
 
 
   // Helper method to get images from the camera or gallery
