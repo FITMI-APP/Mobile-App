@@ -73,10 +73,10 @@ class _HomeState extends State<Home> {
       drawer: NavigationDrawerWidget(),
       body: Container(
         decoration: BoxDecoration(
-          // image: DecorationImage(
-          //   image: AssetImage("assets/background_image.jpg"),
-          //   fit: BoxFit.cover,
-          // ),
+          image: DecorationImage(
+            image: AssetImage("assets/background_image.jpg"),
+            fit: BoxFit.cover,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -186,7 +186,6 @@ class _HomeState extends State<Home> {
 
             const SizedBox(height: 20),
 
-
           ],
         ),
       ),
@@ -220,8 +219,87 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+  //
+  // // Helper method to build image widgets with consistent styling
+  // Widget buildImageWidget({
+  //   File? image,
+  //   VoidCallback? onRemove,
+  //   VoidCallback? onCapture,
+  //   VoidCallback? onSelect,
+  //   String placeholderText = '',
+  //   VoidCallback? onWardrobe, // Add this parameter for the Wardrobe button
+  // }) {
+  //   return Column(
+  //     children: [
+  //       Container(
+  //         width: 150,
+  //         height: 200,
+  //         decoration: BoxDecoration(
+  //           color: image != null ? Colors.transparent : HexColor("#DBE2EF"),
+  //           image: image != null
+  //               ? DecorationImage(
+  //             image: FileImage(image),
+  //             fit: BoxFit.cover,
+  //           )
+  //               : null,
+  //           border: Border.all(width: 5, color: Colors.black12),
+  //           borderRadius: BorderRadius.circular(12),
+  //         ),
+  //         alignment: Alignment.center,
+  //         child: image == null
+  //             ? Text(
+  //           placeholderText,
+  //           style: const TextStyle(fontSize: 20),
+  //         )
+  //             : null,
+  //       ),
+  //       const SizedBox(height: 20),
+  //       if (image != null)
+  //         ElevatedButton(
+  //           style: buttonStyle, // Consistent style for all ElevatedButtons
+  //           onPressed: onRemove,
+  //           child: const Text("Remove Image"),
+  //         )
+  //       else ...[
+  //         SizedBox(
+  //           width: 150, // Adjust the width as needed
+  //           height: 50, // Adjust the height as needed
+  //           child: ElevatedButton(
+  //             onPressed: onCapture,
+  //             style: buttonStyle,
+  //             child: const Text("Capture Image", textAlign: TextAlign.center),
+  //           ),
+  //         ),
+  //         const SizedBox(height: 20),
+  //         SizedBox(
+  //           width: 150, // Adjust the width as needed
+  //           height: 50, // Adjust the height as needed
+  //           child: ElevatedButton(
+  //             onPressed: onSelect,
+  //             style: buttonStyle,
+  //             child: const Text("Image from gallery", textAlign: TextAlign.center),
+  //           ),
+  //         ),
+  //         if (onWardrobe != null) // Show "Wardrobe" button only if onWardrobe is provided
+  //           Column(
+  //             children: [
+  //               const SizedBox(height: 20),
+  //               SizedBox(
+  //                 width: 150, // Adjust the width as needed
+  //                 height: 50, // Adjust the height as needed
+  //                 child: ElevatedButton(
+  //                   onPressed: onWardrobe,
+  //                   style: buttonStyle,
+  //                   child: const Text("Wardrobe", textAlign: TextAlign.center),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //       ],
+  //     ],
+  //   );
+  // }
 
-  // Helper method to build image widgets with consistent styling
   Widget buildImageWidget({
     File? image,
     VoidCallback? onRemove,
@@ -236,7 +314,7 @@ class _HomeState extends State<Home> {
           width: 150,
           height: 200,
           decoration: BoxDecoration(
-            color: image != null ? Colors.transparent : HexColor("#DBE2EF"),
+            color: image != null ? Colors.transparent : Colors.grey[300],
             image: image != null
                 ? DecorationImage(
               image: FileImage(image),
@@ -256,50 +334,38 @@ class _HomeState extends State<Home> {
         ),
         const SizedBox(height: 20),
         if (image != null)
-          ElevatedButton(
-            style: buttonStyle, // Consistent style for all ElevatedButtons
+          IconButton(
             onPressed: onRemove,
-            child: const Text("Remove Image"),
+            icon: Icon(Icons.remove_circle),
+            tooltip: "Remove Image",
           )
-        else ...[
-          SizedBox(
-            width: 150, // Adjust the width as needed
-            height: 50, // Adjust the height as needed
-            child: ElevatedButton(
-              onPressed: onCapture,
-              style: buttonStyle,
-              child: const Text("Capture Image", textAlign: TextAlign.center),
-            ),
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            width: 150, // Adjust the width as needed
-            height: 50, // Adjust the height as needed
-            child: ElevatedButton(
-              onPressed: onSelect,
-              style: buttonStyle,
-              child: const Text("Image from gallery", textAlign: TextAlign.center),
-            ),
-          ),
-          if (onWardrobe != null) // Show "Wardrobe" button only if onWardrobe is provided
-            Column(
-              children: [
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: 150, // Adjust the width as needed
-                  height: 50, // Adjust the height as needed
-                  child: ElevatedButton(
-                    onPressed: onWardrobe,
-                    style: buttonStyle,
-                    child: const Text("Wardrobe", textAlign: TextAlign.center),
-                  ),
+        else
+          Row( // Use Row instead of Column for horizontal alignment
+            mainAxisAlignment: MainAxisAlignment.center, // Align buttons horizontally in the center
+            children: [
+              IconButton(
+                onPressed: onCapture,
+                icon: Icon(Icons.camera_alt),
+                tooltip: "Capture Image",
+              ),
+              const SizedBox(width: 20), // Add spacing between buttons
+              IconButton(
+                onPressed: onSelect,
+                icon: Icon(Icons.image),
+                tooltip: "Image from Gallery",
+              ),
+              if (onWardrobe != null)
+                IconButton(
+                  onPressed: onWardrobe,
+                  icon: Icon(Icons.checkroom_rounded),
+                  tooltip: "Wardrobe",
                 ),
-              ],
-            ),
-        ],
+            ],
+          ),
       ],
     );
   }
+
 
   // Helper method to get images from the camera or gallery
   void getImage({required ImageSource source, required String type}) async {
