@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:io';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import '../../services/authenticate.dart';
+import '../../services/wardrobeService.dart';
+
 
 class GenerateImageCard extends StatefulWidget {
+  final String userId;
   final String gender; // Gender of the person trying on the clothes
   final String category; // Category of the clothing item
   final File? personImageName; // Person's image file
@@ -14,6 +19,7 @@ class GenerateImageCard extends StatefulWidget {
 
   const GenerateImageCard({
     Key? key,
+    required this.userId,
     required this.gender,
     required this.category,
     required this.personImageName,
@@ -124,7 +130,7 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
   // Function to fetch photo data for complementary items
   Future<void> fetchComplementaryPhotos() async {
     try {
-      for (int i = 1; i <= 10; i++) {
+      for (int i = 2; i <= 10; i++) {
         var url = Uri.parse('http://192.168.1.2:5000/get_comp_rec?gender=${widget.gender}&id=$i');
         var response = await http.get(url);
 
@@ -194,9 +200,17 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
 
                 SizedBox(height: 20),
                 if (showRecommendations)
-                  RecommendationSection(photos: photos),
+                  RecommendationSection(
+                    photos: photos,
+                    userId: widget.userId,
+                    category: widget.category,
+                  ),
                 if (showComplementaryItems)
-                  ComplementarySection(photos: complementaryPhotos),
+                  ComplementarySection(
+                    photos: complementaryPhotos,
+                    userId: widget.userId,
+                    category: widget.category,
+                  ),
               ],
             ),
           ),
@@ -237,12 +251,25 @@ class FillImageCard extends StatelessWidget {
   }
 }
 
-class RecommendationSection extends StatelessWidget {
+class RecommendationSection extends StatefulWidget {
   final List<Uint8List> photos;
+  final String userId;
+  final String category;
 
   const RecommendationSection({
     required this.photos,
+    required this.userId,
+    required this.category,
   });
+
+  @override
+  _RecommendationSectionState createState() => _RecommendationSectionState();
+}
+
+class _RecommendationSectionState extends State<RecommendationSection> {
+  int? selectedIndex;
+  final AuthService _auth = AuthService();
+  String userID = '';
 
   @override
   Widget build(BuildContext context) {
@@ -250,23 +277,72 @@ class RecommendationSection extends StatelessWidget {
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: photos.length,
+        itemCount: widget.photos.length,
         itemBuilder: (context, index) {
-          final photoData = photos[index];
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
+          final photoData = widget.photos[index];
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedIndex = index;
+              });
+            },
             child: Card(
               child: Container(
                 width: 150,
                 height: 150,
                 color: Colors.grey[200],
-                child: Image.memory(
-                  photoData,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    print('Error loading image: $error');
-                    return Center(child: Text('Error loading image'));
-                  },
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.memory(
+                        photoData,
+                        fit: BoxFit.cover,
+                        width: 150,
+                        height: 150,
+                        errorBuilder: (context, error, stackTrace) {
+                          print('Error loading image: $error');
+                          return Center(child: Text('Error loading image'));
+                        },
+                      ),
+                    ),
+                    if (selectedIndex == index)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                          child: Container(
+                            width: 150,
+                            height: 150,
+                            color: Colors.black.withOpacity(0.5),
+                            child: Center(
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  // Create a temporary file from the selected photo data
+                                  final tempDir = await getTemporaryDirectory();
+                                  final tempFile = File('${tempDir.path}/temp_image.jpg');
+                                  await tempFile.writeAsBytes(photoData);
+
+                                  // Upload the image and save the URL to Firestore
+                                  String? imageUrl = await uploadImageToFirebase(tempFile, widget.category);
+                                  // if (imageUrl != null) {
+                                  //   // Optionally, you can save the URL to Firestore here
+                                  // }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  shadowColor: Colors.transparent,
+                                ),
+                                child: Text(
+                                  'Add to Wardrobe',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
@@ -275,14 +351,40 @@ class RecommendationSection extends StatelessWidget {
       ),
     );
   }
+
+  Future<String?> uploadImageToFirebase(File imageFile, String category) async {
+    Map<String, String> userInfo = await _auth.getUserInfo();
+    String userID = userInfo['userid'] ?? '';
+
+    String? imageUrl = await uploadImage(imageFile, userID, category);
+    if (imageUrl != null) {
+      await saveImageUrlToDatabase(userID, category, imageUrl);
+      setState(() {});
+    } else {
+      print('Image upload failed');
+    }
+    return imageUrl;
+  }
+
 }
 
-class ComplementarySection extends StatelessWidget {
+class ComplementarySection extends StatefulWidget {
   final List<Uint8List> photos;
+  final String userId;
+  final String category;
 
   const ComplementarySection({
     required this.photos,
+    required this.userId,
+    required this.category,
   });
+
+  @override
+  _ComplementarySectionState createState() => _ComplementarySectionState();
+}
+
+class _ComplementarySectionState extends State<ComplementarySection> {
+  int? selectedIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -290,23 +392,72 @@ class ComplementarySection extends StatelessWidget {
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: photos.length,
+        itemCount: widget.photos.length,
         itemBuilder: (context, index) {
-          final photoData = photos[index];
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
+          final photoData = widget.photos[index];
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedIndex = index;
+              });
+            },
             child: Card(
               child: Container(
                 width: 150,
                 height: 150,
                 color: Colors.grey[200],
-                child: Image.memory(
-                  photoData,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    print('Error loading image: $error');
-                    return Center(child: Text('Error loading image'));
-                  },
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.memory(
+                        photoData,
+                        fit: BoxFit.cover,
+                        width: 150,
+                        height: 150,
+                        errorBuilder: (context, error, stackTrace) {
+                          print('Error loading image: $error');
+                          return Center(child: Text('Error loading image'));
+                        },
+                      ),
+                    ),
+                    if (selectedIndex == index)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                          child: Container(
+                            width: 150,
+                            height: 150,
+                            color: Colors.black.withOpacity(0.5),
+                            child: Center(
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  // Create a temporary file from the selected photo data
+                                  final tempDir = await getTemporaryDirectory();
+                                  final tempFile = File('${tempDir.path}/temp_image.jpg');
+                                  await tempFile.writeAsBytes(photoData);
+
+                                  // Upload the image and save the URL to Firestore
+                                  String? imageUrl = await uploadImage(tempFile, widget.userId, widget.category);
+                                  if (imageUrl != null) {
+                                    await saveImageUrlToDatabase(widget.userId, widget.category, imageUrl);
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                ),
+                                child: Text(
+                                  'Add to Wardrobe',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
