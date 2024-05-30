@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:grad/screens/ProfilePage.dart';
 import 'package:grad/screens/home/home.dart';
 import '../screens/authenticate/signIn.dart';
-import '../screens/favourites_page.dart';
-import '../screens/user_page.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:grad/screens/waredrobe/wardrobe.dart';
 import '../services/authenticate.dart';
@@ -70,6 +68,8 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                   ],
                 ),
                 automaticallyImplyLeading: false,
+
+
               ),
             ),
             Container(

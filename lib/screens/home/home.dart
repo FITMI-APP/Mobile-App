@@ -199,7 +199,7 @@ class _HomeState extends State<Home> {
     return AnimatedButtonBar(
       radius: 32.0,
       padding: const EdgeInsets.all(10.0),
-      backgroundColor: HexColor("#DBE2EF"),
+      backgroundColor: HexColor("#c9aaff"),
       foregroundColor: HexColor("#FFFFFF"),
       borderWidth: 2,
       innerVerticalPadding: 12,
@@ -371,7 +371,7 @@ class _HomeState extends State<Home> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF3F237A),
+                      color:  Colors.black,
                     ),
                     textAlign: TextAlign.center,
                   ),

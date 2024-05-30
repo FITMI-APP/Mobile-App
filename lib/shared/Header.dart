@@ -22,7 +22,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                HexColor("#300f78"),
+                HexColor("#553e8c"),
                 HexColor("#5419d3"),
               ],
               begin: Alignment.topCenter,
