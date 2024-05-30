@@ -115,6 +115,7 @@ class _HomeState extends State<Home> {
                   onSelect: () =>
                       getImage(source: ImageSource.gallery, type: 'person'),
                   placeholderText: 'Person image',
+
                 ),
                 const SizedBox(height: 15), // Space between the images
                 buildImageWidget(
@@ -370,7 +371,7 @@ class _HomeState extends State<Home> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: const Color(0xFF3F237A),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -405,7 +406,7 @@ class _HomeState extends State<Home> {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
-          colors:  [Color(0xFFADD8E6), Color(0xFF808080)],
+          colors:  [Color(0xFF300f78), Color(0xFF5419d3)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
