@@ -45,7 +45,7 @@ class _GenerateImageFromTextPageState extends State<GenerateImageFromTextPage> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _launchURL,
-              child: Text('Try our web app'),
+              child: Text('Try it in our web app'),
             ),
           ],
         ),

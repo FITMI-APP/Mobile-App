@@ -130,7 +130,7 @@ class _HomeState extends State<Home> {
               ],
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 7),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -145,6 +145,7 @@ class _HomeState extends State<Home> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => GenerateImageCard(
+                                userId: _userId,
                                 gender: gender,
                                 category: category,
                                 personImageName: person,
@@ -316,7 +317,7 @@ class _HomeState extends State<Home> {
               width: 300,
               height: 250,
               decoration: BoxDecoration(
-                color: image != null ? Colors.transparent : Colors.white,
+                color: image != null ? Colors.transparent : Colors.white.withOpacity(0.1), // Adjust opacity here
                 image: image != null
                     ? DecorationImage(
                   image: FileImage(image),
@@ -392,6 +393,7 @@ class _HomeState extends State<Home> {
         const SizedBox(height: 20),
       ],
     );
+
   }
 
   Widget _buildGradientIconButton({
