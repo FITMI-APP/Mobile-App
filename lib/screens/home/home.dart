@@ -29,15 +29,15 @@ class _HomeState extends State<Home> {
   String _userId = '';
   final AuthService _auth = AuthService();
 
-  // Define a consistent style for buttons
-  final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
-    backgroundColor: HexColor("#F5F5F5"), // Button background color
-    foregroundColor: Colors.black, // Button text color
-    padding: const EdgeInsets.all(12),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-  );
+  // // Define a consistent style for buttons
+  // final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+  //   backgroundColor: HexColor("#F5F5F5"), // Button background color
+  //   foregroundColor: Colors.black, // Button text color
+  //   padding: const EdgeInsets.all(12),
+  //   shape: RoundedRectangleBorder(
+  //     borderRadius: BorderRadius.circular(12),
+  //   ),
+  // );
 
   @override
   void initState() {
