@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(title: 'Home'),
+      appBar: Header(title: 'HOME'),
       drawer: NavigationDrawerWidget(),
       body: Container(
         decoration: BoxDecoration(
