@@ -107,7 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: Header(title: 'Profile'),
+      appBar: Header(title: 'PROFILE'),
       drawer: NavigationDrawerWidget(),
       body: Center(
         child: SingleChildScrollView(
@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                            return Color(0xFF4A2F7C);
+                            return Color(0xFF4615af);
                           }),
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(

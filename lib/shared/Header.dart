@@ -20,28 +20,34 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
         preferredSize: Size.fromHeight(56), // Adjust the height as needed
         child: Container(
           decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2), // Shadow color
-                spreadRadius: 2, // Spread radius
-                blurRadius: 4, // Blur radius
-                offset: Offset(0, 2), // Shadow offset (vertical and horizontal)
-              ),
-            ],
+            gradient: LinearGradient(
+              colors: [
+                HexColor("#300f78"),
+                HexColor("#5419d3"),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
           child: AppBar(
-            backgroundColor: HexColor("#FFFFFF"),
+            backgroundColor: Colors.transparent, // Make the inner AppBar transparent
             elevation: 0, // Set elevation to 0 to avoid double shadow
             title: Row(
               children: [
-                Text(title),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white, // Set text color to white
+                    fontSize: 18.0, // Adjust font size if needed
+                    fontWeight: FontWeight.bold, // Adjust font weight if needed
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ),
     );
-
   }
 
   @override

@@ -73,10 +73,10 @@ class _HomeState extends State<Home> {
       drawer: NavigationDrawerWidget(),
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/background_image.jpg"),
-            fit: BoxFit.cover,
-          ),
+          // image: DecorationImage(
+          //   image: AssetImage("assets/background_image.jpg"),
+          //   fit: BoxFit.cover,
+          // ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
