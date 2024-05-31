@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:grad/screens/ProfilePage.dart';
 import 'package:grad/screens/home/home.dart';
 import '../screens/authenticate/signIn.dart';
-import '../screens/favourites_page.dart';
-import '../screens/user_page.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:grad/screens/waredrobe/wardrobe.dart';
 import '../services/authenticate.dart';
@@ -43,13 +42,13 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
   Widget build(BuildContext context) {
     return Drawer(
       child: Material(
-        color: HexColor("#DBE2EF"), // Change background color to white
+        color: HexColor("#3f1a8d"), // Change background color to white
         child: ListView(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
               child: AppBar(
-                backgroundColor: HexColor("#DBE2EF"), // Navigation bar color blue
+                backgroundColor: HexColor("#3f1a8d"),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -70,6 +69,8 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                   ],
                 ),
                 automaticallyImplyLeading: false,
+
+
               ),
             ),
             Container(
@@ -84,12 +85,12 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                         children: [
                           Text(
                             _name,
-                            style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 4),
                           Text(
                             _email,
-                            style: TextStyle(fontSize: 14, color: Colors.black),
+                            style: TextStyle(fontSize: 14, color: Colors.white),
                           ),
                         ],
                       ),
@@ -141,7 +142,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
     required IconData icon,
     VoidCallback? onClicked,
   }) {
-    final color = Colors.black; // Change icon and text color to black
+    final color = Colors.white; // Change icon and text color to black
     final hoverColor = Colors.grey[300]; // Change hover color for a subtle effect
 
     return ListTile(

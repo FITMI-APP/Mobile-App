@@ -71,6 +71,8 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: Header(title: 'HOME'),
       drawer: NavigationDrawerWidget(),
+
+
       body: Container(
         decoration: BoxDecoration(
           // image: DecorationImage(
@@ -164,7 +166,7 @@ class _HomeState extends State<Home> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: HexColor("#DBE2EF"), // Background color
+                        backgroundColor: HexColor("#5419d3"), // Background color
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
@@ -176,7 +178,7 @@ class _HomeState extends State<Home> {
                           "Generate",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.black, // Change text color
+                            color: Colors.white, // Change text color
                           ),
                         ),
                       ),
@@ -199,7 +201,7 @@ class _HomeState extends State<Home> {
     return AnimatedButtonBar(
       radius: 32.0,
       padding: const EdgeInsets.all(10.0),
-      backgroundColor: HexColor("#DBE2EF"),
+      backgroundColor: Color.fromARGB(255, 231, 231, 231),
       foregroundColor: HexColor("#FFFFFF"),
       borderWidth: 2,
       innerVerticalPadding: 12,
@@ -316,7 +318,7 @@ class _HomeState extends State<Home> {
           children: [
             Container(
               width: 300,
-              height: 250,
+              height: 210,
               decoration: BoxDecoration(
                 color: image != null ? Colors.transparent : Colors.white.withOpacity(0.1), // Adjust opacity here
                 image: image != null
@@ -371,7 +373,7 @@ class _HomeState extends State<Home> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF3F237A),
+                      color:  Colors.black,
                     ),
                     textAlign: TextAlign.center,
                   ),
