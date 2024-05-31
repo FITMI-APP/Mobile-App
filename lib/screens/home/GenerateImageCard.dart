@@ -356,9 +356,9 @@ class _RecommendationSectionState extends State<RecommendationSection> {
     Map<String, String> userInfo = await _auth.getUserInfo();
     String userID = userInfo['userid'] ?? '';
 
-    String? imageUrl = await uploadImage(imageFile, userID, category);
+    String? imageUrl = await WardrobeService().uploadImage(imageFile, userID, category);
     if (imageUrl != null) {
-      await saveImageUrlToDatabase(userID, category, imageUrl);
+      await WardrobeService().saveImageUrlToDatabase(userID, category, imageUrl);
       setState(() {});
     } else {
       print('Image upload failed');
@@ -439,9 +439,9 @@ class _ComplementarySectionState extends State<ComplementarySection> {
                                   await tempFile.writeAsBytes(photoData);
 
                                   // Upload the image and save the URL to Firestore
-                                  String? imageUrl = await uploadImage(tempFile, widget.userId, widget.category);
+                                  String? imageUrl = await WardrobeService().uploadImage(tempFile, widget.userId, widget.category);
                                   if (imageUrl != null) {
-                                    await saveImageUrlToDatabase(widget.userId, widget.category, imageUrl);
+                                    await WardrobeService().saveImageUrlToDatabase(widget.userId, widget.category, imageUrl);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
