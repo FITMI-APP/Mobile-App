@@ -29,15 +29,15 @@ class _HomeState extends State<Home> {
   String _userId = '';
   final AuthService _auth = AuthService();
 
-  // Define a consistent style for buttons
-  final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
-    backgroundColor: HexColor("#F5F5F5"), // Button background color
-    foregroundColor: Colors.black, // Button text color
-    padding: const EdgeInsets.all(12),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-  );
+  // // Define a consistent style for buttons
+  // final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+  //   backgroundColor: HexColor("#F5F5F5"), // Button background color
+  //   foregroundColor: Colors.black, // Button text color
+  //   padding: const EdgeInsets.all(12),
+  //   shape: RoundedRectangleBorder(
+  //     borderRadius: BorderRadius.circular(12),
+  //   ),
+  // );
 
   @override
   void initState() {
@@ -69,14 +69,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(title: 'Home'),
+      appBar: Header(title: 'HOME'),
       drawer: NavigationDrawerWidget(),
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/background_image.jpg"),
-            fit: BoxFit.cover,
-          ),
+          // image: DecorationImage(
+          //   image: AssetImage("assets/background_image.jpg"),
+          //   fit: BoxFit.cover,
+          // ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -115,6 +115,7 @@ class _HomeState extends State<Home> {
                   onSelect: () =>
                       getImage(source: ImageSource.gallery, type: 'person'),
                   placeholderText: 'Person image',
+
                 ),
                 const SizedBox(height: 15), // Space between the images
                 buildImageWidget(
@@ -370,7 +371,7 @@ class _HomeState extends State<Home> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: const Color(0xFF3F237A),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -405,7 +406,7 @@ class _HomeState extends State<Home> {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
-          colors:  [Color(0xFFADD8E6), Color(0xFF808080)],
+          colors:  [Color(0xFF300f78), Color(0xFF5419d3)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
