@@ -52,7 +52,22 @@ class _SignInState extends State<SignIn> {
         ? const Loading()
         : Scaffold(
       backgroundColor: HexColor("#FFFFFF"),
-      appBar: Header(title: 'Sign in to FitMi'),
+      appBar: AppBar(
+        title: Text('Sign in to FitMi', style: TextStyle(color: Colors.white)),
+
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                HexColor("#3f1a8d"),
+                HexColor("#4e24ae"),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
         child: Form(

@@ -45,7 +45,22 @@ class _RegisterState extends State<Register> {
         ? const Loading()
         : Scaffold(
             backgroundColor: Colors.white,
-            appBar: Header(title: 'Sign up to FitMi'),
+            appBar: AppBar(
+              title: Text('Sign up to FitMi' ,  style: TextStyle(color: Colors.white)),
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      HexColor("#3f1a8d"),
+                      HexColor("#4e24ae"),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+                iconTheme: IconThemeData(color: Colors.white)
+            ),
             body: SingleChildScrollView(
               child: Container(
                 padding: const EdgeInsets.all(20.0),

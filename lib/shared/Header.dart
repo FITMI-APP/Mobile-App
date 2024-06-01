@@ -72,33 +72,28 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       backgroundColor: Colors.white,
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(56), // Adjust the height as needed
-        child: Container(
-            decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                HexColor("#3f1a8d"),
-                HexColor("#4e24ae"),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0, // Set elevation to 0 to avoid double shadow
-            leading: IconButton(
-              icon: Icon(Icons.menu, color: Colors.white), // Set the icon color to white
-              onPressed: () {
-                scaffoldKey?.currentState?.openDrawer();
-              },
-            ),
-            title: Text(title, style: TextStyle(color: Colors.white)), // Ensure title text is black
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              HexColor("#3f1a8d"),
+              HexColor("#4e24ae"),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
         ),
       ),
+      elevation: 0, // Set elevation to 0 to avoid double shadow
+      leading: IconButton(
+        icon: Icon(Icons.menu, color: Colors.white), // Set the icon color to white
+        onPressed: () {
+          scaffoldKey?.currentState?.openDrawer();
+        },
+      ),
+      title: Text(title, style: TextStyle(color: Colors.white)), // Ensure title text is white
     );
+
   }
 
   @override

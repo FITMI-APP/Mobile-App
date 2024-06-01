@@ -31,7 +31,7 @@ class _ImageSelectionPageState extends State<ImageSelectionPage> {
       appBar: AppBar(
         title: Text('Add Item to ${widget.category}'),
       ),
-      drawer: NavigationDrawerWidget(), // Dummy drawer implementation
+      //drawer: NavigationDrawerWidget(), // Dummy drawer implementation
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
