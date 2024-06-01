@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import '../../shared/loading.dart';
 import '../../services/authenticate.dart';
 import '../../services/wardrobeService.dart';
-
 
 class GenerateImageCard extends StatefulWidget {
   final String userId;
@@ -33,32 +33,81 @@ class GenerateImageCard extends StatefulWidget {
 class _GenerateImageCardState extends State<GenerateImageCard> {
   bool showRecommendations = false;
   bool showComplementaryItems = false;
+  bool isLoading = false; // Loading state
   http.Response? generatedImageResponse; // Response containing the generated image
   List<Uint8List> photos = []; // List to store photo data for recommendations
   List<Uint8List> complementaryPhotos = []; // List to store complementary items data
-
+  bool photosFetched = false;
+  bool complementaryPhotosFetched = false;
   @override
   void initState() {
     super.initState();
-    // Call the function to fetch the generated image when the widget is initialized
-    fetchGeneratedImage();
-    // Call the function to fetch the photo data for recommendations after another delay
-    fetchPhotos();
-    // Call the function to fetch complementary photos after another delay
-    fetchComplementaryPhotos();
+    _fetchData();
   }
 
-  // Function to call the API and fetch the generated image
+  Future<void> _fetchData() async {
+    setState(() {
+      isLoading = true; // Start loading
+    });
+    try {
+      await fetchGeneratedImage();
+      await ServerReboot();
+      //await fetchPhotos();
+      //await fetchComplementaryPhotos();
+    } catch (e) {
+      print('Error in fetching data: $e');
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Error in fetching data: $e'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      setState(() {
+        isLoading = false; // Stop loading
+      });
+    }
+  }
+
+  Future<void> ServerReboot() async {
+    try {
+      var stopUrl = Uri.parse('http://192.168.1.2:6000/stop-server');
+      var startUrl = Uri.parse('http://192.168.1.2:6000/start-server');
+
+      var stopResponse = await http.get(stopUrl);
+      if (stopResponse.statusCode == 200) {
+        print('Server shut down');
+      } else {
+        print('Failed to shut down server');
+      }
+
+      var startResponse = await http.get(startUrl);
+      if (startResponse.statusCode == 200) {
+        print('Server started');
+      } else {
+        print('Failed to start server');
+      }
+    } catch (e) {
+      print('Server reboot error: $e');
+      throw 'Server reboot error: $e';
+    }
+  }
+
   Future<void> fetchGeneratedImage() async {
     try {
-      // Construct the API endpoint URL
-      var url = Uri.parse('http://192.168.1.2:5000/api/generate_tryon'); // Update with your actual server URL
-      // Create a multipart request
+      var url = Uri.parse('http://192.168.1.2:5000/api/generate_tryon');
       var request = http.MultipartRequest('POST', url)
-      // Add fields to the request (category and gender)
         ..fields['category'] = widget.category
         ..fields['gender'] = widget.gender
-      // Add files to the request (person_image and cloth_image)
         ..files.add(http.MultipartFile(
           'person_image',
           widget.personImageName!.readAsBytes().asStream(),
@@ -74,8 +123,6 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
 
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
-
-      // Check if the response was successful (status code 200)
       if (response.statusCode == 200) {
         setState(() {
           generatedImageResponse = response;
@@ -84,69 +131,46 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
         throw 'Failed to fetch generated image: ${response.statusCode}';
       }
     } catch (e) {
-      // Handle errors
       print('Error fetching generated image: $e');
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error'),
-          content: Text('Failed to fetch generated image. Error: $e'), // Display the actual error message
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+      throw 'Error fetching generated image: $e';
     }
   }
 
-  // Function to fetch photo data from the API for recommendations
   Future<void> fetchPhotos() async {
     try {
       for (int i = 1; i <= 10; i++) {
         var url = Uri.parse('http://192.168.1.2:5000/get_cloth_rec?category=${widget.category}&id=$i');
         var response = await http.get(url);
-
         if (response.statusCode == 200) {
-          // If the request is successful, directly add the photo data to the list
           setState(() {
-            this.photos.add(response.bodyBytes);
+            photos.add(response.bodyBytes);
           });
         } else {
-          // If the request fails, show an error message
           print('Failed to fetch photo: ${response.statusCode}');
         }
       }
     } catch (e) {
-      // Handle any exceptions
       print('Error fetching photos: $e');
+      throw 'Error fetching photos: $e';
     }
   }
 
-  // Function to fetch photo data for complementary items
   Future<void> fetchComplementaryPhotos() async {
     try {
       for (int i = 2; i <= 10; i++) {
         var url = Uri.parse('http://192.168.1.2:5000/get_comp_rec?gender=${widget.gender}&id=$i');
         var response = await http.get(url);
-
         if (response.statusCode == 200) {
-          // If the request is successful, directly add the photo data to the list
           setState(() {
-            this.complementaryPhotos.add(response.bodyBytes);
+            complementaryPhotos.add(response.bodyBytes);
           });
         } else {
-          // If the request fails, show an error message
           print('Failed to fetch complementary photo: ${response.statusCode}');
         }
       }
     } catch (e) {
-      // Handle any exceptions
       print('Error fetching complementary photos: $e');
+      throw 'Error fetching complementary photos: $e';
     }
   }
 
@@ -155,63 +179,94 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Generated Image Card'),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Card(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                SizedBox(height: 20),
-                if (generatedImageResponse != null)
-                  FillImageCard(
-                    width: 250,
-                    heightImage: 350,
-                    imageProvider: MemoryImage(generatedImageResponse!.bodyBytes),
-                  )
-                else
-                  Text("No image generated"),
-
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          showRecommendations = !showRecommendations;
-                          showComplementaryItems = false;
-                        });
-                      },
-                      child: Text('Recommend Other Cloth'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          showComplementaryItems = !showComplementaryItems;
-                          showRecommendations = false;
-                        });
-                      },
-                      child: Text('Complementary Items'),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: 20),
-                if (showRecommendations)
-                  RecommendationSection(
-                    photos: photos,
-                    userId: widget.userId,
-                    category: widget.category,
-                  ),
-                if (showComplementaryItems)
-                  ComplementarySection(
-                    photos: complementaryPhotos,
-                    userId: widget.userId,
-                    category: widget.category,
-                  ),
+        title: Text('Generated Image Card', style: TextStyle(color: Colors.white)),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                HexColor("#3f1a8d"),
+                HexColor("#4e24ae"),
               ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+        iconTheme: IconThemeData(color: Colors.white),
+        automaticallyImplyLeading: !isLoading, // Disable back button when loading
+      ),
+      body: WillPopScope(
+        onWillPop: () async => !isLoading, // Disable back button when loading
+        child: isLoading
+            ? Loading() // Show loading screen when isLoading is true
+            : Center(
+          child: SingleChildScrollView(
+            child: Card(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SizedBox(height: 20),
+                  if (generatedImageResponse != null)
+                    FillImageCard(
+                      width: 250,
+                      heightImage: 350,
+                      imageProvider: MemoryImage(generatedImageResponse!.bodyBytes),
+                    )
+                  else
+                    Text("No image generated"),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF5419d3), // Custom hex color
+                        ),
+                        onPressed: () async {
+                          if (!photosFetched) {
+                            await fetchPhotos();
+                            photosFetched = true;
+                          }
+                          setState(() {
+                            showRecommendations = !showRecommendations;
+                            showComplementaryItems = false;
+                          });
+                        },
+                        child: Text('Recommend Other Cloth', style: TextStyle(color: Colors.white)),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF5419d3), // Custom hex color
+                        ),
+                        onPressed: () async {
+                          if (!complementaryPhotosFetched) {
+                            await fetchComplementaryPhotos();
+                            complementaryPhotosFetched = true;
+                          }
+                          setState(() {
+                            showComplementaryItems = !showComplementaryItems;
+                            showRecommendations = false;
+                          });
+                        },
+                        child: Text('Complementary Items', style: TextStyle(color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  if (showRecommendations)
+                    RecommendationSection(
+                      photos: photos,
+                      userId: widget.userId,
+                      category: widget.category,
+                    ),
+                  if (showComplementaryItems)
+                    ComplementarySection(
+                      photos: complementaryPhotos,
+                      userId: widget.userId,
+                      category: widget.category,
+                    ),
+                ],
+              ),
             ),
           ),
         ),
@@ -316,28 +371,34 @@ class _RecommendationSectionState extends State<RecommendationSection> {
                             height: 150,
                             color: Colors.black.withOpacity(0.5),
                             child: Center(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  // Create a temporary file from the selected photo data
-                                  final tempDir = await getTemporaryDirectory();
-                                  final tempFile = File('${tempDir.path}/temp_image.jpg');
-                                  await tempFile.writeAsBytes(photoData);
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    // Create a temporary file from the selected photo data
+                                    final tempDir = await getTemporaryDirectory();
+                                    final tempFile = File('${tempDir.path}/temp_image.jpg');
+                                    await tempFile.writeAsBytes(photoData);
 
-                                  // Upload the image and save the URL to Firestore
-                                  String? imageUrl = await uploadImageToFirebase(tempFile, widget.category);
-                                  // if (imageUrl != null) {
-                                  //   // Optionally, you can save the URL to Firestore here
-                                  // }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  shadowColor: Colors.transparent,
+                                    // Upload the image and save the URL to Firestore
+                                    String? imageUrl = await uploadImageToFirebase(tempFile, widget.category);
+                                    if (imageUrl != null) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text("Added to wardrobe successfully."),
+                                          backgroundColor: Color(0xFF3f1a8d),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xFF5419d3),
+                                    shadowColor: Colors.transparent,
+                                  ),
+                                  child: Text(
+                                    'Add to Wardrobe',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
-                                child: Text(
-                                  'Add to Wardrobe',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
                             ),
                           ),
                         ),
@@ -365,7 +426,6 @@ class _RecommendationSectionState extends State<RecommendationSection> {
     }
     return imageUrl;
   }
-
 }
 
 class ComplementarySection extends StatefulWidget {
@@ -421,42 +481,6 @@ class _ComplementarySectionState extends State<ComplementarySection> {
                         },
                       ),
                     ),
-                    if (selectedIndex == index)
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                          child: Container(
-                            width: 150,
-                            height: 150,
-                            color: Colors.black.withOpacity(0.5),
-                            child: Center(
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  // Create a temporary file from the selected photo data
-                                  final tempDir = await getTemporaryDirectory();
-                                  final tempFile = File('${tempDir.path}/temp_image.jpg');
-                                  await tempFile.writeAsBytes(photoData);
-
-                                  // Upload the image and save the URL to Firestore
-                                  String? imageUrl = await WardrobeService().uploadImage(tempFile, widget.userId, widget.category);
-                                  if (imageUrl != null) {
-                                    await WardrobeService().saveImageUrlToDatabase(widget.userId, widget.category, imageUrl);
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                ),
-                                child: Text(
-                                  'Add to Wardrobe',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                   ],
                 ),
               ),

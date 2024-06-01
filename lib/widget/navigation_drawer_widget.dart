@@ -115,6 +115,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                     icon: Icons.person,
                     onClicked: () => selectedItem(context, 2),
                   ),
+                  const SizedBox(height: 16),
                   buildMenuItem(
                     text: 'Generate Your Own Cloth',
                     icon: Icons.design_services,
