@@ -161,7 +161,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
 
         final userGender = snapshot.data?['gender'];
 
-        print('from wardrobe $userGender');
+        // print('from wardrobe $userGender');
 
         return Scaffold(
           key: _scaffoldKey, // Use the GlobalKey for the Scaffold
@@ -221,7 +221,8 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                   color: Colors.black,
                 ),
               ),
-              IconButton(
+              _buildGradientIconButton( // Use _buildGradientIconButton here
+                icon: Icons.add,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -250,10 +251,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
                     ),
                   );
                 },
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.black,
-                ),
+                tooltip: 'Add', // Add tooltip here
               ),
             ],
           ),
@@ -263,6 +261,33 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
             onImageDeleted: _refreshPage,
           ), // Example list of items
         ],
+      ),
+    );
+  }
+  Widget _buildGradientIconButton({
+    required IconData icon,
+    required VoidCallback? onPressed,
+    required String tooltip,
+    double iconSize = 22.0, // Default size of the icon
+    double containerSize = 37.0, // Default size of the container
+  }) {
+    return Container(
+      width: containerSize,
+      height: containerSize,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [Color(0xFF300f78), Color(0xFF5419d3)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: IconButton(
+        icon: Icon(icon, color: Colors.white),
+        onPressed: onPressed,
+        tooltip: tooltip,
+        iconSize: iconSize,
+        padding: EdgeInsets.zero, // Remove padding around the icon
       ),
     );
   }

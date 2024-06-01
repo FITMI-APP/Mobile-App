@@ -107,7 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: Header(title: 'PROFILE' ,  scaffoldKey: _scaffoldKey),
+      appBar: Header(title: 'Profile' ,  scaffoldKey: _scaffoldKey),
       drawer: NavigationDrawerWidget(),
       body: Center(
         child: SingleChildScrollView(
@@ -152,7 +152,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Old Password',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)), // Rounded edges
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                        borderSide: BorderSide(color: Colors.grey), // Border color when enabled
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                        borderSide: BorderSide(color: Colors.blue), // Border color when focused
+                      ),
                       filled: true,
                       fillColor: Colors.grey[100],
                     ),
@@ -161,12 +171,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   TextField(
                     controller: _newPasswordController,
                     obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'New Password',
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      fillColor: Colors.grey[100],
-                    ),
+                      decoration: InputDecoration(
+                        labelText: 'New Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12.0)), // Rounded edges
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                          borderSide: BorderSide(color: Colors.grey), // Border color when enabled
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                          borderSide: BorderSide(color: Colors.blue), // Border color when focused
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                      ),
                   ),
                   SizedBox(height: 20.0),
                   Center(

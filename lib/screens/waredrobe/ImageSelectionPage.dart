@@ -4,7 +4,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import '../../widget/navigation_drawer_widget.dart';
-
+import '../../shared/constants.dart';
 class ImageSelectionPage extends StatefulWidget {
   final String category;
   final Function(File?) onImageSelected;
@@ -26,86 +26,133 @@ class _ImageSelectionPageState extends State<ImageSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    String categoryWithoutBody = widget.category.replaceAll('_body', ''); // Remove _body if it exists
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Add Item to ${widget.category}'),
-      ),
-      //drawer: NavigationDrawerWidget(), // Dummy drawer implementation
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/background_image.jpg"),
-            fit: BoxFit.cover,
+        title: Text('Add Item to ${categoryWithoutBody} cloth', style: TextStyle(color: Colors.white)),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                HexColor("#3f1a8d"),
+                HexColor("#4e24ae"),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _imageFile != null
-                  ? Image.file(
-                _imageFile!,
-                height: 150,
-                width: 150,
-                fit: BoxFit.cover,
-              )
-                  : Text(
-                'No image selected',
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-              SizedBox(height: 20),
-              if (_imageFile == null)
-                Column(
+        iconTheme: IconThemeData(color: Colors.white),
+      ), // Dummy drawer implementation
+      body: Center(
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          color: Color(0xFFF1EBF5),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _imageFile != null
+                    ? Image.file(
+                  _imageFile!,
+                  height: 500,
+                  width: 350,
+                  fit: BoxFit.cover,
+                )
+                    : Text(
+                  'No image selected',
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () => getImage(ImageSource.camera),
-                      child: Text('Capture Image'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => getImage(ImageSource.gallery),
-                      child: Text('Select Image'),
-                    ),
+                    if (_imageFile == null)
+                      _buildGradientIconButton(
+                        icon: Icons.camera_alt,
+                        onPressed: () => getImage(ImageSource.camera),
+                        tooltip: 'Capture Image',
+                      ),
+                    if (_imageFile == null)
+                      SizedBox(width: 30), // Ensure spacing is consistent
+                    if (_imageFile == null)
+                      _buildGradientIconButton(
+                        icon: Icons.photo_library,
+                        onPressed: () => getImage(ImageSource.gallery),
+                        tooltip: 'Select Image',
+                      ),
+                    if (_imageFile != null)
+                      _buildGradientIconButton(
+                        icon: Icons.delete,
+                        onPressed: removeImage,
+                        tooltip: 'Remove Image',
+                      ),
+                    if (_imageFile != null)
+                      SizedBox(width: 30), // Ensure spacing is consistent
+                    if (_imageFile != null)
+                      _buildGradientIconButton(
+                        icon: Icons.save,
+                        onPressed: () {
+                          if (_imageFile != null) {
+                            widget.onUploadToFirebase(_imageFile);
+                            Navigator.pop(context);
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('No Image Selected'),
+                                  content: Text('Please select an image first.'),
+                                  actions: <Widget>[
+                                    ElevatedButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                        tooltip: 'Save Image',
+                      ),
                   ],
                 ),
-              if (_imageFile != null)
-                ElevatedButton(
-                  onPressed: removeImage,
-                  child: Text('Remove Image'),
-                ),
-              if (_imageFile != null) // Only show the button when _imageFile is not null
-                ElevatedButton(
-                  onPressed: () {
-                    if (_imageFile != null) {
-                      widget.onUploadToFirebase(_imageFile);
-                      Navigator.pop(context);
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('No Image Selected'),
-                            content: Text('Please select an image first.'),
-                            actions: <Widget>[
-                              ElevatedButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('OK'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                  },
-                  child: Text('Save image'),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
+  Widget _buildGradientIconButton({
+    required IconData icon,
+    required VoidCallback? onPressed,
+    required String tooltip,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [Color(0xFF300f78), Color(0xFF5419d3)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: IconButton(
+        icon: Icon(icon, color: Colors.white),
+        onPressed: onPressed,
+        tooltip: tooltip,
+      ),
+    );
+  }
 
   void getImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(
