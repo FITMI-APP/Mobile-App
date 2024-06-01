@@ -185,16 +185,19 @@ class _RegisterState extends State<Register> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                     content: Text(
-                                        'Registration failed. Please try again.')),
+                                        'Registration failed. Please try again.'),
+                                  backgroundColor:  Color(0xFF3f1a8d),),
                               );
                             } else {
                               setState(() {
                                 loading = false;
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content:
-                                        Text('Account created successfully!')),
+                                const SnackBar(
+                                  content: Text(
+                                      "Account created successfully!"),
+                                  backgroundColor:  Color(0xFF3f1a8d),// Change this to your desired color
+                                ),
                               );
                               Navigator.push(
                                 context,
