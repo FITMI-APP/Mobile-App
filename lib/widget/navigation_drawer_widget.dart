@@ -55,13 +55,13 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                     Row(
                       children: [
                         Image.asset(
-                          'assets/logoo.png',
+                          'assets/logo_sideabr.png',
                           height: 40,
                         ),
                         const SizedBox(width: 8),
                         const Text(
                           'FitMi',
-                          style: TextStyle(fontSize: 16, color: Colors.black),
+                          style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ],
                     ),
@@ -96,7 +96,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                       ),
                     ),
                   ),
-                  Divider(color: Colors.black54), // Change divider color for better contrast
+                  Divider(color: Colors.white), // Change divider color for better contrast
 
                   buildMenuItem(
                     text: 'Home',
@@ -121,7 +121,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                     onClicked: () => selectedItem(context, 4),
                   ),
                   const SizedBox(height: 24),
-                  Divider(color: Colors.black54), // Change divider color for better contrast
+                  Divider(color: Colors.white), // Change divider color for better contrast
                   const SizedBox(height: 24),
                   buildMenuItem(
                     text: 'Sign Out',
