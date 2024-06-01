@@ -51,118 +51,146 @@ class _SignInState extends State<SignIn> {
     return loading
         ? const Loading()
         : Scaffold(
-      backgroundColor: HexColor("#FFFFFF"),
-      appBar: AppBar(
-        title: Text('Sign in to FitMi', style: TextStyle(color: Colors.white)),
-
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                HexColor("#3f1a8d"),
-                HexColor("#4e24ae"),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+            backgroundColor: HexColor("#FFFFFF"),
+            appBar: AppBar(
+              title: Text('Sign in to FitMi', style: TextStyle(color: Colors.white)),
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      HexColor("#3f1a8d"),
+                      HexColor("#4e24ae"),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Image.asset(
-                'assets/logoo.png',
-                height: 60,
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Welcome to FitMi!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Try on endless styles, effortlessly',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 30),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  prefixIcon: Icon(Icons.email),
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Image.asset(
+                      'assets/logoo.png',
+                      height: 100,  // Increased the logo size
+                      width: 100,   // Added width to maintain aspect ratio
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Welcome to FitMi!',
+                      style: TextStyle(
+                        fontSize: 28,  // Increased font size
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF4A2F7C),  // Added color
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Try on endless styles, effortlessly',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 30),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                      validator: (val) => val!.isEmpty ? 'Invalid Email' : null,
+                      onChanged: (val) {
+                        setState(() => email = val);
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: Icon(Icons.lock),
+                      ),
+                      validator: (val) => val!.isEmpty ? 'Invalid Password' : null,
+                      onChanged: (val) {
+                        setState(() => password = val);
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Color(0xFF5419D3)),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        foregroundColor: MaterialStateProperty.all(Colors.black),
+                      ),
+                      onPressed: _signInWithEmail,
+                      child: const Text(
+                        'Sign in',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton.icon(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Color(0xFF5419D3)),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        foregroundColor: MaterialStateProperty.all(Colors.black),
+                      ),
+                      icon: FaIcon(FontAwesomeIcons.google, color: Colors.white),
+                      label: const Text(
+                        'Sign in with Google',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () async {
+                        setState(() => loading = true);
+                        await _auth.signInWithGoogle(context);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Color(0xFF5419D3)),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        foregroundColor: MaterialStateProperty.all(Colors.black),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Register()), // Navigate to Register
+                        );
+                      },
+                      child: const Text(
+                        'Create Account',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      error,
+                      style: const TextStyle(color: Colors.red, fontSize: 14),
+                    ),
+                  ],
                 ),
-                validator: (val) => val!.isEmpty ? 'Invalid Email' : null,
-                onChanged: (val) {
-                  setState(() => email = val);
-                },
               ),
-              const SizedBox(height: 20),
-              TextFormField(
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  prefixIcon: Icon(Icons.lock),
-                ),
-                validator: (val) => val!.isEmpty ? 'Invalid Password' : null,
-                onChanged: (val) {
-                  setState(() => password = val);
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: button,
-                onPressed: _signInWithEmail,
-                child: const Text(
-                  'Sign in',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton.icon(
-                style: button,
-                icon: FaIcon(FontAwesomeIcons.google, color: Colors.white),
-                label: const Text(
-                  'Sign in with Google',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                onPressed: () async {
-                  setState(() => loading = true);
-                  await _auth.signInWithGoogle(context);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => Home()),
-                  );
-                },
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                style: button,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Register()), // Navigate to Register
-                  );
-                },
-                child: const Text(
-                  'Create Account',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                error,
-                style: const TextStyle(color: Colors.red, fontSize: 14),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

@@ -24,7 +24,7 @@ final logo = Padding(
 );
 
 final button = ButtonStyle(
-  backgroundColor: MaterialStateProperty.all(Colors.blue[500]),
+  backgroundColor: MaterialStateProperty.all(Color(0xFF5419D3)),
   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
     RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10.0),

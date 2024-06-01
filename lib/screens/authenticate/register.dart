@@ -75,22 +75,20 @@ class _RegisterState extends State<Register> {
                       ),
                       const SizedBox(height: 20.0),
                       const Text(
-                        'Welcome to FitMi!',
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
+                      'Welcome to FitMi!',
+                      style: TextStyle(
+                        fontSize: 28,  // Increased font size
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF4A2F7C),  // Added color
                       ),
-                      const SizedBox(height: 10.0),
-                      const Text(
-                        'Try on endless styles, effortlessly',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.grey,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Try on endless styles, effortlessly',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
                       const SizedBox(height: 30.0),
                       TextFormField(
                         controller: _fullNameController,
