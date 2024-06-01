@@ -162,6 +162,7 @@ class _HomeState extends State<Home> {
                             const SnackBar(
                               content: Text(
                                   "Please insert both person and cloth images."),
+                              backgroundColor:  Color(0xFF3f1a8d),// Change this to your desired color
                             ),
                           );
                         }
