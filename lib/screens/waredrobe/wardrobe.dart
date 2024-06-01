@@ -45,7 +45,7 @@ class _ClothItemsState extends State<ClothItems> {
   }
 
   Future<List<String>> _fetchImageUrls() {
-    return getImageUrlsByCategory(_userId, widget.category);
+    return WardrobeService().getImageUrlsByCategory(_userId, widget.category);
   }
 
   @override
@@ -114,7 +114,6 @@ class _ClothItemsState extends State<ClothItems> {
   }
 }
 
-
 class Wardrobe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -135,7 +134,7 @@ class WardrobeScreen extends StatefulWidget {
 }
 
 class _WardrobeScreenState extends State<WardrobeScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); // Global key for the Scaffold
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   File? uppercloth;
   File? lowercloth;
@@ -166,7 +165,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
 
         return Scaffold(
           key: _scaffoldKey, // Use the GlobalKey for the Scaffold
-          appBar: Header(title: 'Wardrobe'),
+          appBar: Header(title: 'Wardrobe', scaffoldKey: _scaffoldKey), // Pass the scaffoldKey here
           drawer: NavigationDrawerWidget(), // Attach the navigation drawer
           body: SingleChildScrollView(
             child: Column(
@@ -272,9 +271,9 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
     Map<String, String> userInfo = await _auth.getUserInfo();
     userID = userInfo['userid'] ?? '';
 
-    String? imageUrl = await uploadImage(imageFile, userID, category);
+    String? imageUrl = await WardrobeService().uploadImage(imageFile, userID, category);
     if (imageUrl != null) {
-      await saveImageUrlToDatabase(userID, category, imageUrl);
+      await WardrobeService().saveImageUrlToDatabase(userID, category, imageUrl);
       setState(() {});
     } else {
       print('Image upload failed');
@@ -282,9 +281,8 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
   }
 }
 
-
 Future<void> getImageUrlsForUserAndCategory(String userId, String category) async {
-  List<String> imageUrls = await getImageUrlsByCategory(userId, category);
+  List<String> imageUrls = await WardrobeService().getImageUrlsByCategory(userId, category);
   if (imageUrls.isNotEmpty) {
     // Print or use the retrieved image URLs
     print('Image URLs for user $userId and category $category: $imageUrls');
@@ -315,46 +313,34 @@ class EnlargedImage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () async {
-              bool? confirmDelete = await showDialog<bool>(
+              bool? confirmDelete = await showDialog(
                 context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('Delete Image'),
-                    content: Text('Are you sure you want to delete this picture?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(false); // Return false
-                        },
-                        child: Text('No'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(true); // Return true
-                        },
-                        child: Text('Yes'),
-                      ),
-                    ],
-                  );
-                },
+                builder: (context) => AlertDialog(
+                  title: Text('Delete Image'),
+                  content: Text('Are you sure you want to delete this image?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text('Delete'),
+                    ),
+                  ],
+                ),
               );
-
               if (confirmDelete == true) {
-                await deleteImageUrlFromDatabase(userId, category, imageUrl);
-                onImageDeleted(); // Call the callback to refresh the page
-                Navigator.of(context).pop(); // Close the image view
+                await WardrobeService().deleteImageUrlFromDatabase(userId, category, imageUrl);
+                onImageDeleted();
+                Navigator.pop(context);
               }
             },
           ),
         ],
       ),
       body: Center(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.pop(context); // Close the enlarged image view when tapped
-          },
-          child: Image.network(imageUrl), // Show the enlarged image
-        ),
+        child: Image.network(imageUrl),
       ),
     );
   }

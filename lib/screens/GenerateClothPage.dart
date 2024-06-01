@@ -29,7 +29,7 @@ class _GenerateImageFromTextPageState extends State<GenerateImageFromTextPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: Header(title: 'Generate Image from Text'),
+      appBar: Header(title: 'Generate Image from Text', scaffoldKey: _scaffoldKey),
       drawer: NavigationDrawerWidget(),
       body: Center(
         child: Column(

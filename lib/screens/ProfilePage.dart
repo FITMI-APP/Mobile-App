@@ -107,7 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: Header(title: 'PROFILE'),
+      appBar: Header(title: 'PROFILE' ,  scaffoldKey: _scaffoldKey),
       drawer: NavigationDrawerWidget(),
       body: Center(
         child: SingleChildScrollView(

@@ -28,6 +28,8 @@ class _HomeState extends State<Home> {
   List<String> imageUrls = [];
   String _userId = '';
   final AuthService _auth = AuthService();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 
   // // Define a consistent style for buttons
   // final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
@@ -69,10 +71,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(title: 'HOME'),
+      key: _scaffoldKey,
+      appBar: Header(title: 'Home', scaffoldKey: _scaffoldKey),
       drawer: NavigationDrawerWidget(),
-
-
       body: Container(
         decoration: BoxDecoration(
           // image: DecorationImage(
@@ -441,7 +442,7 @@ class _HomeState extends State<Home> {
   Future<void> fetchWardrobeImages() async {
     try {
       print("Fetching image URLs...");
-      final List<String> urls = await getImageUrlsByCategory(_userId, category);
+      final List<String> urls = await WardrobeService().getImageUrlsByCategory(_userId, category);
       setState(() {
         imageUrls = urls;
       });
