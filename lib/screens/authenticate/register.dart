@@ -46,7 +46,10 @@ class _RegisterState extends State<Register> {
         : Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              title: Text('Sign up to FitMi' ,  style: TextStyle(color: Colors.white)),
+              title: Text(
+                'Sign up to FitMi',
+                style: TextStyle(color: Colors.white),
+              ),
               flexibleSpace: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -59,7 +62,7 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
               ),
-                iconTheme: IconThemeData(color: Colors.white)
+              iconTheme: IconThemeData(color: Colors.white),
             ),
             body: SingleChildScrollView(
               child: Container(
@@ -75,20 +78,20 @@ class _RegisterState extends State<Register> {
                       ),
                       const SizedBox(height: 20.0),
                       const Text(
-                      'Welcome to FitMi!',
-                      style: TextStyle(
-                        fontSize: 28,  // Increased font size
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF4A2F7C),  // Added color
+                        'Welcome to FitMi!',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF4A2F7C),
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Try on endless styles, effortlessly',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                      textAlign: TextAlign.center,
-                    ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Try on endless styles, effortlessly',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                        textAlign: TextAlign.center,
+                      ),
                       const SizedBox(height: 30.0),
                       TextFormField(
                         controller: _fullNameController,
@@ -106,8 +109,15 @@ class _RegisterState extends State<Register> {
                           labelText: 'Email',
                           prefixIcon: Icon(Icons.email),
                         ),
-                        validator: (value) =>
-                            value!.isEmpty ? 'Enter an email' : null,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Enter an email';
+                          } else if (!value.contains('@') ||
+                              !value.endsWith('.com')) {
+                            return 'Please enter a valid email address';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 20.0),
                       TextFormField(
@@ -184,9 +194,10 @@ class _RegisterState extends State<Register> {
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                    content: Text(
-                                        'Registration failed. Please try again.'),
-                                  backgroundColor:  Color(0xFF3f1a8d),),
+                                  content: Text(
+                                      'Registration failed. Please try again.'),
+                                  backgroundColor: Color(0xFF3f1a8d),
+                                ),
                               );
                             } else {
                               setState(() {
@@ -194,15 +205,15 @@ class _RegisterState extends State<Register> {
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text(
-                                      "Account created successfully!"),
-                                  backgroundColor:  Color(0xFF3f1a8d),// Change this to your desired color
+                                  content: Text("Account created successfully!"),
+                                  backgroundColor: Color(0xFF3f1a8d),
                                 ),
                               );
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SignIn()),
+                                  builder: (context) => SignIn(),
+                                ),
                               );
                             }
                           }
@@ -210,7 +221,8 @@ class _RegisterState extends State<Register> {
                         child: const Text(
                           'CREATE ACCOUNT',
                           style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
