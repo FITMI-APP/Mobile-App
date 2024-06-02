@@ -53,6 +53,7 @@ class _ImageSelectionPageState extends State<ImageSelectionPage> {
             borderRadius: BorderRadius.circular(15.0),
           ),
           color: Color(0xFFF1EBF5),
+
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

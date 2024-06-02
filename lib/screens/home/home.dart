@@ -117,7 +117,7 @@ class _HomeState extends State<Home> {
                       getImage(source: ImageSource.camera, type: 'person'),
                   onSelect: () =>
                       getImage(source: ImageSource.gallery, type: 'person'),
-                  placeholderText: 'Person image',
+                  placeholderText: 'Person Image',
 
                 ),
                 const SizedBox(height: 15), // Space between the images
@@ -128,7 +128,7 @@ class _HomeState extends State<Home> {
                       getImage(source: ImageSource.camera, type: 'cloth'),
                   onSelect: () =>
                       getImage(source: ImageSource.gallery, type: 'cloth'),
-                  placeholderText: 'Cloth image',
+                  placeholderText: 'Cloth Image',
                   onWardrobe: _showImageUrlsModal, // Pass the callback for Wardrobe button
                 ),
               ],
@@ -175,7 +175,7 @@ class _HomeState extends State<Home> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 0), // Adjust vertical padding as needed
+                            vertical: 0),
                         child: Text(
                           "Generate",
                           textAlign: TextAlign.center,

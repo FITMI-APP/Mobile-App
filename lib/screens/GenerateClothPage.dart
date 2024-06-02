@@ -17,7 +17,7 @@ class _GenerateImageFromTextPageState extends State<GenerateImageFromTextPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<void> _launchURL() async {
-    const url = 'https://nice-areas-marry.loca.lt/';
+    const url = 'https://cyan-dragons-shake.loca.lt/';
 
     try {
       await FlutterWebBrowser.openWebPage(url: url);
@@ -67,18 +67,18 @@ class _GenerateImageFromTextPageState extends State<GenerateImageFromTextPage> {
                         ),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
                         ),
                         minimumSize: MaterialStateProperty.all(Size(180, 50)),
                         padding: MaterialStateProperty.all(
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 30)),
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 20)),
                         elevation: MaterialStateProperty.all(0),
                         shadowColor: MaterialStateProperty.all(Colors.grey.shade300),
                         foregroundColor: MaterialStateProperty.all(Colors.white),
                       ),
                       child: Text(
-                        'Try our Web App',
+                        'Try Our Web App',
                         style: TextStyle(fontSize: 16),
                       ),
                     ),

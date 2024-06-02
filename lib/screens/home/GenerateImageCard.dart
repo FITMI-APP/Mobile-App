@@ -202,6 +202,7 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
             : Center(
           child: SingleChildScrollView(
             child: Card(
+              color: Color(0xFFF1EBF5),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -220,7 +221,10 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF5419d3), // Custom hex color
+                          backgroundColor: Color(0xFF5419d3),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            )// Custom hex color
                         ),
                         onPressed: () async {
                           if (!photosFetched) {
@@ -232,11 +236,14 @@ class _GenerateImageCardState extends State<GenerateImageCard> {
                             showComplementaryItems = false;
                           });
                         },
-                        child: Text('Recommend Other Cloth', style: TextStyle(color: Colors.white)),
+                        child: Text('Recommend Cloth', style: TextStyle(color: Colors.white)),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF5419d3), // Custom hex color
+                          backgroundColor: Color(0xFF5419d3),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            )// Custom hex color
                         ),
                         onPressed: () async {
                           if (!complementaryPhotosFetched) {
@@ -345,7 +352,7 @@ class _RecommendationSectionState extends State<RecommendationSection> {
               child: Container(
                 width: 150,
                 height: 150,
-                color: Colors.grey[200],
+                color: Color(0xFFF1EBF5),
                 child: Stack(
                   children: [
                     ClipRRect(
@@ -392,6 +399,9 @@ class _RecommendationSectionState extends State<RecommendationSection> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Color(0xFF5419d3),
                                     shadowColor: Colors.transparent,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      )
                                   ),
                                   child: Text(
                                     'Add to Wardrobe',
@@ -465,7 +475,7 @@ class _ComplementarySectionState extends State<ComplementarySection> {
               child: Container(
                 width: 150,
                 height: 150,
-                color: Colors.grey[200],
+                color: Color(0xFFF1EBF5),
                 child: Stack(
                   children: [
                     ClipRRect(
