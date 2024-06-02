@@ -195,11 +195,11 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
     String getDisplayText(String category) {
       switch (category) {
         case 'upper_body':
-          return 'Upper';
+          return '  Upper';
         case 'lower_body':
-          return 'Lower';
+          return '  Lower';
         case 'dresses':
-          return 'Dresses';
+          return '  Dresses';
         default:
           return category; // Default to the original category if no match found
       }
